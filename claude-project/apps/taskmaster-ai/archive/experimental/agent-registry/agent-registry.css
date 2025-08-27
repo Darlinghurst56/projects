@@ -1,0 +1,301 @@
+/**
+ * Agent Registry Widget Styles
+ * Home Vibe Coder Standards - Clean and Simple
+ */
+
+.agent-registry-widget {
+    background: var(--card-background);
+    border-radius: 12px;
+    padding: 20px;
+    border: 1px solid var(--border-color);
+    min-height: 400px;
+    display: flex;
+    flex-direction: column;
+}
+
+.agent-registry-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid var(--accent-color);
+}
+
+.agent-registry-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.agent-registry-title::before {
+    content: "🤖";
+    font-size: 1.2em;
+}
+
+.agent-status-indicator {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+}
+
+.status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.status-dot.active {
+    background: #10b981;
+    box-shadow: 0 0 6px rgba(16, 185, 129, 0.4);
+}
+
+.status-dot.idle {
+    background: #f59e0b;
+}
+
+.status-dot.offline {
+    background: #ef4444;
+}
+
+.agents-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 16px;
+    flex: 1;
+}
+
+.agent-card {
+    background: var(--widget-background);
+    border: 1px solid var(--border-light);
+    border-radius: 8px;
+    padding: 16px;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    position: relative;
+}
+
+.agent-card:hover {
+    border-color: var(--accent-color);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.agent-card.active {
+    border-color: var(--success-color);
+    background: linear-gradient(135deg, var(--widget-background) 0%, rgba(16, 185, 129, 0.05) 100%);
+}
+
+.agent-card.idle {
+    border-color: var(--warning-color);
+    background: linear-gradient(135deg, var(--widget-background) 0%, rgba(245, 158, 11, 0.05) 100%);
+}
+
+.agent-card.offline {
+    border-color: var(--error-color);
+    background: linear-gradient(135deg, var(--widget-background) 0%, rgba(239, 68, 68, 0.05) 100%);
+    opacity: 0.7;
+}
+
+.agent-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 12px;
+}
+
+.agent-name {
+    font-weight: 600;
+    color: var(--text-primary);
+    font-size: 1.1rem;
+    margin: 0;
+}
+
+.agent-role {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    margin: 2px 0 0 0;
+}
+
+.agent-status-badge {
+    font-size: 0.75rem;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-weight: 500;
+    text-transform: uppercase;
+}
+
+.agent-status-badge.active {
+    background: rgba(16, 185, 129, 0.1);
+    color: var(--success-color);
+}
+
+.agent-status-badge.idle {
+    background: rgba(245, 158, 11, 0.1);
+    color: var(--warning-color);
+}
+
+.agent-status-badge.offline {
+    background: rgba(239, 68, 68, 0.1);
+    color: var(--error-color);
+}
+
+.agent-capabilities {
+    margin-bottom: 12px;
+}
+
+.capabilities-title {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+    margin: 0 0 6px 0;
+}
+
+.capabilities-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+}
+
+.capability-tag {
+    font-size: 0.75rem;
+    padding: 2px 6px;
+    background: var(--accent-light);
+    color: var(--accent-color);
+    border-radius: 6px;
+    border: 1px solid var(--accent-color);
+}
+
+.agent-metrics {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid var(--border-light);
+}
+
+.metric {
+    text-align: center;
+}
+
+.metric-value {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    display: block;
+}
+
+.metric-label {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    margin-top: 2px;
+}
+
+.agent-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 12px;
+}
+
+.agent-action-btn {
+    flex: 1;
+    padding: 6px 12px;
+    border: 1px solid var(--border-color);
+    background: var(--widget-background);
+    color: var(--text-secondary);
+    border-radius: 6px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.agent-action-btn:hover {
+    border-color: var(--accent-color);
+    color: var(--accent-color);
+    background: var(--accent-light);
+}
+
+.agent-action-btn.primary {
+    background: var(--accent-color);
+    color: white;
+    border-color: var(--accent-color);
+}
+
+.agent-action-btn.primary:hover {
+    background: var(--accent-dark);
+}
+
+.no-agents-message {
+    text-align: center;
+    color: var(--text-secondary);
+    font-style: italic;
+    padding: 40px 20px;
+    border: 2px dashed var(--border-light);
+    border-radius: 8px;
+    margin: 20px 0;
+}
+
+.no-agents-message::before {
+    content: "🔍";
+    display: block;
+    font-size: 2rem;
+    margin-bottom: 10px;
+}
+
+.refresh-agents-btn {
+    align-self: flex-end;
+    padding: 8px 16px;
+    background: var(--accent-color);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background 0.2s ease;
+}
+
+.refresh-agents-btn:hover {
+    background: var(--accent-dark);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .agents-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .agent-card-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+    
+    .agent-metrics {
+        grid-template-columns: 1fr;
+        gap: 4px;
+    }
+}
+
+/* Animation for new agents */
+@keyframes agentAppear {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.agent-card.new {
+    animation: agentAppear 0.3s ease-out;
+}

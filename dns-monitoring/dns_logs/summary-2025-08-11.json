@@ -1,0 +1,325 @@
+{
+  "generated": "2025-08-11T09:54:57.906Z",
+  "session": {
+    "startTime": "2025-08-11T09:54:57.814Z",
+    "collections": 1,
+    "totalQueries": 2495,
+    "uniqueDevices": 47
+  },
+  "topDevices": {
+    "192.168.1.77": {
+      "name": "Philips Hue Hub",
+      "type": "Smart Lighting",
+      "category": "Smart Home",
+      "confirmed": true
+    },
+    "192.168.1.82": {
+      "name": "Monitoring Device",
+      "type": "IoT/Security",
+      "category": "Monitoring",
+      "confirmed": false
+    },
+    "192.168.1.32": {
+      "name": "Network Device",
+      "type": "Network/IoT",
+      "category": "Infrastructure",
+      "confirmed": false
+    },
+    "192.168.1.41": {
+      "name": "Auto-detected-41",
+      "type": "Unknown",
+      "category": "Unknown",
+      "confirmed": false
+    },
+    "192.168.1.21": {
+      "name": "Auto-detected-21",
+      "type": "Unknown",
+      "category": "Unknown",
+      "confirmed": false
+    },
+    "192.168.1.47": {
+      "name": "Media Device",
+      "type": "Streaming/Media",
+      "category": "Entertainment",
+      "confirmed": false
+    },
+    "192.168.1.39": {
+      "name": "Auto-detected-39",
+      "type": "Unknown",
+      "category": "Unknown",
+      "confirmed": false
+    },
+    "192.168.1.81": {
+      "name": "Auto-detected-81",
+      "type": "Unknown",
+      "category": "Unknown",
+      "confirmed": false
+    },
+    "192.168.1.22": {
+      "name": "Auto-detected-22",
+      "type": "Unknown",
+      "category": "Unknown",
+      "confirmed": false
+    },
+    "192.168.1.38": {
+      "name": "Auto-detected-38",
+      "type": "Unknown",
+      "category": "Unknown",
+      "confirmed": false
+    },
+    "192.168.1.10": {
+      "name": "Auto-detected-10",
+      "type": "Unknown",
+      "category": "Unknown",
+      "confirmed": false
+    },
+    "192.168.1.61": {
+      "name": "Auto-detected-61",
+      "type": "Unknown",
+      "category": "Unknown",
+      "confirmed": false
+    },
+    "192.168.1.76": {
+      "name": "Auto-detected-76",
+      "type": "Unknown",
+      "category": "Unknown",
+      "confirmed": false
+    },
+    "192.168.1.85": {
+      "name": "Auto-detected-85",
+      "type": "Unknown",
+      "category": "Unknown",
+      "confirmed": false
+    },
+    "192.168.1.15": {
+      "name": "Primary Workstation",
+      "type": "Computer",
+      "category": "Workstation",
+      "confirmed": false
+    },
+    "192.168.1.40": {
+      "name": "Discovery Device",
+      "type": "Network",
+      "category": "Infrastructure",
+      "confirmed": false
+    },
+    "192.168.1.42": {
+      "name": "Auto-detected-42",
+      "type": "Unknown",
+      "category": "Unknown",
+      "confirmed": false
+    },
+    "192.168.1.24": {
+      "name": "Auto-detected-24",
+      "type": "Unknown",
+      "category": "Unknown",
+      "confirmed": false
+    },
+    "192.168.1.43": {
+      "name": "Auto-detected-43",
+      "type": "Unknown",
+      "category": "Unknown",
+      "confirmed": false
+    },
+    "192.168.1.13": {
+      "name": "Auto-detected-13",
+      "type": "Unknown",
+      "category": "Unknown",
+      "confirmed": false
+    },
+    "192.168.1.72": {
+      "name": "Auto-detected-72",
+      "type": "Unknown",
+      "category": "Unknown",
+      "confirmed": false
+    },
+    "192.168.1.37": {
+      "name": "Auto-detected-37",
+      "type": "Unknown",
+      "category": "Unknown",
+      "confirmed": false
+    },
+    "192.168.1.34": {
+      "name": "IoT Device",
+      "type": "IoT",
+      "category": "Smart Home",
+      "confirmed": false
+    },
+    "192.168.1.66": {
+      "name": "Auto-detected-66",
+      "type": "Unknown",
+      "category": "Unknown",
+      "confirmed": false
+    },
+    "192.168.1.51": {
+      "name": "Auto-detected-51",
+      "type": "Unknown",
+      "category": "Unknown",
+      "confirmed": false
+    },
+    "192.168.1.19": {
+      "name": "Auto-detected-19",
+      "type": "Unknown",
+      "category": "Unknown",
+      "confirmed": false
+    },
+    "192.168.1.90": {
+      "name": "Auto-detected-90",
+      "type": "Unknown",
+      "category": "Unknown",
+      "confirmed": false
+    },
+    "192.168.1.18": {
+      "name": "Auto-detected-18",
+      "type": "Unknown",
+      "category": "Unknown",
+      "confirmed": false
+    },
+    "192.168.1.87": {
+      "name": "Auto-detected-87",
+      "type": "Unknown",
+      "category": "Unknown",
+      "confirmed": false
+    },
+    "192.168.1.46": {
+      "name": "Auto-detected-46",
+      "type": "Unknown",
+      "category": "Unknown",
+      "confirmed": false
+    },
+    "192.168.1.27": {
+      "name": "Auto-detected-27",
+      "type": "Unknown",
+      "category": "Unknown",
+      "confirmed": false
+    },
+    "192.168.1.69": {
+      "name": "Smart Device Hub",
+      "type": "IoT",
+      "category": "Smart Home",
+      "confirmed": false
+    },
+    "192.168.1.7": {
+      "name": "Auto-detected-7",
+      "type": "Unknown",
+      "category": "Unknown",
+      "confirmed": false
+    },
+    "192.168.1.62": {
+      "name": "Auto-detected-62",
+      "type": "Unknown",
+      "category": "Unknown",
+      "confirmed": false
+    },
+    "192.168.1.6": {
+      "name": "Mobile Device",
+      "type": "Mobile",
+      "category": "Personal",
+      "confirmed": false
+    },
+    "192.168.1.5": {
+      "name": "Auto-detected-5",
+      "type": "Unknown",
+      "category": "Unknown",
+      "confirmed": false
+    },
+    "192.168.1.73": {
+      "name": "Secondary Device",
+      "type": "Computer/Mobile",
+      "category": "Unknown",
+      "confirmed": false
+    },
+    "192.168.1.68": {
+      "name": "Auto-detected-68",
+      "type": "Unknown",
+      "category": "Unknown",
+      "confirmed": false
+    },
+    "192.168.1.36": {
+      "name": "Auto-detected-36",
+      "type": "Unknown",
+      "category": "Unknown",
+      "confirmed": false
+    },
+    "192.168.1.151": {
+      "name": "Auto-detected-151",
+      "type": "Unknown",
+      "category": "Unknown",
+      "confirmed": false
+    },
+    "192.168.1.35": {
+      "name": "Auto-detected-35",
+      "type": "Unknown",
+      "category": "Unknown",
+      "confirmed": false
+    },
+    "192.168.1.165": {
+      "name": "Auto-detected-165",
+      "type": "Unknown",
+      "category": "Unknown",
+      "confirmed": false
+    },
+    "192.168.1.31": {
+      "name": "Communication Device",
+      "type": "Mobile/Communication",
+      "category": "Personal",
+      "confirmed": false
+    },
+    "192.168.1.59": {
+      "name": "Security/Monitoring",
+      "type": "Security",
+      "category": "Security",
+      "confirmed": false
+    },
+    "192.168.1.80": {
+      "name": "Smart Speaker/Assistant",
+      "type": "Voice Assistant",
+      "category": "Smart Home",
+      "confirmed": false
+    },
+    "192.168.1.60": {
+      "name": "Auto-detected-60",
+      "type": "Unknown",
+      "category": "Unknown",
+      "confirmed": false
+    },
+    "192.168.1.84": {
+      "name": "Auto-detected-84",
+      "type": "Unknown",
+      "category": "Unknown",
+      "confirmed": false
+    }
+  },
+  "topDomains": {
+    "dns.controld.com": 366,
+    "aqm3wd1qlc3dy-ats.iot.us-east-1.amazonaws.com": 130,
+    "ap.spotify.com": 91,
+    "api.amazonalexa.com": 72,
+    "_dns.resolver.arpa": 63,
+    "mobile-collector.newrelic.com": 59,
+    "info.cspserver.net": 57,
+    "api.amazon.com": 47,
+    "d3p8zr0ffa9t17.cloudfront.net": 44,
+    "avs-alexa-14-eu.amazon.com": 43,
+    "ntp.wiz.world": 40,
+    "fireoscaptiveportal.com": 39,
+    "api.eu.amazonalexa.com": 38,
+    "lb._dns-sd._udp.0.1.168.192.in-addr.arpa": 35,
+    "eu.mqtt.wiz.world": 34,
+    "1ee9g7o5xyg.dns.controld.com": 31,
+    "apresolve.spotify.com": 31,
+    "acsechocaptiveportal.com": 30,
+    "deviceapi.messaging.arlo.com": 28,
+    "a7wxqph584yp.us-east-1.prod.service.minerva.devices.a2z.com": 25
+  },
+  "queryTypeDistribution": {
+    "A": 1869,
+    "AAAA": 158,
+    "HTTPS": 296,
+    "SVCB": 63,
+    "PTR": 83,
+    "NAPTR": 1,
+    "SRV": 1,
+    "SOA": 24
+  }
+}

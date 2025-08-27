@@ -1,0 +1,49 @@
+# Task ID: 10
+# Title: Test all newly installed MCP servers for functionality and integration with Claude Code
+# Status: done
+# Dependencies: 6, 7, 8, 9
+# Priority: high
+# Description: Verify that all MCP servers are properly installed, configured, and functioning correctly with Claude Code integration.
+# Details:
+1. Task Master AI MCP server: Verify all task management commands work (get_tasks, next_task, set_task_status, etc.). 2. ESLint MCP server: Verify linting and formatting capabilities (lint_file, fix_file with Prettier integration). 3. HTTP/Fetch MCP server: Verify fetch capabilities (fetch_json). 4. Puppeteer MCP server: Verify browser automation capabilities (navigate, screenshot, click, type, evaluate). 5. Docker MCP server: Verify container management functions (list_containers, container_logs, container_inspect). 6. Check MCP server connection status and error handling. 7. Verify environment variables and API keys are properly configured. 8. Test each server's core functionality with sample operations. 9. Validate integration with Claude Code tool allowlist. 10. Document any configuration issues or missing dependencies.
+
+# Test Strategy:
+1. Run `claude --mcp-debug` to verify all MCP servers are connected. 2. Execute core functions from each MCP server (task-master help, eslint lint_file, http/fetch fetch_json, puppeteer navigate, docker list_containers). 3. Verify API responses are valid and expected. 4. Test error handling by attempting operations without required parameters. 5. Confirm all servers appear in Claude Code's available tools list. 6. Test concurrent operations across multiple MCP servers. 7. Validate that all configured environment variables are accessible to MCP servers. 8. Document test results and any failures or limitations discovered. 9. Configure tool allowlist in .claude/settings.json.
+
+# Subtasks:
+## 1. Task Master AI MCP server tests [completed]
+### Dependencies: None
+### Description: Verify all task management commands work (models command, complexity-report, get_tasks, set_task_status, use_tag).
+### Details:
+
+
+## 2. ESLint MCP server tests [completed]
+### Dependencies: None
+### Description: Verify linting and formatting capabilities (lint_file, fix_file with Prettier integration).
+### Details:
+
+
+## 3. HTTP/Fetch MCP server tests [completed]
+### Dependencies: None
+### Description: Verify fetch capabilities (fetch_json command with httpbin.org).
+### Details:
+
+
+## 4. Investigate Puppeteer MCP server browser launch failure [done]
+### Dependencies: None
+### Description: Address Chrome binary syntax error in WSL2 environment. Issue: "/root/.cache/puppeteer/chrome/linux-131.0.6778.204/chrome-linux64/chrome: 2: Syntax error: Unterminated quoted string". Requires Chrome installation fix for WSL2.
+### Details:
+
+
+## 5. Install Docker Desktop with WSL2 integration [done]
+### Dependencies: None
+### Description: Docker MCP server is not available because Docker is not installed in WSL2 environment. Enable WSL integration in Docker Desktop.
+### Details:
+
+
+## 6. Configure tool allowlist in .claude/settings.json [done]
+### Dependencies: None
+### Description: Complete .claude/settings.json configuration to enable all working MCP servers.
+### Details:
+
+

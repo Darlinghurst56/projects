@@ -1,0 +1,163 @@
+{
+  "timestamp": "2025-08-03T14:08:48.577Z",
+  "success": false,
+  "steps": [
+    {
+      "timestamp": "2025-08-03T14:08:48.578Z",
+      "type": "info",
+      "message": "Starting router login test..."
+    },
+    {
+      "timestamp": "2025-08-03T14:08:48.580Z",
+      "type": "info",
+      "message": "Initializing browser..."
+    },
+    {
+      "timestamp": "2025-08-03T14:08:51.229Z",
+      "type": "info",
+      "message": "Browser initialized successfully"
+    },
+    {
+      "timestamp": "2025-08-03T14:08:51.229Z",
+      "type": "info",
+      "message": "Attempting to access router at http://192.168.1.1"
+    },
+    {
+      "timestamp": "2025-08-03T14:08:54.209Z",
+      "type": "info",
+      "message": "Response status: 200"
+    },
+    {
+      "timestamp": "2025-08-03T14:08:54.210Z",
+      "type": "info",
+      "message": "Final URL: http://192.168.1.1/webpages/index.html"
+    },
+    {
+      "timestamp": "2025-08-03T14:08:55.599Z",
+      "type": "info",
+      "message": "Screenshot saved: /home/darlinghurstlinux/projects/miniprojects/router_logs/screenshot-initial-1754230134210.png"
+    },
+    {
+      "timestamp": "2025-08-03T14:08:55.616Z",
+      "type": "info",
+      "message": "Page title: login"
+    },
+    {
+      "timestamp": "2025-08-03T14:08:55.617Z",
+      "type": "info",
+      "message": "Current URL: http://192.168.1.1/webpages/index.html"
+    },
+    {
+      "timestamp": "2025-08-03T14:08:55.618Z",
+      "type": "info",
+      "message": "Analyzing login form..."
+    },
+    {
+      "timestamp": "2025-08-03T14:08:57.623Z",
+      "type": "info",
+      "message": "Found 2 form elements:"
+    },
+    {
+      "timestamp": "2025-08-03T14:08:57.623Z",
+      "type": "info",
+      "message": "  1. input: {\"type\":\"input\",\"inputType\":\"password\",\"name\":\"\",\"id\":\"\",\"placeholder\":\"\",\"className\":\"text-text password-text password-hidden  \",\"index\":0}"
+    },
+    {
+      "timestamp": "2025-08-03T14:08:57.624Z",
+      "type": "info",
+      "message": "  2. input: {\"type\":\"input\",\"inputType\":\"text\",\"name\":\"\",\"id\":\"\",\"placeholder\":\"\",\"className\":\"text-text password-text password-visible hidden \",\"index\":1}"
+    },
+    {
+      "timestamp": "2025-08-03T14:08:57.967Z",
+      "type": "info",
+      "message": "Screenshot saved: /home/darlinghurstlinux/projects/miniprojects/router_logs/screenshot-login-form-1754230137624.png"
+    },
+    {
+      "timestamp": "2025-08-03T14:08:57.968Z",
+      "type": "info",
+      "message": "Attempting login with username: admin"
+    },
+    {
+      "timestamp": "2025-08-03T14:08:58.092Z",
+      "type": "info",
+      "message": "Found username field with selector: input[type=\"text\"]"
+    },
+    {
+      "timestamp": "2025-08-03T14:08:58.243Z",
+      "type": "info",
+      "message": "Found password field with selector: input[type=\"password\"]"
+    },
+    {
+      "timestamp": "2025-08-03T14:08:58.732Z",
+      "type": "error",
+      "message": "Could not find username or password fields"
+    },
+    {
+      "timestamp": "2025-08-03T14:08:58.733Z",
+      "type": "info",
+      "message": "Exploring router interface..."
+    },
+    {
+      "timestamp": "2025-08-03T14:08:58.738Z",
+      "type": "info",
+      "message": "Found 1 potentially useful links:"
+    },
+    {
+      "timestamp": "2025-08-03T14:08:58.739Z",
+      "type": "info",
+      "message": "  1. \"LOG IN\" -> javascript:void(0);"
+    },
+    {
+      "timestamp": "2025-08-03T14:08:59.412Z",
+      "type": "info",
+      "message": "Screenshot saved: /home/darlinghurstlinux/projects/miniprojects/router_logs/screenshot-interface-explored-1754230138739.png"
+    }
+  ],
+  "errors": [
+    {
+      "timestamp": "2025-08-03T14:08:58.732Z",
+      "type": "error",
+      "message": "Could not find username or password fields"
+    }
+  ],
+  "screenshots": [
+    "/home/darlinghurstlinux/projects/miniprojects/router_logs/screenshot-initial-1754230134210.png",
+    "/home/darlinghurstlinux/projects/miniprojects/router_logs/screenshot-login-form-1754230137624.png",
+    "/home/darlinghurstlinux/projects/miniprojects/router_logs/screenshot-interface-explored-1754230138739.png"
+  ],
+  "loginFields": [
+    {
+      "type": "input",
+      "inputType": "password",
+      "name": "",
+      "id": "",
+      "placeholder": "",
+      "className": "text-text password-text password-hidden  ",
+      "index": 0
+    },
+    {
+      "type": "input",
+      "inputType": "text",
+      "name": "",
+      "id": "",
+      "placeholder": "",
+      "className": "text-text password-text password-visible hidden ",
+      "index": 1
+    }
+  ],
+  "pageInfo": {
+    "status": 200,
+    "url": "http://192.168.1.1/webpages/index.html",
+    "title": "login",
+    "currentUrl": "http://192.168.1.1/webpages/index.html"
+  },
+  "interfaceLinks": [
+    {
+      "text": "LOG IN",
+      "href": "javascript:void(0);",
+      "onclick": "",
+      "tagName": "A",
+      "index": 0
+    }
+  ]
+}

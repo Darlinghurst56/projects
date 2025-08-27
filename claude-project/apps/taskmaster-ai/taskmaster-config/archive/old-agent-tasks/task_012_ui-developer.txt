@@ -1,0 +1,20 @@
+# Task ID: 12
+# Title: Test Task Creation with Format Validation and Agent Tagging
+# Status: pending
+# Dependencies: 11, 10, 9
+# Priority: medium
+# Description: Create a test task to verify the task creation endpoint's format validation, including proper agent tagging. This ensures the system correctly handles task creation requests with valid data structures.
+
+PROJECT: House AI - Family Home Page | SUBPROJECT: Quality Assurance System
+# Details:
+1.  **Define Test Case:** Create a JSON payload representing a new task. This payload should include fields for 'title', 'description', 'details', 'testStrategy', and 'dependencies'. Ensure the 'dependencies' field contains an array of valid task IDs.
+2.  **Agent Tagging:** Include agent-specific tags within the 'description' and 'details' fields. These tags should follow a predefined format (e.g., @agentName) to simulate real-world task assignments.
+3.  **Send Request:** Use a testing framework (e.g., Jest, Mocha) to send a POST request to the task creation endpoint with the crafted JSON payload.
+4.  **Validate Response:** Verify that the endpoint returns a success response (e.g., HTTP 201 Created) and that the response body contains the newly created task with the correct data, including the agent tags.
+5.  **Error Handling (Negative Test):** Create a second test case with an invalid JSON payload (e.g., missing required fields, incorrect data types). Verify that the endpoint returns an appropriate error response (e.g., HTTP 400 Bad Request) with a descriptive error message indicating the validation failure.
+
+# Test Strategy:
+1.  **Positive Test:** Execute the test case with the valid JSON payload. Assert that the task is created successfully and that all fields, including agent tags, are correctly stored in the system.
+2.  **Negative Test:** Execute the test case with the invalid JSON payload. Assert that the endpoint returns an error response and that the error message accurately describes the validation issue.
+3.  **Database Verification:** After the positive test, query the database to confirm that the task has been created with the correct data and agent tags.
+4.  **Logging Verification:** Check the application logs to ensure that the task creation process is properly logged, including the request payload and the response status.

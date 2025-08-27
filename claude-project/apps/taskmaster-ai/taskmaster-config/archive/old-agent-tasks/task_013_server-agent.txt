@@ -1,0 +1,69 @@
+# Task ID: 13
+# Title: Investigate and Fix Agent Task Widget TaskMaster Integration
+# Status: done
+# Dependencies: 11, 12
+# Priority: medium
+# Description: Debug and fix the task assignment widget to display real TaskMaster data instead of placeholder content. The widget should show all 63 tasks from 5 contexts retrieved from the TaskMaster API integration.
+
+PROJECT: House AI - Family Home Page | SUBPROJECT: Dashboard UI System
+# Details:
+1. Debug TaskMaster API Integration:
+   - Inspect network requests to verify API calls to TaskMaster are being made correctly
+   - Check browser console for any JavaScript errors related to data fetching
+   - Verify the API endpoint URLs and authentication are properly configured
+   - Examine the response data structure from TaskMaster API
+
+2. Analyze Widget Data Loading:
+   - Review task-assignment.js to understand current data loading implementation
+   - Check if the widget is properly subscribing to TaskMaster data events
+   - Verify data transformation logic between API response and widget display format
+   - Ensure proper error handling for failed API requests
+
+3. Fix Data Display Issues:
+   - Update the widget's render methods to use real TaskMaster data
+   - Replace placeholder content with dynamic data binding
+   - Implement proper data mapping for all 5 contexts (frontend-architect, ui-developer, integration-specialist, qa-specialist, server-agent)
+   - Ensure all 63 tasks are properly displayed with their status, priority, and assignment information
+
+4. Implement Proper State Management:
+   - Ensure widget state updates when TaskMaster data changes
+   - Add loading states while fetching data
+   - Implement error states for failed data loads
+   - Add refresh functionality to manually reload TaskMaster data
+
+5. Test Integration:
+   - Verify widget displays correct task counts for each context
+   - Ensure task filtering by context works properly
+   - Test task assignment functionality with real TaskMaster data
+   - Validate that task status updates are reflected in the widget
+
+# Test Strategy:
+1. API Integration Testing:
+   - Open browser developer tools and monitor network tab
+   - Verify TaskMaster API calls return 200 status with valid JSON data
+   - Confirm the response contains all 63 tasks across 5 contexts
+   - Check for any CORS issues or authentication failures
+
+2. Widget Functionality Testing:
+   - Load the dashboard and navigate to the task assignment widget
+   - Verify the widget displays real task titles, not placeholder text
+   - Confirm task counts match the actual TaskMaster data (63 total tasks)
+   - Test filtering by each of the 5 contexts
+
+3. Data Accuracy Testing:
+   - Cross-reference displayed tasks with TaskMaster source data
+   - Verify task properties (status, priority, dependencies) are correctly shown
+   - Test that clicking on tasks shows accurate detailed information
+   - Ensure task assignment operations update the TaskMaster backend
+
+4. Error Handling Testing:
+   - Temporarily disable network to test offline behavior
+   - Verify appropriate error messages are displayed
+   - Test the widget's recovery when connection is restored
+   - Ensure no JavaScript errors appear in the console
+
+5. Performance Testing:
+   - Measure widget load time with full TaskMaster data
+   - Verify smooth scrolling and interaction with 63 tasks
+   - Test memory usage doesn't increase over time
+   - Ensure widget remains responsive during data updates

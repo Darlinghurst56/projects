@@ -1,0 +1,85 @@
+{
+  "timestamp": "2025-07-13T08:06:02.862Z",
+  "system_state": {
+    "api_server": {
+      "status": "running",
+      "port": 3001,
+      "health_endpoint": "http://localhost:3001/api/health",
+      "dashboard_url": "http://localhost:3001/agent-dashboard.html",
+      "start_command": "cd dashboard && node simple-api-server.js &"
+    },
+    "taskmaster_cli": {
+      "current_workspace": "qa-specialist",
+      "executable_path": "/root/.nvm/versions/node/v22.16.0/bin/task-master",
+      "total_workspaces": 11,
+      "active_tasks": {
+        "total": 79,
+        "completed": 13,
+        "in_progress": 7,
+        "pending": 2
+      }
+    },
+    "agents": {
+      "total_registered": 6,
+      "recently_active": [
+        {
+          "id": "family-dashboard-qa-001",
+          "role": "qa-specialist",
+          "last_active": "2025-07-12T20:00:45.263Z",
+          "tasks_completed": 1
+        },
+        {
+          "id": "ux-specialist-background-001",
+          "role": "ui-developer",
+          "last_active": "2025-07-12T20:07:16.897Z",
+          "tasks_completed": 0
+        },
+        {
+          "id": "integration-specialist-background-001",
+          "role": "integration-specialist",
+          "last_active": "2025-07-12T20:14:16.433Z",
+          "tasks_completed": 0
+        }
+      ]
+    },
+    "fixes_applied": {
+      "express_version": "4.18.2",
+      "paths_fixed": [
+        "/dashboard/simple-api-server.js:2519",
+        "/dashboard/simple-api-server.js:2824",
+        "/dashboard/simple-api-server.js:3162"
+      ],
+      "websocket_error_handling": true,
+      "validation_scripts": {
+        "original": ".taskmaster/scripts/validate-post-work.sh",
+        "simplified": ".taskmaster/scripts/validate-post-work-simple.sh"
+      },
+      "task_update_command": "simplified_logging"
+    },
+    "pending_tasks": [
+      {
+        "id": "16",
+        "title": "MVP Priority 3: Essential Task View for Home User",
+        "workspace": "qa-specialist"
+      },
+      {
+        "id": "17",
+        "title": "Autonomous Agent Self-Management System",
+        "workspace": "qa-specialist"
+      },
+      {
+        "id": "22",
+        "title": "Generate complete component library documentation",
+        "status": "in-progress",
+        "workspace": "qa-specialist"
+      }
+    ]
+  },
+  "resume_instructions": {
+    "step1": "cd /mnt/d/Projects/claude-project",
+    "step2": "cd dashboard && node simple-api-server.js &",
+    "step3": "cd .. && task-master use-tag qa-specialist",
+    "step4": "Launch agents: timeout 180 node family-dashboard-qa-agent.js &",
+    "verify": "curl http://localhost:3001/api/health"
+  }
+}

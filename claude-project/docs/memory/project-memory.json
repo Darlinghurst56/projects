@@ -1,0 +1,33 @@
+{
+    "mcp_servers":  {
+                        "browser":  {
+                                        "command":  "npx @browsermcp/mcp@latest",
+                                        "status":  "configured"
+                                    },
+                        "sequential":  {
+                                           "command":  "npx @modelcontextprotocol/server-sequential-thinking",
+                                           "status":  "configured"
+                                       },
+                        "memory":  {
+                                       "command":  "npx @modelcontextprotocol/server-memory",
+                                       "status":  "configured"
+                                   },
+                        "filesystem":  {
+                                           "command":  "npx @modelcontextprotocol/server-filesystem",
+                                           "status":  "configured"
+                                       }
+                    },
+    "projects":  {
+                     "sample-project":  {
+                                            "last_accessed":  "2025-06-25",
+                                            "path":  "D:\\Projects\\claude-project\\projects\\sample-project",
+                                            "description":  "A sample project to demonstrate Claude\u0027s memory and project management capabilities",
+                                            "name":  "Sample Project",
+                                            "key_files":  [
+                                                              "src/index.js",
+                                                              "docs/README.md",
+                                                              "project.json"
+                                                          ]
+                                        }
+                 }
+}

@@ -1,0 +1,40 @@
+{
+  "timestamp": "2025-07-05T09:39:26.918Z",
+  "tests": [
+    {
+      "name": "Dashboard HTML Structure",
+      "passed": 7,
+      "total": 7,
+      "score": "100.0%"
+    },
+    {
+      "name": "DNS Info Widget Files",
+      "passed": 3,
+      "total": 3,
+      "score": "100.0%"
+    },
+    {
+      "name": "API Integration Analysis",
+      "passed": 8,
+      "total": 10,
+      "score": "80.0%"
+    },
+    {
+      "name": "Configuration Files",
+      "passed": 2,
+      "total": 2,
+      "score": "100.0%"
+    }
+  ],
+  "issues": [
+    "Server not accessible - make sure development server is running"
+  ],
+  "recommendations": [
+    "Fix the identified issues before proceeding with manual testing",
+    "Run the development server with `npm run dev` if not already running",
+    "Test the dashboard manually in a browser at http://localhost:3000/dashboard.html",
+    "Check browser console for JavaScript errors",
+    "Verify that API calls are being made to Control D endpoints",
+    "Test time range and device filter functionality manually"
+  ]
+}

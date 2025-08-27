@@ -1,0 +1,413 @@
+/**
+ * Task Assignment Widget Styles
+ * Home Vibe Coder Standards - Drag & Drop Task Scheduling
+ */
+
+.task-assignment-widget {
+    background: var(--card-background);
+    border-radius: 12px;
+    padding: 20px;
+    border: 1px solid var(--border-color);
+    min-height: 500px;
+    display: flex;
+    flex-direction: column;
+}
+
+.task-assignment-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid var(--accent-color);
+}
+
+.task-assignment-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.task-assignment-title::before {
+    content: "📋";
+    font-size: 1.2em;
+}
+
+.assignment-controls {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.filter-select {
+    padding: 6px 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    background: var(--widget-background);
+    color: var(--text-primary);
+    font-size: 0.9rem;
+}
+
+.auto-assign-btn {
+    padding: 8px 16px;
+    background: var(--accent-color);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background 0.2s ease;
+}
+
+.auto-assign-btn:hover {
+    background: var(--accent-dark);
+}
+
+.assignment-workspace {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 20px;
+    flex: 1;
+    min-height: 400px;
+}
+
+/* Task Queue Section */
+.task-queue {
+    background: var(--widget-background);
+    border: 1px solid var(--border-light);
+    border-radius: 8px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+}
+
+.task-queue-header {
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 16px;
+    display: flex;
+    justify-content: between;
+    align-items: center;
+}
+
+.task-queue-title {
+    margin: 0;
+    font-size: 1.1rem;
+}
+
+.task-count {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    background: var(--accent-light);
+    padding: 2px 8px;
+    border-radius: 12px;
+    margin-left: auto;
+}
+
+.tasks-list {
+    flex: 1;
+    max-height: 350px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.task-item {
+    background: var(--card-background);
+    border: 1px solid var(--border-light);
+    border-radius: 6px;
+    padding: 12px;
+    cursor: grab;
+    transition: all 0.2s ease;
+    user-select: none;
+}
+
+.task-item:hover {
+    border-color: var(--accent-color);
+    transform: translateX(2px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.task-item.dragging {
+    opacity: 0.7;
+    transform: rotate(2deg);
+    cursor: grabbing;
+    z-index: 1000;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+}
+
+.task-item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 8px;
+}
+
+.task-title {
+    font-weight: 500;
+    color: var(--text-primary);
+    font-size: 0.95rem;
+    margin: 0;
+    line-height: 1.3;
+}
+
+.task-priority {
+    font-size: 0.75rem;
+    padding: 2px 6px;
+    border-radius: 10px;
+    font-weight: 500;
+    text-transform: uppercase;
+}
+
+.task-priority.high {
+    background: rgba(239, 68, 68, 0.1);
+    color: var(--error-color);
+}
+
+.task-priority.medium {
+    background: rgba(245, 158, 11, 0.1);
+    color: var(--warning-color);
+}
+
+.task-priority.low {
+    background: rgba(16, 185, 129, 0.1);
+    color: var(--success-color);
+}
+
+.task-description {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    margin: 4px 0 8px 0;
+    line-height: 1.4;
+}
+
+.task-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+}
+
+.task-id {
+    font-family: monospace;
+    background: var(--accent-light);
+    padding: 1px 4px;
+    border-radius: 3px;
+}
+
+.task-capabilities {
+    display: flex;
+    gap: 4px;
+}
+
+.capability-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent-color);
+}
+
+/* Agent Assignment Columns */
+.agent-columns {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 16px;
+}
+
+.agent-column {
+    background: var(--widget-background);
+    border: 2px dashed var(--border-light);
+    border-radius: 8px;
+    padding: 16px;
+    min-height: 350px;
+    transition: all 0.2s ease;
+}
+
+.agent-column.drag-over {
+    border-color: var(--accent-color);
+    background: linear-gradient(135deg, var(--widget-background) 0%, rgba(59, 130, 246, 0.05) 100%);
+    border-style: solid;
+}
+
+.agent-column-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border-light);
+}
+
+.agent-name {
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.agent-status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+}
+
+.agent-status-dot.active {
+    background: var(--success-color);
+}
+
+.agent-status-dot.idle {
+    background: var(--warning-color);
+}
+
+.agent-status-dot.offline {
+    background: var(--error-color);
+}
+
+.agent-workload {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    background: var(--accent-light);
+    padding: 2px 8px;
+    border-radius: 12px;
+}
+
+.assigned-tasks {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-height: 100px;
+}
+
+.assigned-task {
+    background: var(--card-background);
+    border: 1px solid var(--border-light);
+    border-radius: 6px;
+    padding: 10px;
+    border-left: 3px solid var(--accent-color);
+}
+
+.assigned-task.completed {
+    opacity: 0.6;
+    border-left-color: var(--success-color);
+}
+
+.assigned-task.in-progress {
+    border-left-color: var(--warning-color);
+    background: linear-gradient(135deg, var(--card-background) 0%, rgba(245, 158, 11, 0.05) 100%);
+}
+
+.drop-zone-message {
+    text-align: center;
+    color: var(--text-secondary);
+    font-style: italic;
+    padding: 40px 20px;
+    border: 2px dashed var(--border-light);
+    border-radius: 6px;
+    margin: 20px 0;
+}
+
+.drop-zone-message.active {
+    border-color: var(--accent-color);
+    color: var(--accent-color);
+    background: rgba(59, 130, 246, 0.05);
+}
+
+.assignment-summary {
+    margin-top: 20px;
+    padding: 16px;
+    background: var(--widget-background);
+    border-radius: 8px;
+    border: 1px solid var(--border-light);
+}
+
+.summary-title {
+    font-weight: 600;
+    margin: 0 0 12px 0;
+    color: var(--text-primary);
+}
+
+.summary-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 12px;
+}
+
+.summary-stat {
+    text-align: center;
+}
+
+.stat-value {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--accent-color);
+    display: block;
+}
+
+.stat-label {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    margin-top: 2px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+    .assignment-workspace {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+    
+    .agent-columns {
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 12px;
+    }
+}
+
+@media (max-width: 768px) {
+    .assignment-controls {
+        flex-direction: column;
+        gap: 8px;
+        align-items: stretch;
+    }
+    
+    .agent-columns {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Drag and drop animations */
+@keyframes taskDrop {
+    from {
+        transform: scale(1.05);
+        opacity: 0.8;
+    }
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.task-item.dropped {
+    animation: taskDrop 0.3s ease-out;
+}
+
+.empty-queue-message {
+    text-align: center;
+    color: var(--text-secondary);
+    font-style: italic;
+    padding: 40px 20px;
+}
+
+.empty-queue-message::before {
+    content: "✅";
+    display: block;
+    font-size: 2rem;
+    margin-bottom: 10px;
+}

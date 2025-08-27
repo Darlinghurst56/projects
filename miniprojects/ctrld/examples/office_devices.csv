@@ -1,0 +1,9 @@
+192.168.10.10,aa:bb:cc:dd:ee:10,admin-workstation
+192.168.10.11,aa:bb:cc:dd:ee:11,admin-server
+192.168.10.20,11:22:33:44:55:10,employee-laptop-1
+192.168.10.21,11:22:33:44:55:11,employee-laptop-2
+192.168.10.22,11:22:33:44:55:12,employee-desktop
+192.168.10.50,66:77:88:99:aa:10,guest-wifi-access
+192.168.10.100,99:88:77:66:55:10,office-printer
+192.168.10.101,99:88:77:66:55:11,conference-room-tv
+192.168.10.102,99:88:77:66:55:12,door-access-control

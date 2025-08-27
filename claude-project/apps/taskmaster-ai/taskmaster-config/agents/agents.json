@@ -1,0 +1,75 @@
+[
+  {
+    "id": "qa-specialist",
+    "capabilities": [
+      "testing",
+      "validation",
+      "quality-assurance",
+      "web-testing"
+    ],
+    "status": "available",
+    "registeredAt": "2025-07-18T14:25:22.149Z",
+    "lastUpdated": "2025-07-23T10:15:11.950Z",
+    "assignedTasks": [
+      "16"
+    ]
+  },
+  {
+    "id": "backend-agent",
+    "capabilities": [
+      "nodejs",
+      "api",
+      "database",
+      "server-logic",
+      "web-research"
+    ],
+    "status": "available",
+    "registeredAt": "2025-07-18T14:25:22.150Z",
+    "lastUpdated": "2025-07-23T10:15:11.907Z",
+    "assignedTasks": []
+  },
+  {
+    "id": "frontend-agent",
+    "capabilities": [
+      "react",
+      "typescript",
+      "css",
+      "ui-components",
+      "web-research"
+    ],
+    "status": "available",
+    "registeredAt": "2025-07-18T14:25:22.150Z",
+    "lastUpdated": "2025-07-23T10:15:11.894Z",
+    "assignedTasks": [
+      "5"
+    ]
+  },
+  {
+    "id": "devops-agent",
+    "capabilities": [
+      "deployment",
+      "docker",
+      "ci-cd",
+      "server-management"
+    ],
+    "status": "available",
+    "registeredAt": "2025-07-18T14:25:22.150Z",
+    "lastUpdated": "2025-07-23T10:15:11.937Z",
+    "assignedTasks": [
+      "13"
+    ]
+  },
+  {
+    "id": "orchestrator-agent",
+    "capabilities": [
+      "coordination",
+      "developer-interface",
+      "web-research",
+      "file-creation"
+    ],
+    "status": "available",
+    "registeredAt": "2025-07-18T14:25:22.150Z",
+    "lastUpdated": "2025-07-23T10:15:11.882Z",
+    "assignedTasks": []
+  }
+]

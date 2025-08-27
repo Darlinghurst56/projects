@@ -1,0 +1,38 @@
+{
+  "id": "1",
+  "title": "Implement user authentication",
+  "description": "Add JWT-based authentication system",
+  "status": "pending",
+  "priority": "high",
+  "agentRole": "backend-agent",
+  "createdAt": "2024-01-01T00:00:00.000Z",
+  "updatedAt": "2024-01-01T00:00:00.000Z",
+  "subtasks": [
+    {
+      "id": "1.1",
+      "title": "Design JWT token structure",
+      "status": "completed",
+      "assignedTo": "backend-1"
+    },
+    {
+      "id": "1.2", 
+      "title": "Implement login endpoint",
+      "status": "in-progress",
+      "assignedTo": "backend-1"
+    },
+    {
+      "id": "1.3",
+      "title": "Add password hashing",
+      "status": "pending",
+      "assignedTo": null
+    }
+  ],
+  "dependencies": [],
+  "testStrategy": "Unit tests for auth middleware, integration tests for login flow",
+  "acceptanceCriteria": [
+    "Users can login with email/password",
+    "JWT tokens are issued on successful login",
+    "Protected routes require valid JWT",
+    "Tokens expire after 24 hours"
+  ]
+}

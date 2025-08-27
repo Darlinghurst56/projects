@@ -1,0 +1,32 @@
+Control D Device Configuration Report
+==================================================
+Resolver ID: 644415lhr77v
+Control D Endpoint: https://dns.controld.com/644415lhr77v
+Generated: 2025-08-03 13:53:47
+
+Total Devices Configured: 3
+
+Device Group: Admin Devices
+Description: Administrative devices with full access
+Device Count: 1
+DNS Profile: secure
+
+Devices:
+  - 192.168.1.10 (MAC: aa:bb:cc:dd:ee:01) - admin-laptop
+
+Device Group: Family Devices
+Description: Family devices with content filtering
+Device Count: 1
+DNS Profile: family_safe
+
+Devices:
+  - 192.168.1.20 (MAC: 11:22:33:44:55:01) - family-tablet
+
+Device Group: IoT Devices
+Description: Internet of Things devices
+Device Count: 1
+DNS Profile: iot_secure
+
+Devices:
+  - 192.168.1.100 (MAC: 99:88:77:66:55:01) - smart-tv
+

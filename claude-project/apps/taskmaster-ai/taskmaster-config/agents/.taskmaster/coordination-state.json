@@ -1,0 +1,15 @@
+{
+  "activeAgents": {},
+  "taskAssignments": {},
+  "handoffQueue": [],
+  "roleHistory": {},
+  "priorityDecisions": [],
+  "coordinationMetrics": {
+    "totalHandoffs": 0,
+    "successfulHandoffs": 0,
+    "priorityOverrides": 0,
+    "conflictsResolved": 0,
+    "handoffSuccessRate": "0%"
+  },
+  "lastSync": "2025-07-14T07:12:58.945Z"
+}

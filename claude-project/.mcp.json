@@ -1,0 +1,84 @@
+{
+  "mcpServers": {
+    "task-master-ai": {
+      "command": "npx",
+      "args": ["-y", "--package=task-master-ai", "task-master-ai"],
+      "env": {
+        "GOOGLE_API_KEY": "${GOOGLE_API_KEY}"
+      }
+    },
+    "filesystem": {
+      "command": "npx",
+      "args": ["@modelcontextprotocol/server-filesystem", "."]
+    },
+    "memory": {
+      "command": "npx",
+      "args": ["@modelcontextprotocol/server-memory"]
+    },
+    "sequential-thinking": {
+      "command": "npx",
+      "args": ["@modelcontextprotocol/server-sequential-thinking"]
+    },
+    "github": {
+      "command": "npx",
+      "args": ["@modelcontextprotocol/server-github"],
+      "env": {
+        "GITHUB_TOKEN": "${GITHUB_TOKEN}"
+      }
+    },
+    "context7": {
+      "command": "npx",
+      "args": ["-y", "@upstash/context7-mcp@latest"]
+    },
+    "vite": {
+      "command": "npx",
+      "args": ["-y", "@vite/mcp-server"],
+      "env": {
+        "NODE_ENV": "development"
+      }
+    },
+    "tailwindcss": {
+      "command": "node",
+      "args": ["./dashboard/build.js"],
+      "env": {
+        "NODE_ENV": "development"
+      }
+    },
+    "shadcn-ui": {
+      "command": "npx", 
+      "args": ["-y", "@shadcn/ui-mcp-server"]
+    },
+    "cron": {
+      "command": "npx",
+      "args": ["-y", "@cron/mcp-server"]
+    },
+    "fetch": {
+      "command": "node",
+      "args": ["./mcp-servers/fetch-mcp/dist/index.js"]
+    },
+    "playwright": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-playwright"]
+    },
+    "docker": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-docker"]
+    },
+    "eslint": {
+      "command": "npx",
+      "args": ["-y", "@eslint/mcp@latest"]
+    },
+    "accessibility-testing-mcp": {
+      "command": "node",
+      "args": ["./mcp-servers/accessibility-testing-mcp/index.js"]
+    },
+    "user-testing-mcp": {
+      "command": "node",
+      "args": ["./mcp-servers/user-testing-mcp/index.js"]
+    },
+    "design-system-mcp": {
+      "command": "node",
+      "args": ["./mcp-servers/design-system-mcp/index.js"]
+    }
+  }
+}

@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TaskMaster AI - Home</title>
+    <link rel="stylesheet" href="/app/web/css/common.css">
+    <style>
+        .hero-section {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: white;
+            padding: 1.5rem 0;
+            margin: -2rem -2rem 1rem -2rem;
+        }
+
+        .hero-content {
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .hero-title {
+            font-size: 1.75rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .hero-subtitle {
+            font-size: 1rem;
+            opacity: 0.9;
+            margin-bottom: 0;
+        }
+
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .action-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: var(--card-shadow);
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .action-card:hover {
+            box-shadow: var(--card-shadow-hover);
+            transform: translateY(-2px);
+        }
+
+        .action-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .action-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .action-description {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            line-height: 1.5;
+        }
+
+        .system-overview {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .overview-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: var(--card-shadow);
+            border: 1px solid var(--border-color);
+        }
+
+        .overview-title {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .metric {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .metric:last-child {
+            border-bottom: none;
+        }
+
+        .metric-label {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+
+        .metric-value {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .process-flow {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 2rem 0;
+            box-shadow: var(--card-shadow);
+            border: 1px solid var(--border-color);
+        }
+
+        .flow-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            color: var(--text-primary);
+        }
+
+        .flow-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .flow-step {
+            text-align: center;
+            padding: 1rem;
+            position: relative;
+        }
+
+        .step-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            background: var(--primary-color);
+            color: white;
+            border-radius: 50%;
+            font-weight: 600;
+            font-size: 0.875rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .step-title {
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+        }
+
+        .step-description {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+    </style>
+</head>
+<body>
+    <main class="tm-main">
+        <div class="tm-container">
+            <div class="hero-section">
+                <div class="hero-content">
+                    <h1 class="hero-title">🤖 TaskMaster AI</h1>
+                    <p class="hero-subtitle">Developer Task Coordination</p>
+                </div>
+            </div>
+
+            <div class="system-overview">
+                <div class="overview-card">
+                    <h3 class="overview-title">📊 System Status</h3>
+                    <div class="metric">
+                        <span class="metric-label">API Server</span>
+                        <span class="metric-value" id="api-status">Checking...</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">TaskMaster CLI</span>
+                        <span class="metric-value" id="cli-status">Checking...</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">Uptime</span>
+                        <span class="metric-value" id="uptime">Checking...</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">Last Updated</span>
+                        <span class="metric-value" id="last-updated">Now</span>
+                    </div>
+                    <div style="margin-top: 1rem; text-align: center;">
+                        <button onclick="loadSystemData()" class="tm-btn tm-btn-outline tm-btn-small">Refresh Status</button>
+                    </div>
+                </div>
+
+                <div class="overview-card">
+                    <h3 class="overview-title">🤖 Agent System</h3>
+                    <div class="metric">
+                        <span class="metric-label">Total Agents</span>
+                        <span class="metric-value" id="total-agents">Loading...</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">Active Agents</span>
+                        <span class="metric-value" id="active-agents">Loading...</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">Agent Types</span>
+                        <span class="metric-value">5</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">Coordination</span>
+                        <span class="metric-value" id="coordination-status">Loading...</span>
+                    </div>
+                    <div style="margin-top: 1rem; text-align: center;">
+                        <a href="/agent-management" class="tm-btn tm-btn-secondary tm-btn-small">Manage Agents</a>
+                    </div>
+                </div>
+
+                <div class="overview-card">
+                    <h3 class="overview-title">📋 Task Overview</h3>
+                    <div class="metric">
+                        <span class="metric-label">Total Tasks</span>
+                        <span class="metric-value" id="total-tasks">Loading...</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">Completed</span>
+                        <span class="metric-value" id="completed-tasks">Loading...</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">In Progress</span>
+                        <span class="metric-value" id="progress-tasks">Loading...</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">Pending</span>
+                        <span class="metric-value" id="pending-tasks">Loading...</span>
+                    </div>
+                    <div style="margin-top: 1rem; text-align: center;">
+                        <a href="/tasks" class="tm-btn tm-btn-primary tm-btn-small">Review Tasks</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="/app/web/components/navigation.js"></script>
+    <script>
+        // Initialize dashboard data
+        async function loadSystemData() {
+            try {
+                // Load API health
+                const health = await fetch('/api/health').then(r => r.json());
+                document.getElementById('api-status').textContent = health.status === 'healthy' ? '✅ Online' : '⚠️ Issues';
+                document.getElementById('cli-status').textContent = health.taskmaster === 'connected' ? '✅ Connected' : '❌ Disconnected';
+                
+                const uptime = Math.floor(health.uptime / 60);
+                document.getElementById('uptime').textContent = `${uptime} minutes`;
+
+            } catch (error) {
+                document.getElementById('api-status').textContent = '❌ Offline';
+                document.getElementById('cli-status').textContent = '❌ Offline';
+            }
+
+            try {
+                // Load agent data
+                const agents = await fetch('/api/v2/agents').then(r => r.json());
+                if (agents && agents.agents) {
+                    document.getElementById('total-agents').textContent = agents.agents.length;
+                    const active = agents.agents.filter(a => a.status === 'active').length;
+                    document.getElementById('active-agents').textContent = active;
+                    document.getElementById('coordination-status').textContent = active > 0 ? '✅ Active' : '⚠️ Idle';
+                }
+            } catch (error) {
+                document.getElementById('total-agents').textContent = '❌ Error';
+                document.getElementById('active-agents').textContent = '❌ Error';
+                document.getElementById('coordination-status').textContent = '❌ Error';
+            }
+
+            try {
+                // Load task data from API v2
+                const workspace = await fetch('/api/v2/tasks').then(r => r.json());
+                if (workspace && workspace.tasks) {
+                    const tasks = workspace.tasks;
+                    document.getElementById('total-tasks').textContent = tasks.length;
+                    
+                    const completed = tasks.filter(t => t.status === 'done').length;
+                    const progress = tasks.filter(t => t.status === 'in-progress').length;
+                    const pending = tasks.filter(t => t.status === 'pending').length;
+                    
+                    document.getElementById('completed-tasks').textContent = completed;
+                    document.getElementById('progress-tasks').textContent = progress;
+                    document.getElementById('pending-tasks').textContent = pending;
+                }
+            } catch (error) {
+                document.getElementById('total-tasks').textContent = '❌ Error';
+                document.getElementById('completed-tasks').textContent = '❌ Error';
+                document.getElementById('progress-tasks').textContent = '❌ Error';
+                document.getElementById('pending-tasks').textContent = '❌ Error';
+            }
+
+            // Update timestamp
+            document.getElementById('last-updated').textContent = new Date().toLocaleTimeString();
+        }
+
+        // Load data on page load
+        loadSystemData();
+
+        // Refresh data every 30 seconds
+        setInterval(loadSystemData, 30000);
+    </script>
+</body>
+</html>

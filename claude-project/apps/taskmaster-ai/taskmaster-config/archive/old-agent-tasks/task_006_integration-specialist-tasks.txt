@@ -1,0 +1,31 @@
+# Task ID: 6
+# Title: Install and configure Cron/Scheduler MCP server for complex task scheduling and automated widget updates
+# Status: done
+# Dependencies: 1, 2, 3
+# Priority: high
+# Description: Set up task scheduling capabilities using node-cron for automated dashboard widget updates and background job management, with optional custom MCP server development for Claude Code integration.
+# Details:
+1. Install node-cron package for programmatic task scheduling
+2. Create scheduling service module for dashboard widget automation
+3. Implement weather widget refresh scheduling (every 5 minutes)
+4. Set up daily session cleanup scheduling
+5. Create job management utilities (list active jobs, cancel, run immediately)
+6. Implement error handling and logging for scheduled tasks
+7. Set up notification system for failed scheduled jobs
+8. Create dashboard interface for viewing and managing scheduled tasks
+9. Implement backup and cleanup schedules for data maintenance
+10. Optional: Develop custom MCP server for Claude Code integration with scheduling capabilities
+11. Test scheduling with various cron patterns and validate proper execution timing
+
+# Test Strategy:
+1. Verify node-cron installation and basic functionality
+2. Test weather widget refresh scheduling with 5-minute intervals
+3. Test daily session cleanup execution
+4. Validate job cancellation and immediate execution functionality
+5. Test error handling for invalid cron patterns
+6. Verify widget refresh scheduling with actual API calls
+7. Test job persistence and management across application restarts
+8. Test concurrent job execution and resource management
+9. Validate logging and notification systems for job failures
+10. Confirm dashboard interface displays scheduled tasks correctly
+11. If implemented: Test custom MCP server integration with Claude Code

@@ -1,0 +1,21 @@
+# Task ID: 31
+# Title: Update Frontend Agent Skills and Documentation for MVP Dashboard
+# Status: done
+# Dependencies: 1, 29, 30
+# Priority: high
+# Description: Update the frontend agent's skills and documentation to ensure it is properly configured with the right tools (Puppeteer, ESLint, Tailwind CSS, Shadcn/UI) and that its documentation is accurate and up-to-date for the MVP dashboard.
+# Details:
+1. **Tool Configuration**: Configure the frontend agent with the necessary tools, including Puppeteer for UI interaction, ESLint for code quality, Tailwind CSS for styling, and Shadcn/UI for UI components.
+2. **Documentation Update**: Update the agent's documentation to reflect the new tools and configurations. Ensure the documentation clearly describes how to use each tool and how they contribute to the agent's functionality.
+3. **Coding Standards**: Review and update the agent's coding standards to align with best practices for using Puppeteer, ESLint, Tailwind CSS, and Shadcn/UI. Document any specific coding conventions or guidelines that developers should follow.
+4. **Example Usage**: Provide example code snippets and usage scenarios to demonstrate how to use the agent's features and tools effectively. Ensure the examples are clear, concise, and easy to understand.
+5. **Accessibility Guidelines**: Incorporate accessibility guidelines into the agent's documentation and coding standards. Provide guidance on how to develop accessible UI components and ensure compliance with WCAG guidelines.
+6. **Integration with CI/CD**: Document how the agent is integrated into the CI/CD pipeline and how to run tests automatically on every code commit. Explain how to interpret test results and address any issues that are identified.
+
+# Test Strategy:
+1. **Tool Verification**: Verify that the frontend agent is correctly configured with Puppeteer, ESLint, Tailwind CSS, and Shadcn/UI. Confirm that each tool is functioning as expected and that there are no configuration errors.
+2. **Documentation Review**: Manually review the agent's documentation to ensure it is accurate, complete, and up-to-date. Verify that the documentation clearly describes how to use each tool and how they contribute to the agent's functionality.
+3. **Code Style Validation**: Use ESLint to validate the agent's code style and ensure compliance with coding standards. Review ESLint reports to identify and fix any code style issues.
+4. **Accessibility Audit**: Conduct a manual accessibility audit of the agent's UI components to ensure compliance with WCAG guidelines. Address any accessibility issues identified during the audit.
+5. **Example Validation**: Run the example code snippets and usage scenarios to verify that they are working correctly and that they demonstrate the agent's features effectively.
+6. **CI/CD Verification**: Verify that the agent is correctly integrated into the CI/CD pipeline and that tests are automatically run on every code commit. Confirm that the pipeline reports test results and fails builds if any tests fail.

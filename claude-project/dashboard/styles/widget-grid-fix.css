@@ -1,0 +1,337 @@
+/**
+ * Widget Grid Layout Fix - Task 3
+ * Comprehensive solution for dashboard widget width inconsistencies
+ * Implements dynamic width calculations and consistent responsive design
+ */
+
+/* === CORE GRID SYSTEM === */
+
+/* Override existing grid definitions with consistent approach */
+.widget-grid {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fit, minmax(min(350px, 100%), 1fr)) !important;
+    grid-auto-rows: minmax(280px, auto) !important;
+    gap: clamp(1rem, 2.5vw, 2rem) !important;
+    padding: clamp(1rem, 2.5vw, 2rem) !important;
+    max-width: 1400px !important;
+    margin: 0 auto !important;
+    width: 100% !important;
+    min-height: calc(100vh - 120px) !important;
+}
+
+/* Fixed layout enhancement for specific widget positioning */
+.widget-grid.fixed-layout {
+    grid-template-columns: repeat(auto-fit, minmax(min(400px, 100%), 1fr)) !important;
+    grid-template-areas: none !important; /* Remove rigid areas for flexibility */
+}
+
+/* === WIDGET SIZING AND CONSISTENCY === */
+
+/* Enhanced widget base with consistent sizing */
+.widget {
+    display: flex !important;
+    flex-direction: column !important;
+    min-height: 280px !important;
+    max-height: min(600px, 80vh) !important;
+    width: 100% !important;
+    overflow: hidden !important;
+    border-radius: var(--radius-lg) !important;
+    box-shadow: var(--shadow) !important;
+    transition: all var(--transition) !important;
+}
+
+/* Widget content with proper overflow handling */
+.widget-content {
+    flex: 1 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    padding: var(--spacing-md) !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    gap: var(--spacing-sm) !important;
+    min-height: 0 !important; /* Allow flex shrinking */
+}
+
+/* === TEXT OVERFLOW AND CONTENT HANDLING === */
+
+/* Prevent text overflow in widget titles */
+.widget-title {
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+    max-width: 100% !important;
+}
+
+/* Handle long text in widget content */
+.widget-content p,
+.widget-content span,
+.widget-content div {
+    word-wrap: break-word !important;
+    overflow-wrap: break-word !important;
+    hyphens: auto !important;
+}
+
+/* Handle long URLs and code snippets */
+.widget-content code,
+.widget-content pre,
+.widget-content .url-text {
+    overflow-x: auto !important;
+    white-space: pre-wrap !important;
+    word-break: break-all !important;
+    max-width: 100% !important;
+}
+
+/* === RESPONSIVE BREAKPOINTS === */
+
+/* Extra Small Devices - Mobile Phones (320px - 479px) */
+@media screen and (max-width: 479px) {
+    .widget-grid {
+        grid-template-columns: 1fr !important;
+        gap: 1rem !important;
+        padding: 1rem !important;
+    }
+    
+    .widget {
+        min-height: 240px !important;
+        max-height: 400px !important;
+    }
+    
+    .widget-content {
+        padding: 0.75rem !important;
+        font-size: 0.875rem !important;
+    }
+}
+
+/* Small Devices - Large Mobile Phones (480px - 767px) */
+@media screen and (min-width: 480px) and (max-width: 767px) {
+    .widget-grid {
+        grid-template-columns: 1fr !important;
+        gap: 1.25rem !important;
+        padding: 1.25rem !important;
+    }
+    
+    .widget {
+        min-height: 260px !important;
+        max-height: 450px !important;
+    }
+}
+
+/* Medium Devices - Tablets (768px - 1023px) */
+@media screen and (min-width: 768px) and (max-width: 1023px) {
+    .widget-grid {
+        grid-template-columns: repeat(auto-fit, minmax(min(340px, 100%), 1fr)) !important;
+        gap: 1.5rem !important;
+        padding: 1.5rem !important;
+    }
+    
+    .widget {
+        min-height: 280px !important;
+        max-height: 500px !important;
+    }
+}
+
+/* Large Devices - Small Desktops (1024px - 1199px) */
+@media screen and (min-width: 1024px) and (max-width: 1199px) {
+    .widget-grid {
+        grid-template-columns: repeat(auto-fit, minmax(min(380px, 100%), 1fr)) !important;
+        gap: 1.75rem !important;
+        padding: 1.75rem !important;
+    }
+    
+    .widget {
+        min-height: 300px !important;
+        max-height: 550px !important;
+    }
+}
+
+/* Extra Large Devices - Large Desktops (1200px - 1599px) */
+@media screen and (min-width: 1200px) and (max-width: 1599px) {
+    .widget-grid {
+        grid-template-columns: repeat(auto-fit, minmax(min(400px, 100%), 1fr)) !important;
+        gap: 2rem !important;
+        padding: 2rem !important;
+    }
+    
+    .widget {
+        min-height: 320px !important;
+        max-height: 600px !important;
+    }
+}
+
+/* Ultra Wide Devices - Extra Large Desktops (1600px+) */
+@media screen and (min-width: 1600px) {
+    .widget-grid {
+        grid-template-columns: repeat(auto-fit, minmax(min(420px, 100%), 1fr)) !important;
+        gap: 2rem !important;
+        padding: 2rem !important;
+        max-width: 1600px !important;
+    }
+}
+
+/* === WIDGET-SPECIFIC LAYOUT FIXES === */
+
+/* DNS Info Widget - Responsive Grid */
+.dns-info-content {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    grid-template-rows: auto auto 1fr !important;
+    gap: var(--spacing-md) !important;
+    height: 100% !important;
+    min-height: 0 !important;
+}
+
+.dns-info-stats {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)) !important;
+    gap: var(--spacing-sm) !important;
+}
+
+/* DNS Status Widget - Flexible Layout */
+.dns-status-content {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: var(--spacing-md) !important;
+    height: 100% !important;
+}
+
+.dns-performance-metrics {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fit, minmax(80px, 1fr)) !important;
+    gap: var(--spacing-sm) !important;
+}
+
+/* DNS Profile Widget - Responsive Details */
+.profile-details {
+    display: grid !important;
+    grid-template-columns: auto 1fr !important;
+    gap: var(--spacing-sm) var(--spacing-md) !important;
+    align-items: start !important;
+}
+
+/* === LOADING AND ERROR STATES === */
+
+/* Consistent loading state positioning */
+.widget-loading {
+    position: relative !important;
+    opacity: 0.7 !important;
+    pointer-events: none !important;
+}
+
+.widget-loading::after {
+    content: '' !important;
+    position: absolute !important;
+    top: 50% !important;
+    left: 50% !important;
+    width: 24px !important;
+    height: 24px !important;
+    margin: -12px 0 0 -12px !important;
+    border: 3px solid var(--color-border) !important;
+    border-top-color: var(--color-primary) !important;
+    border-radius: 50% !important;
+    animation: widget-spin 1s linear infinite !important;
+}
+
+@keyframes widget-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Error state styling */
+.widget-error {
+    border-color: var(--color-danger) !important;
+    background-color: rgba(220, 53, 69, 0.02) !important;
+}
+
+/* === UTILITY CLASSES FOR DYNAMIC WIDTH === */
+
+/* Force equal width widgets */
+.widgets-equal-width .widget {
+    flex: 1 1 0 !important;
+    min-width: 0 !important;
+}
+
+/* Allow natural widget sizing */
+.widgets-natural-width .widget {
+    flex: 0 1 auto !important;
+}
+
+/* Full width widget (spans all columns) */
+.widget-full-width {
+    grid-column: 1 / -1 !important;
+}
+
+/* Half width widget */
+.widget-half-width {
+    grid-column: span 1 !important;
+}
+
+/* === PRINT STYLES === */
+@media print {
+    .widget-grid {
+        display: block !important;
+        gap: 0 !important;
+        padding: 0 !important;
+    }
+    
+    .widget {
+        break-inside: avoid !important;
+        margin-bottom: 1rem !important;
+        box-shadow: none !important;
+        border: 1px solid var(--color-border) !important;
+        max-height: none !important;
+    }
+    
+    .widget-loading::after {
+        display: none !important;
+    }
+}
+
+/* === ACCESSIBILITY ENHANCEMENTS === */
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    .widget {
+        border-width: 2px !important;
+        border-color: var(--color-text-primary) !important;
+    }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+    .widget,
+    .widget-loading::after {
+        transition: none !important;
+        animation: none !important;
+    }
+}
+
+/* Focus management for keyboard navigation */
+.widget:focus-within {
+    outline: 2px solid var(--color-primary) !important;
+    outline-offset: 2px !important;
+}
+
+/* === BROWSER-SPECIFIC FIXES === */
+
+/* Chrome/Edge - Fix flex container issues */
+@supports (-webkit-appearance: none) {
+    .widget-content {
+        -webkit-overflow-scrolling: touch !important;
+    }
+}
+
+/* Firefox - Fix grid container overflow */
+@-moz-document url-prefix() {
+    .widget-grid {
+        min-height: calc(100vh - 140px) !important;
+    }
+}
+
+/* Safari - Fix flex shrinking issues */
+@supports (-webkit-touch-callout: none) {
+    .widget {
+        -webkit-flex-shrink: 1 !important;
+        flex-shrink: 1 !important;
+    }
+}

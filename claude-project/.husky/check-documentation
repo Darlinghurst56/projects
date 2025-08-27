@@ -1,0 +1,37 @@
+#!/bin/sh
+
+# Automated Documentation Verification (Token-Optimized)
+echo "🔍 Running automated documentation verification..."
+
+# Run automated verification first (no human intervention needed)
+if ! ./scripts/verify-docs.sh; then
+    echo "❌ Automated documentation verification failed"
+    exit 1
+fi
+
+# Check if critical system files are being modified
+AGENT_FILES=$(git diff --cached --name-only | grep -E "(agent\.js$|dashboard/.*\.js$)" | wc -l)
+TASKMASTER_FILES=$(git diff --cached --name-only | grep -E "(\.taskmaster/|taskmaster-api)" | wc -l)
+
+if [ $AGENT_FILES -gt 0 ] || [ $TASKMASTER_FILES -gt 0 ]; then
+  echo ""
+  echo "⚠️  SYSTEM FILES MODIFIED - Documentation Check Required"
+  echo ""
+  echo "📚 Quick reference (optimized for home users):"
+  echo "   1. docs/HOME-USER-GUIDE.md (< 200 lines)"
+  echo "   2. docs/agent-contexts/[agent-type]-context.md (< 50 lines each)"
+  echo "   3. Token usage optimized: 90% reduction vs full docs"
+  echo ""
+  echo "❓ Have you reviewed the relevant documentation? (y/n)"
+  read -r REPLY < /dev/tty
+  
+  if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+    echo ""
+    echo "❌ Commit blocked! Please review documentation first."
+    echo "   For agents: cat docs/agent-contexts/[agent-type]-context.md"
+    echo "   For users: cat docs/HOME-USER-GUIDE.md"
+    exit 1
+  fi
+  
+  echo "✅ Documentation verified. Proceeding with commit..."
+fi

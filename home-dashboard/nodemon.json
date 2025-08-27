@@ -1,0 +1,25 @@
+{
+  "watch": ["server/"],
+  "ext": "js,json",
+  "ignore": [
+    "server/logs/*",
+    "server/uploads/*", 
+    "server/cache/*",
+    "node_modules/*",
+    "*.test.js",
+    "*.spec.js"
+  ],
+  "delay": 1000,
+  "env": {
+    "NODE_ENV": "development",
+    "DEBUG": "app:*"
+  },
+  "nodeArgs": [
+    "--max-old-space-size=2048"
+  ],
+  "restartable": "rs",
+  "verbose": false,
+  "colours": true,
+  "legacyWatch": false,
+  "polling": false
+}

@@ -1,0 +1,19 @@
+{
+  "name": "user-testing-mcp-demo",
+  "version": "1.0.0",
+  "description": "User Testing MCP for Family Dashboard automation",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest",
+    "test:integration": "jest --config=jest.integration.config.js",
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0",
+    "puppeteer": "^24.11.2",
+    "jest": "^29.7.0"
+  },
+  "keywords": ["mcp", "testing", "automation", "dashboard"],
+  "author": "QA Specialist Agent",
+  "license": "MIT"
+}

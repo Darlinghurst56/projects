@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Control D Dashboard</title>
+    <link rel="stylesheet" href="styles/base.css">
+    <link rel="stylesheet" href="styles/layout.css">
+    <link rel="stylesheet" href="styles/settings.css">
+    <link rel="stylesheet" href="styles/tailwind.css">
+    
+    <!-- Widget grid consistency fix -->
+    <link rel="stylesheet" href="styles/widget-grid-fix.css">
+    
+    <!-- UX Enhancements -->
+    <link rel="stylesheet" href="styles/ux-enhancements.css">
+    
+    <!-- Human-Centered Design Improvements -->
+    <link rel="stylesheet" href="styles/human-centered-design.css">
+    
+    <!-- Widget-specific styles -->
+    <link rel="stylesheet" href="widgets/dns-status/dns-status.css">
+    <link rel="stylesheet" href="widgets/dns-profile/dns-profile.css">
+    <link rel="stylesheet" href="widgets/dns-analytics/dns-analytics.css">
+    <link rel="stylesheet" href="widgets/pause-test/pause-test.css">
+</head>
+<body>
+    <!-- Skip link for accessibility -->
+    <a href="#widget-grid" class="skip-link">Skip to main content</a>
+    
+    <div id="dashboard-container">
+        <header class="dashboard-header">
+            <h1>Agent Dashboard</h1>
+            <nav class="dashboard-nav">
+                <button id="refresh-all" class="nav-button">
+                    <span>🔄</span>
+                    Refresh All
+                </button>
+                <button id="settings" class="nav-button">
+                    <span>⚙️</span>
+                    Settings
+                </button>
+            </nav>
+        </header>
+        
+        <main id="widget-grid" class="widget-grid fixed-layout">
+            <!-- Widgets will be dynamically loaded here -->
+        </main>
+        
+        <footer class="dashboard-footer">
+            <p>&copy; 2025 Control D Dashboard</p>
+        </footer>
+    </div>
+
+    <!-- Load DNS Info Widget JavaScript -->
+    <script type="module" src="widgets/dns-info/dns-info.js"></script>
+    
+    <!-- Load DNS Status Widget JavaScript -->
+    <script type="module" src="widgets/dns-status/dns-status.js"></script>
+    
+    <!-- Load DNS Profile Widget JavaScript -->
+    <script type="module" src="widgets/dns-profile/dns-profile.js"></script>
+    
+    <!-- Load DNS Analytics Widget JavaScript -->
+    <script type="module" src="widgets/dns-analytics/dns-analytics.js"></script>
+    
+    <!-- Load Pause/Test Widget JavaScript -->
+    <script type="module" src="widgets/pause-test/pause-test.js"></script>
+    
+    <!-- Load widget grid manager -->
+    <script type="module" src="js/widget-grid-manager.js"></script>
+    
+    <!-- Load core JavaScript -->
+    <script type="module" src="js/core.js"></script>
+    
+    <!-- Load human-centered interaction enhancements -->
+    <script src="js/human-centered-interactions.js"></script>
+    
+    <!-- Load final UX improvements -->
+    <script src="js/final-ux-improvements.js"></script>
+    
+    <!-- Initialize dashboard -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const dashboard = new WidgetManager();
+            dashboard.init();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,22 @@
+# Task ID: 4
+# Title: Automated E2E Testing of API and Dashboard Integration with Puppeteer
+# Status: in-progress
+# Dependencies: 2, 3
+# Priority: medium
+# Description: Implement end-to-end testing of the API backend server and dashboard integration using Puppeteer browser automation to verify multi-agent coordination functionality.
+
+PROJECT: House AI - Family Home Page | SUBPROJECT: Dashboard UI System
+# Details:
+1.  **Puppeteer Setup:** Install and configure Puppeteer in the testing environment. Create a test suite specifically for the multi-agent coordination features.
+2.  **Test Case Design:** Design test cases that simulate various multi-agent scenarios, including task assignment, real-time updates, and agent interactions. Cover both normal operation and edge cases (e.g., agent failure, network issues).
+3.  **Dashboard Interaction:** Use Puppeteer to automate interactions with the dashboard, such as logging in, navigating to the multi-agent coordination view, and triggering actions.
+4.  **API Verification:** Integrate API calls within the Puppeteer tests to directly verify the backend server's behavior. For example, check that task assignments are correctly reflected in the API.
+5.  **Real-time Validation:** Implement mechanisms to validate real-time updates in the dashboard. This may involve waiting for specific events or polling the dashboard for changes.
+6.  **Reporting:** Generate detailed test reports that include pass/fail status, screenshots, and error messages. Integrate the reports into the CI/CD pipeline.
+
+# Test Strategy:
+1.  **Functional Tests:** Write Puppeteer tests to simulate user interactions with the dashboard and verify that the multi-agent coordination features work as expected. This includes testing task assignment, agent status updates, and real-time communication.
+2.  **API Integration Tests:** Use Puppeteer to trigger API calls and verify that the backend server responds correctly. Check that data is being retrieved and updated as expected.
+3.  **Performance Tests:** Measure the performance of the dashboard and API under load. Use Puppeteer to simulate multiple concurrent users and agents.
+4.  **Error Handling Tests:** Simulate error conditions (e.g., agent failure, network issues) and verify that the dashboard and API handle them gracefully. Check that appropriate error messages are displayed and that the system recovers correctly.
+5.  **Cross-Browser Compatibility:** Run the Puppeteer tests in multiple browsers (e.g., Chrome, Firefox) to ensure cross-browser compatibility.

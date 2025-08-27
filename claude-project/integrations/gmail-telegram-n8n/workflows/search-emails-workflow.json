@@ -1,0 +1,237 @@
+{
+  "name": "Gmail Search Emails via Telegram",
+  "nodes": [
+    {
+      "parameters": {
+        "authentication": "botToken",
+        "resource": "message",
+        "operation": "get",
+        "additionalFields": {}
+      },
+      "name": "Telegram Trigger",
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1,
+      "position": [240, 300],
+      "webhookId": "telegram-search-emails",
+      "credentials": {
+        "telegramApi": {
+          "id": "telegram-bot-credentials",
+          "name": "Gmail Telegram Bot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$node['Telegram Trigger'].json['message']['text']}}",
+              "operation": "startsWith",
+              "value2": "/search_email"
+            }
+          ]
+        }
+      },
+      "name": "Check Search Command",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [460, 300]
+    },
+    {
+      "parameters": {
+        "functionCode": "// Parse the telegram message to extract search query\nconst message = items[0].json.message.text;\nconst chatId = items[0].json.message.chat.id;\n\n// Expected format: /search_email query:search terms\nconst queryMatch = message.match(/\\/search_email\\s+query:(.+)/);\n\nif (!queryMatch) {\n  return [{\n    json: {\n      error: true,\n      chatId: chatId,\n      message: \"Invalid format. Use: /search_email query:your search terms\"\n    }\n  }];\n}\n\nconst query = queryMatch[1].trim();\n\n// Gmail search query formatting\n// Support common search patterns\nlet gmailQuery = query;\n\n// Add some helpful search shortcuts\nif (query.includes('from:')) {\n  // Keep as is - already formatted\n} else if (query.includes('subject:')) {\n  // Keep as is - already formatted  \n} else if (query.includes('unread')) {\n  gmailQuery = 'is:unread ' + query.replace('unread', '').trim();\n} else {\n  // Default search in subject and body\n  gmailQuery = `(subject:${query} OR ${query})`;\n}\n\nreturn [{\n  json: {\n    chatId: chatId,\n    query: gmailQuery,\n    originalQuery: query,\n    error: false\n  }\n}];"
+      },
+      "name": "Parse Search Command",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [680, 200]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{$node['Parse Search Command'].json['error']}}",
+              "value2": false
+            }
+          ]
+        }
+      },
+      "name": "Check Valid Query",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [900, 200]
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "operation": "getAll",
+        "returnAll": false,
+        "limit": 10,
+        "simple": false,
+        "options": {
+          "q": "={{$node['Parse Search Command'].json['query']}}"
+        }
+      },
+      "name": "Search Gmail",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 1,
+      "position": [1120, 120],
+      "credentials": {
+        "googleOAuth2Api": {
+          "id": "gmail-oauth-credentials",
+          "name": "Gmail OAuth2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "// Format search results for Telegram\nconst emails = items;\nconst chatId = $node['Parse Search Command'].json.chatId;\nconst originalQuery = $node['Parse Search Command'].json.originalQuery;\n\nif (emails.length === 0) {\n  return [{\n    json: {\n      chatId: chatId,\n      text: `🔍 **Search Results**\\n\\nNo emails found for query: \"${originalQuery}\"`\n    }\n  }];\n}\n\nlet searchResults = `🔍 **Search Results** (${emails.length} found)\\n`;\nsearchResults += `Query: \"${originalQuery}\"\\n\\n`;\n\nfor (let i = 0; i < emails.length; i++) {\n  const email = emails[i].json;\n  const subject = email.payload.headers.find(h => h.name === 'Subject')?.value || 'No Subject';\n  const from = email.payload.headers.find(h => h.name === 'From')?.value || 'Unknown Sender';\n  const date = new Date(parseInt(email.internalDate)).toLocaleDateString();\n  const isUnread = email.labelIds?.includes('UNREAD') ? '🔵' : '✅';\n  \n  // Extract snippet/preview if available\n  const snippet = email.snippet || '';\n  const shortSnippet = snippet.length > 100 ? snippet.substring(0, 100) + '...' : snippet;\n  \n  searchResults += `${isUnread} **${subject}**\\n`;\n  searchResults += `👤 From: ${from}\\n`;\n  searchResults += `📅 Date: ${date}\\n`;\n  if (shortSnippet) {\n    searchResults += `📝 Preview: ${shortSnippet}\\n`;\n  }\n  searchResults += `🆔 ID: ${email.id}\\n\\n`;\n}\n\n// Telegram message limit is 4096 characters\nif (searchResults.length > 4000) {\n  searchResults = searchResults.substring(0, 4000) + '\\n\\n... (truncated)';\n}\n\nreturn [{\n  json: {\n    chatId: chatId,\n    text: searchResults\n  }\n}];"
+      },
+      "name": "Format Search Results",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [1340, 120]
+    },
+    {
+      "parameters": {
+        "chatId": "={{$node['Format Search Results'].json['chatId']}}",
+        "text": "={{$node['Format Search Results'].json['text']}}",
+        "additionalFields": {
+          "parse_mode": "Markdown"
+        }
+      },
+      "name": "Send Search Results",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [1560, 120],
+      "credentials": {
+        "telegramApi": {
+          "id": "telegram-bot-credentials",
+          "name": "Gmail Telegram Bot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{$node['Parse Search Command'].json['chatId']}}",
+        "text": "❌ {{$node['Parse Search Command'].json['message']}}"
+      },
+      "name": "Error Response",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [1120, 280],
+      "credentials": {
+        "telegramApi": {
+          "id": "telegram-bot-credentials",
+          "name": "Gmail Telegram Bot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{$node['Telegram Trigger'].json['message']['chat']['id']}}",
+        "text": "❓ Unknown command. Use /search_email query:your search terms"
+      },
+      "name": "Unknown Command",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [680, 400],
+      "credentials": {
+        "telegramApi": {
+          "id": "telegram-bot-credentials",
+          "name": "Gmail Telegram Bot"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "Check Search Command",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Search Command": {
+      "main": [
+        [
+          {
+            "node": "Parse Search Command",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Unknown Command",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Search Command": {
+      "main": [
+        [
+          {
+            "node": "Check Valid Query",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Valid Query": {
+      "main": [
+        [
+          {
+            "node": "Search Gmail",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Error Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search Gmail": {
+      "main": [
+        [
+          {
+            "node": "Format Search Results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format Search Results": {
+      "main": [
+        [
+          {
+            "node": "Send Search Results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {},
+  "id": "gmail-search-emails-workflow",
+  "meta": {
+    "instanceId": "n8n-gmail-telegram-integration"
+  },
+  "tags": ["gmail", "telegram", "email", "search"]
+}

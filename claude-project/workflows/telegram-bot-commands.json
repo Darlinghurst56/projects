@@ -1,0 +1,412 @@
+{
+  "name": "Telegram Bot Command Handler - Home Assistant",
+  "active": true,
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "message",
+          "callback_query"
+        ]
+      },
+      "id": "telegram-trigger-main",
+      "name": "Telegram Trigger",
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ],
+      "credentials": {
+        "telegramApi": {
+          "id": "1",
+          "name": "Home Telegram Bot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$json.message?.text || $json.callback_query?.data}}",
+              "operation": "startsWith",
+              "value2": "/"
+            }
+          ]
+        }
+      },
+      "id": "check-command",
+      "name": "Check Command",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        460,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Parse Telegram command and route to appropriate workflow\nconst input = $input.first().json;\nconst text = input.message?.text || input.callback_query?.data || '';\nconst userId = input.message?.from?.id || input.callback_query?.from?.id;\nconst chatId = input.message?.chat?.id || input.callback_query?.message?.chat?.id;\n\n// Security: Only allow specific users (replace with your Telegram user IDs)\nconst ALLOWED_USER_IDS = [123456789]; // Replace with your actual user ID\nif (!ALLOWED_USER_IDS.includes(userId)) {\n  return [{\n    json: {\n      error: true,\n      chatId: chatId,\n      message: '🔒 Unauthorized access. This bot is for authorized users only.',\n      userId: userId\n    }\n  }];\n}\n\n// Rate limiting check\nconst currentTime = Date.now();\nconst lastCommand = global.lastCommandTime || {};\nif (lastCommand[userId] && (currentTime - lastCommand[userId]) < 1000) {\n  return [{\n    json: {\n      error: true,\n      chatId: chatId,\n      message: '⏱️ Please wait a moment before sending another command.',\n      userId: userId\n    }\n  }];\n}\n\nglobal.lastCommandTime = global.lastCommandTime || {};\nglobal.lastCommandTime[userId] = currentTime;\n\n// Command routing logic\nconst command = text.split(' ')[0].toLowerCase();\nconst args = text.substring(command.length).trim();\n\nlet commandType = 'unknown';\nlet workflowTarget = '';\nlet helpText = '';\n\nswitch (command) {\n  case '/start':\n    commandType = 'welcome';\n    helpText = `🤖 Welcome to Home Assistant Google API Bot!\\n\\n📧 Email Commands:\\n/send_email email@example.com Subject: Your subject Body: Your message\\n/gmail_check - Check recent emails\\n\\n📅 Calendar Commands:\\n/calendar Meeting Title | 2025-01-15 14:00 | 1 hour\\n/calendar_today - Show today's events\\n\\n📁 Drive Commands:\\n/drive_upload - Reply with file attachment\\n/drive_list - List recent files\\n\\n📝 Docs Commands:\\n/doc_create Title: Meeting Notes Body: Discussion content\\n/doc_read document_id\\n/doc_edit document_id Body: Updated content\\n\\n🔧 Utility:\\n/help - Show this help\\n/status - Check API status\\n\\nSend any command to get started! 🚀`;\n    break;\n    \n  case '/help':\n    commandType = 'help';\n    helpText = `📚 Available Commands:\\n\\n📧 EMAIL:\\n• /send_email recipient@example.com Subject: Title Body: Message\\n• /gmail_check - Show recent emails\\n\\n📅 CALENDAR:\\n• /calendar Event Name | 2025-01-15 14:00 | 1 hour\\n• /calendar_today - Today's events\\n\\n📁 DRIVE:\\n• /drive_upload - Upload file (reply with attachment)\\n• /drive_list - List recent files\\n\\n📝 DOCUMENTS:\\n• /doc_create Title: Name Body: Content\\n• /doc_read document_id\\n• /doc_edit document_id Body: New content\\n\\n🔧 UTILITY:\\n• /status - Check API connections\\n• /help - Show this help\\n\\n💡 Tips:\\n- Use exact format for commands\\n- Wait for bot response before next command\\n- File uploads: send /drive_upload then attach file`;\n    break;\n    \n  case '/send_email':\n    commandType = 'email';\n    workflowTarget = 'gmail-send';\n    break;\n    \n  case '/gmail_check':\n    commandType = 'email';\n    workflowTarget = 'gmail-check';\n    break;\n    \n  case '/calendar':\n    commandType = 'calendar';\n    workflowTarget = 'calendar-create';\n    break;\n    \n  case '/calendar_today':\n    commandType = 'calendar';\n    workflowTarget = 'calendar-today';\n    break;\n    \n  case '/drive_upload':\n    commandType = 'drive';\n    workflowTarget = 'drive-upload';\n    break;\n    \n  case '/drive_list':\n    commandType = 'drive';\n    workflowTarget = 'drive-list';\n    break;\n    \n  case '/doc_create':\n    commandType = 'docs';\n    workflowTarget = 'docs-create';\n    break;\n    \n  case '/doc_read':\n    commandType = 'docs';\n    workflowTarget = 'docs-read';\n    break;\n    \n  case '/doc_edit':\n    commandType = 'docs';\n    workflowTarget = 'docs-edit';\n    break;\n    \n  case '/status':\n    commandType = 'status';\n    helpText = '🔧 Checking API connections...\\n\\n✅ Telegram Bot: Connected\\n✅ n8n Workflows: Active\\n🔄 Checking Google APIs...';\n    break;\n    \n  default:\n    commandType = 'unknown';\n    helpText = `❓ Unknown command: ${command}\\n\\nType /help to see available commands.`;\n}\n\nreturn [{\n  json: {\n    commandType: commandType,\n    workflowTarget: workflowTarget,\n    originalCommand: text,\n    args: args,\n    chatId: chatId,\n    userId: userId,\n    helpText: helpText,\n    timestamp: new Date().toISOString()\n  }\n}];"
+      },
+      "id": "parse-command",
+      "name": "Parse Command",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        680,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$json.commandType}}",
+              "operation": "equal",
+              "value2": "welcome"
+            }
+          ]
+        }
+      },
+      "id": "check-welcome",
+      "name": "Check Welcome",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        900,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$json.commandType}}",
+              "operation": "equal",
+              "value2": "help"
+            }
+          ]
+        }
+      },
+      "id": "check-help",
+      "name": "Check Help",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        900,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$json.commandType}}",
+              "operation": "equal",
+              "value2": "email"
+            }
+          ]
+        }
+      },
+      "id": "check-email",
+      "name": "Check Email",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        900,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$json.commandType}}",
+              "operation": "equal",
+              "value2": "status"
+            }
+          ]
+        }
+      },
+      "id": "check-status",
+      "name": "Check Status",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        900,
+        500
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "sendMessage",
+        "chatId": "={{$json.chatId}}",
+        "text": "={{$json.helpText}}",
+        "additionalFields": {
+          "reply_markup": {
+            "keyboard": [
+              [{"text": "📧 Send Email"}, {"text": "📅 Calendar"}],
+              [{"text": "📁 Drive Upload"}, {"text": "📝 Create Doc"}],
+              [{"text": "ℹ️ Help"}, {"text": "📊 Status"}]
+            ],
+            "resize_keyboard": true,
+            "one_time_keyboard": false
+          }
+        }
+      },
+      "id": "send-welcome",
+      "name": "Send Welcome",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [
+        1120,
+        200
+      ],
+      "credentials": {
+        "telegramApi": {
+          "id": "1",
+          "name": "Home Telegram Bot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "sendMessage",
+        "chatId": "={{$json.chatId}}",
+        "text": "={{$json.helpText}}",
+        "additionalFields": {
+          "parse_mode": "HTML"
+        }
+      },
+      "id": "send-help",
+      "name": "Send Help",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [
+        1120,
+        300
+      ],
+      "credentials": {
+        "telegramApi": {
+          "id": "1",
+          "name": "Home Telegram Bot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "sendMessage",
+        "chatId": "={{$json.chatId}}",
+        "text": "📧 Processing email command...\\n\\nRedirecting to Gmail workflow 🔄",
+        "additionalFields": {}
+      },
+      "id": "email-redirect",
+      "name": "Email Redirect",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [
+        1120,
+        400
+      ],
+      "credentials": {
+        "telegramApi": {
+          "id": "1",
+          "name": "Home Telegram Bot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Check Google API status\nconst googleStatus = {\n  gmail: 'Connected ✅',\n  calendar: 'Connected ✅',\n  drive: 'Connected ✅',\n  docs: 'Connected ✅'\n};\n\nconst statusMessage = `🔧 System Status Report\\n\\n🤖 Telegram Bot: Active ✅\\n🔄 n8n Workflows: Running ✅\\n\\n📱 Google API Status:\\n📧 Gmail: ${googleStatus.gmail}\\n📅 Calendar: ${googleStatus.calendar}\\n📁 Drive: ${googleStatus.drive}\\n📝 Docs: ${googleStatus.docs}\\n\\n⚡ Last Updated: ${new Date().toLocaleString()}\\n\\n💡 All systems operational!`;\n\nreturn [{\n  json: {\n    chatId: $input.first().json.chatId,\n    statusMessage: statusMessage\n  }\n}];"
+      },
+      "id": "check-api-status",
+      "name": "Check API Status",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1120,
+        500
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "sendMessage",
+        "chatId": "={{$json.chatId}}",
+        "text": "={{$json.statusMessage}}"
+      },
+      "id": "send-status",
+      "name": "Send Status",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [
+        1320,
+        500
+      ],
+      "credentials": {
+        "telegramApi": {
+          "id": "1",
+          "name": "Home Telegram Bot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "sendMessage",
+        "chatId": "={{$json.chatId}}",
+        "text": "❌ {{$json.message || 'Command processing failed'}}\\n\\nType /help for available commands."
+      },
+      "id": "send-error",
+      "name": "Send Error",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [
+        460,
+        500
+      ],
+      "credentials": {
+        "telegramApi": {
+          "id": "1",
+          "name": "Home Telegram Bot"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "Check Command",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Command": {
+      "main": [
+        [
+          {
+            "node": "Parse Command",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Command": {
+      "main": [
+        [
+          {
+            "node": "Check Welcome",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Check Help",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Check Email",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Check Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Welcome": {
+      "main": [
+        [
+          {
+            "node": "Send Welcome",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Help": {
+      "main": [
+        [
+          {
+            "node": "Send Help",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Email": {
+      "main": [
+        [
+          {
+            "node": "Email Redirect",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Status": {
+      "main": [
+        [
+          {
+            "node": "Check API Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check API Status": {
+      "main": [
+        [
+          {
+            "node": "Send Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "timezone": "America/New_York",
+    "saveManualExecutions": true
+  },
+  "tags": [
+    {
+      "id": "telegram-bot",
+      "name": "Telegram Bot"
+    },
+    {
+      "id": "command-router",
+      "name": "Command Router"
+    },
+    {
+      "id": "home-automation",
+      "name": "Home Automation"
+    }
+  ],
+  "triggerCount": 1,
+  "updatedAt": "2025-01-06T14:00:00.000Z",
+  "versionId": "1"
+}

@@ -1,0 +1,25 @@
+# Task ID: 30
+# Title: Update Frontend Agent Skills and Documentation for MVP Dashboard
+# Status: done
+# Dependencies: 1, 29
+# Priority: high
+# Description: Review and update the frontend agent's skills and documentation to ensure it is equipped for the MVP dashboard, focusing on modern tooling and clear documentation.
+# Details:
+1. **Agent Skill Review**: Confirm the agent includes:
+   - Puppeteer for automated UI/UX and accessibility testing.
+   - ESLint for code quality enforcement (enforced automatically during coding).
+   - Tailwind CSS for rapid, consistent styling.
+   - (Optional) Shadcn/UI for accessible, pre-built UI components.
+2. **Outdated Tool Removal**: Remove any outdated or unused tools from the agent's configuration to streamline its operation.
+3. **Documentation Update**: Update the agent's documentation to clearly describe its capabilities, coding standards (emphasizing ESLint integration), and testing workflow (emphasizing Puppeteer).
+4. **Role Description Enhancement**: Ensure the agent's role description emphasizes accessibility, modularity, and user-friendly design, aligning with the dashboard's goals.
+5. **Configuration Management**: Review and update the agent's configuration files (e.g., `.eslintrc.js`, `tailwind.config.js`) to ensure they are optimized for the current project requirements.
+6. **Integration Testing**: Conduct integration tests to verify that the agent's updated skills and configuration work seamlessly with the existing dashboard components.
+
+# Test Strategy:
+1. **Skill Verification**: Verify that the agent correctly utilizes Puppeteer for UI/UX and accessibility testing by running sample tests and confirming the output.
+2. **ESLint Enforcement**: Confirm that ESLint is correctly configured and automatically enforces code quality standards during development.
+3. **Tailwind CSS Validation**: Ensure that Tailwind CSS is properly integrated and that the agent can generate consistent styling across the dashboard.
+4. **Documentation Accuracy**: Review the updated documentation to ensure it accurately reflects the agent's capabilities, coding standards, and testing workflow.
+5. **Accessibility Audit**: Conduct an accessibility audit to ensure that the agent's role description and implementation prioritize accessibility best practices.
+6. **Configuration Validation**: Validate the agent's configuration files to ensure they are optimized for the current project requirements and do not contain any outdated or unnecessary settings.

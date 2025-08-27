@@ -1,0 +1,18 @@
+{
+  "name": "user-testing-mcp",
+  "version": "1.0.0",
+  "description": "MCP server for automated user journey validation focused on single home user task flows",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node index.js",
+    "test": "node test.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0",
+    "puppeteer": "^21.0.0"
+  },
+  "keywords": ["mcp", "user-testing", "journey", "automation", "dashboard"],
+  "author": "Home Dashboard Team",
+  "license": "MIT"
+}

@@ -1,0 +1,472 @@
+/**
+ * DNS Status Widget Styles
+ * Professional styling for connection status, performance metrics, and health monitoring
+ */
+
+.dns-status-widget {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+    font-family: var(--font-family);
+}
+
+/* Loading State */
+.status-loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: var(--spacing-xl);
+    color: var(--color-text-secondary);
+    gap: var(--spacing-sm);
+}
+
+.loading-spinner {
+    width: 24px;
+    height: 24px;
+    border: 2px solid var(--color-border);
+    border-top: 2px solid var(--color-primary);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Content Layout */
+.status-content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+    height: 100%;
+}
+
+/* Connection Status Section */
+.connection-status {
+    background: var(--color-bg-secondary);
+    border: 1px solid var(--color-border);
+    border-radius: 6px;
+    padding: var(--spacing-md);
+}
+
+.status-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-sm);
+}
+
+.status-header h4 {
+    margin: 0;
+    color: var(--color-text-primary);
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.status-indicator {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    font-weight: 500;
+}
+
+.status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+}
+
+.status-connected .status-dot {
+    background: var(--color-success);
+}
+
+.status-disconnected .status-dot {
+    background: var(--color-danger);
+}
+
+.status-checking .status-dot {
+    background: var(--color-warning);
+}
+
+@keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
+}
+
+.connection-details {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--spacing-sm);
+    margin-top: var(--spacing-sm);
+}
+
+.detail-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--spacing-xs) 0;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.detail-item:last-child {
+    border-bottom: none;
+}
+
+.detail-item label {
+    font-weight: 500;
+    color: var(--color-text-secondary);
+    font-size: 0.9rem;
+}
+
+.detail-item span {
+    color: var(--color-text-primary);
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+}
+
+/* Performance Metrics */
+.performance-metrics {
+    background: var(--color-bg-secondary);
+    border: 1px solid var(--color-border);
+    border-radius: 6px;
+    padding: var(--spacing-md);
+}
+
+.performance-metrics h4 {
+    margin: 0 0 var(--spacing-sm) 0;
+    color: var(--color-text-primary);
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: var(--spacing-sm);
+}
+
+.metric-card {
+    background: var(--color-bg-primary);
+    border: 1px solid var(--color-border);
+    border-radius: 4px;
+    padding: var(--spacing-sm);
+    text-align: center;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.metric-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.metric-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--color-text-primary);
+    margin-bottom: var(--spacing-xs);
+    font-family: var(--font-mono);
+}
+
+.metric-label {
+    font-size: 0.8rem;
+    color: var(--color-text-secondary);
+    font-weight: 500;
+    margin-bottom: var(--spacing-xs);
+}
+
+.metric-status {
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 2px 6px;
+    border-radius: 3px;
+    text-transform: uppercase;
+}
+
+.metric-good {
+    background: rgba(40, 167, 69, 0.1);
+    color: var(--color-success-dark);
+}
+
+.metric-warning {
+    background: rgba(255, 193, 7, 0.1);
+    color: var(--color-warning-dark);
+}
+
+.metric-error {
+    background: rgba(220, 53, 69, 0.1);
+    color: var(--color-danger-dark);
+}
+
+/* Service Health */
+.service-health {
+    background: var(--color-bg-secondary);
+    border: 1px solid var(--color-border);
+    border-radius: 6px;
+    padding: var(--spacing-md);
+}
+
+.service-health h4 {
+    margin: 0 0 var(--spacing-sm) 0;
+    color: var(--color-text-primary);
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.health-items {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+}
+
+.health-item {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: 4px;
+    background: var(--color-bg-primary);
+    border: 1px solid var(--color-border);
+}
+
+.health-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.health-dot.operational {
+    background: var(--color-success);
+}
+
+.health-dot.degraded {
+    background: var(--color-warning);
+}
+
+.health-dot.outage {
+    background: var(--color-danger);
+}
+
+.health-name {
+    flex: 1;
+    font-weight: 500;
+    color: var(--color-text-primary);
+    font-size: 0.9rem;
+}
+
+.health-status {
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: capitalize;
+    color: var(--color-text-secondary);
+}
+
+.health-item.operational .health-status {
+    color: var(--color-success-dark);
+}
+
+.health-item.degraded .health-status {
+    color: var(--color-warning-dark);
+}
+
+.health-item.outage .health-status {
+    color: var(--color-danger-dark);
+}
+
+/* Troubleshooting */
+.troubleshooting {
+    background: var(--color-bg-secondary);
+    border: 1px solid var(--color-border);
+    border-radius: 6px;
+    padding: var(--spacing-md);
+}
+
+.troubleshooting h4 {
+    margin: 0 0 var(--spacing-sm) 0;
+    color: var(--color-text-primary);
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.diagnostic-actions {
+    display: flex;
+    gap: var(--spacing-xs);
+    margin-bottom: var(--spacing-sm);
+    flex-wrap: wrap;
+}
+
+.diagnostic-actions .btn {
+    font-size: 0.8rem;
+    padding: 6px 12px;
+    flex: 1;
+    min-width: 120px;
+}
+
+.diagnostic-results {
+    margin-top: var(--spacing-sm);
+}
+
+.diagnostic-output {
+    background: var(--color-bg-tertiary);
+    border: 1px solid var(--color-border);
+    border-radius: 4px;
+    padding: var(--spacing-sm);
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.diagnostic-output pre {
+    margin: 0;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    color: var(--color-text-primary);
+}
+
+/* Last Updated */
+.last-updated {
+    text-align: center;
+    padding: var(--spacing-xs);
+    color: var(--color-text-secondary);
+    font-size: 0.8rem;
+}
+
+/* Error State */
+.status-error {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: var(--spacing-xl);
+    text-align: center;
+    gap: var(--spacing-sm);
+}
+
+.error-icon {
+    font-size: 2rem;
+    margin-bottom: var(--spacing-sm);
+}
+
+.error-message {
+    color: var(--color-danger);
+    font-weight: 500;
+    margin-bottom: var(--spacing-md);
+}
+
+.retry-button {
+    background: var(--color-primary);
+    color: white;
+    border: none;
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-radius: 4px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.retry-button:hover {
+    background: var(--color-primary-dark);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .connection-details {
+        grid-template-columns: 1fr;
+    }
+    
+    .metrics-grid {
+        grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    }
+    
+    .diagnostic-actions {
+        flex-direction: column;
+    }
+    
+    .diagnostic-actions .btn {
+        min-width: auto;
+    }
+}
+
+@media (max-width: 480px) {
+    .dns-status-widget {
+        gap: var(--spacing-sm);
+    }
+    
+    .connection-status,
+    .performance-metrics,
+    .service-health,
+    .troubleshooting {
+        padding: var(--spacing-sm);
+    }
+    
+    .status-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--spacing-xs);
+    }
+    
+    .metrics-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .metric-value {
+        font-size: 1.25rem;
+    }
+}
+
+/* Dark Theme Support */
+.theme-dark .dns-status-widget {
+    color: var(--color-text-primary-dark);
+}
+
+.theme-dark .connection-status,
+.theme-dark .performance-metrics,
+.theme-dark .service-health,
+.theme-dark .troubleshooting {
+    background: var(--color-bg-secondary-dark);
+    border-color: var(--color-border-dark);
+}
+
+.theme-dark .metric-card,
+.theme-dark .health-item {
+    background: var(--color-bg-primary-dark);
+    border-color: var(--color-border-dark);
+}
+
+.theme-dark .diagnostic-output {
+    background: var(--color-bg-tertiary-dark);
+    border-color: var(--color-border-dark);
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+    .loading-spinner,
+    .status-dot {
+        animation: none;
+    }
+    
+    .metric-card {
+        transition: none;
+    }
+}
+
+@media (prefers-contrast: high) {
+    .connection-status,
+    .performance-metrics,
+    .service-health,
+    .troubleshooting {
+        border-width: 2px;
+    }
+    
+    .metric-card,
+    .health-item {
+        border-width: 2px;
+    }
+}

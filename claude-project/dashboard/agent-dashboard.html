@@ -1,0 +1,965 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agent Coordination Dashboard - Home Vibe Coder</title>
+    <link rel="stylesheet" href="styles/base.css">
+    <link rel="stylesheet" href="styles/layout.css">
+    <link rel="stylesheet" href="styles/settings.css">
+    
+    <!-- Human-Centered Design Improvements -->
+    <link rel="stylesheet" href="styles/human-centered-design.css">
+    
+    <!-- Agent widget styles -->
+    <link rel="stylesheet" href="widgets/agent-registry/agent-registry.css">
+    <link rel="stylesheet" href="widgets/task-assignment/task-assignment.css">
+    <link rel="stylesheet" href="widgets/agent-launcher/agent-launcher.css">
+    
+    <!-- Original widget styles for integration -->
+    <link rel="stylesheet" href="widgets/dns-status/dns-status.css">
+    <link rel="stylesheet" href="widgets/dns-profile/dns-profile.css">
+    
+    <style>
+        /* Agent Dashboard specific styles - Enhanced for human readability */
+        .agent-dashboard-grid {
+            display: grid;
+            grid-template-areas: 
+                "registry launcher"
+                "assignment assignment"
+                "status-monitor capability-matrix";
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: minmax(500px, auto) minmax(400px, auto) minmax(300px, auto);
+            gap: 20px;
+            padding: 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .agent-registry-container {
+            grid-area: registry;
+            min-height: 400px;
+        }
+        
+        .agent-launcher-container {
+            grid-area: launcher;
+            min-height: 400px;
+        }
+        
+        .task-assignment-container {
+            grid-area: assignment;
+            min-height: 500px;
+        }
+        
+        .status-monitor-container {
+            grid-area: status-monitor;
+            min-height: 300px;
+        }
+        
+        .dns-status-container {
+            grid-area: dns-status;
+        }
+        
+        .dns-profile-container {
+            grid-area: dns-profile;
+        }
+        
+        .capability-matrix-container {
+            grid-area: capability-matrix;
+            min-height: 300px;
+        }
+        
+        /* Simplified responsive design */
+        @media (max-width: 1024px) {
+            .agent-dashboard-grid {
+                grid-template-areas: 
+                    "registry"
+                    "launcher"
+                    "assignment"
+                    "status-monitor"
+                    "capability-matrix";
+                grid-template-columns: 1fr;
+                gap: 16px;
+                padding: 16px;
+            }
+            
+            .agent-registry-container,
+            .agent-launcher-container,
+            .task-assignment-container {
+                min-height: 300px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .agent-dashboard-grid {
+                padding: 12px;
+                gap: 12px;
+            }
+            
+            .widget-card {
+                padding: 16px;
+            }
+            
+            .dashboard-header {
+                padding: 16px;
+                margin-bottom: 16px;
+            }
+            
+            .dashboard-title {
+                font-size: 1.5rem;
+            }
+            
+            .dashboard-subtitle {
+                font-size: 1rem;
+            }
+        }
+        
+        .dashboard-header {
+            background: linear-gradient(135deg, var(--accent-color) 0%, var(--accent-dark) 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+        
+        .dashboard-title {
+            margin: 0;
+            font-size: 2rem;
+            font-weight: 600;
+        }
+        
+        .dashboard-subtitle {
+            margin: 8px 0 0 0;
+            opacity: 0.9;
+            font-size: 1.1rem;
+        }
+        
+        .nav-buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: 15px;
+        }
+        
+        .nav-button {
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+        }
+        
+        .nav-button:hover {
+            background: rgba(255, 255, 255, 0.3);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+        
+        .status-indicator {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--card-background);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            z-index: 1000;
+        }
+        
+        .system-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+        }
+        
+        .status-light {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--success-color);
+            animation: pulse 2s ease-in-out infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        /* Enhanced widget styling for better readability */
+        .widget-card {
+            background: var(--color-bg-primary);
+            border-radius: 16px;
+            padding: 24px;
+            border: 1px solid var(--color-border);
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.2s ease;
+        }
+        
+        .widget-card:hover {
+            box-shadow: var(--shadow);
+            border-color: var(--color-primary-light);
+        }
+        
+        .widget-title {
+            margin: 0 0 20px 0;
+            color: var(--color-text-primary);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.25rem;
+            font-weight: 600;
+            line-height: 1.3;
+        }
+        
+        .widget-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .placeholder-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 32px 16px;
+            height: 100%;
+            min-height: 120px;
+        }
+        
+        .placeholder-title {
+            color: var(--color-text-primary);
+            font-size: 1.1rem;
+            font-weight: 500;
+            margin-bottom: 8px;
+            line-height: 1.4;
+        }
+        
+        .placeholder-subtitle {
+            color: var(--color-text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.5;
+            max-width: 280px;
+        }
+        
+        /* Enhanced typography scale */
+        .dashboard-title {
+            margin: 0;
+            font-size: 2.25rem;
+            font-weight: 700;
+            line-height: 1.2;
+            letter-spacing: -0.025em;
+        }
+        
+        .dashboard-subtitle {
+            margin: 12px 0 0 0;
+            opacity: 0.9;
+            font-size: 1.125rem;
+            font-weight: 400;
+            line-height: 1.4;
+        }
+        
+        /* Improved button typography */
+        .nav-button {
+            padding: 10px 18px;
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+            line-height: 1;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+            position: relative;
+        }
+        
+        .nav-button:focus {
+            outline: 2px solid #ffffff;
+            outline-offset: 2px;
+        }
+        
+        .button-icon {
+            display: inline-block;
+            margin-right: 0.5rem;
+            font-size: 1rem;
+        }
+        
+        .widget-icon {
+            display: inline-block;
+            margin-right: 0.5rem;
+            font-size: 1.1rem;
+        }
+        
+        /* Enhanced status indicator */
+        .status-indicator {
+            position: fixed;
+            top: 24px;
+            right: 24px;
+            background: var(--color-bg-primary);
+            border: 1px solid var(--color-border);
+            border-radius: 12px;
+            padding: 16px;
+            box-shadow: var(--shadow);
+            z-index: 1000;
+        }
+        
+        .system-status {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--color-text-primary);
+        }
+        
+        /* Accessible status indicators */
+        .status-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 0.5rem;
+            vertical-align: middle;
+        }
+        
+        .status-done {
+            background-color: #28a745;
+        }
+        
+        .status-progress {
+            background-color: #007bff;
+        }
+        
+        .status-pending {
+            background-color: #ffc107;
+        }
+        
+        /* Focus management */
+        .widget-card:focus-within {
+            box-shadow: 0 0 0 2px #007bff;
+        }
+        
+        /* Keyboard navigation */
+        .nav-button:focus,
+        select:focus,
+        button:focus {
+            outline: 2px solid #007bff;
+            outline-offset: 2px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Skip link for accessibility -->
+    <a href="#dashboard-container" class="skip-link">Skip to main content</a>
+    
+    <div id="dashboard-container">
+        <header class="dashboard-header">
+            <h1 class="dashboard-title">Agent Coordination Dashboard</h1>
+            <p class="dashboard-subtitle">Home Vibe Coder - Task & Agent Management</p>
+            <div class="nav-buttons">
+                <button class="nav-button" id="refresh-all" 
+                        aria-label="Refresh all dashboard data">
+                    <span class="button-icon" aria-hidden="true">↻</span> Refresh All
+                </button>
+                <button class="nav-button" id="auto-mode"
+                        aria-label="Toggle automatic task assignment mode">
+                    <span class="button-icon" aria-hidden="true">⚡</span> Auto Mode
+                </button>
+                <button class="nav-button" id="settings"
+                        aria-label="Open dashboard settings">
+                    <span class="button-icon" aria-hidden="true">⚙</span> Settings
+                </button>
+                <button class="nav-button" id="layout-toggle"
+                        aria-label="Toggle layout mode">
+                    <span class="button-icon" aria-hidden="true">📱</span> <span id="layout-mode-text">Desktop</span>
+                </button>
+                <button class="nav-button" id="original-dashboard" onclick="window.location.href='dashboard.html'"
+                        aria-label="Switch to DNS monitoring dashboard">
+                    <span class="button-icon" aria-hidden="true">📈</span> DNS Dashboard
+                </button>
+            </div>
+        </header>
+        
+        <main class="agent-dashboard-grid">
+            <!-- Agent Registry Widget -->
+            <div class="agent-registry-container" data-widget="agent-registry">
+                <!-- Agent Registry Widget will be loaded here -->
+            </div>
+            
+            <!-- Agent Launcher Widget -->
+            <div class="agent-launcher-container" data-widget="agent-launcher">
+                <!-- Agent Launcher Widget will be loaded here -->
+            </div>
+            
+            <!-- Task Assignment Widget -->
+            <div class="task-assignment-container" data-widget="task-assignment">
+                <div class="widget-card">
+                    <h3 class="widget-title">
+                        <span class="widget-icon" aria-hidden="true">📋</span> Task Assignment
+                        <select id="task-context-filter" 
+                                style="margin-left: auto; padding: 4px 8px; border-radius: 4px; border: 1px solid #ddd;"
+                                aria-label="Filter tasks by context">
+                            <option value="all">All Contexts (Loading...)</option>
+                        </select>
+                    </h3>
+                    <div id="task-assignment-content" class="widget-content">
+                        <div class="task-summary" style="margin-bottom: 16px; padding: 12px; background: #f8f9fa; border-radius: 8px;">
+                            <div style="display: flex; gap: 20px; font-size: 0.9rem;" role="region" aria-label="Task summary statistics">
+                                <span><span class="status-indicator" aria-hidden="true">📊</span> Total: <strong id="total-tasks">Loading...</strong></span>
+                                <span><span class="status-indicator status-done" aria-hidden="true"></span> Done: <strong id="done-tasks">-</strong></span>
+                                <span><span class="status-indicator status-progress" aria-hidden="true"></span> In Progress: <strong id="progress-tasks">-</strong></span>
+                                <span><span class="status-indicator status-pending" aria-hidden="true"></span> Pending: <strong id="pending-tasks">-</strong></span>
+                            </div>
+                        </div>
+                        <div id="tasks-container" style="max-height: 400px; overflow-y: auto;">
+                            <div class="placeholder-content">
+                                <div class="placeholder-title">Loading tasks from all contexts...</div>
+                                <div class="placeholder-subtitle">Fetching data from TaskMaster API</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Agent Status Monitor -->
+            <div class="status-monitor-container"
+                 data-tooltip="Monitor real-time agent performance and status updates"
+                 data-tooltip-title="Agent Status Monitor"
+                 data-tooltip-position="right">
+                <div class="widget-card">
+                    <h3 class="widget-title">
+                        <span class="widget-icon" aria-hidden="true">📊</span> Agent Status Monitor
+                    </h3>
+                    <div id="status-monitor-content" class="widget-content">
+                        <div class="placeholder-content">
+                            <div class="placeholder-title">Real-time agent monitoring</div>
+                            <div class="placeholder-subtitle">Status updates, performance metrics, and alerts</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Capability Matrix -->
+            <div class="capability-matrix-container">
+                <div class="widget-card">
+                    <h3 class="widget-title">
+                        <span class="widget-icon" aria-hidden="true">🎯</span> Capability Matrix
+                    </h3>
+                    <div id="capability-matrix-content" class="widget-content">
+                        <div class="placeholder-content">
+                            <div class="placeholder-title">Agent capabilities visualization</div>
+                            <div class="placeholder-subtitle">Skills mapping and task compatibility</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+        </main>
+        
+        <!-- System Status Indicator -->
+        <div class="status-indicator">
+            <div class="system-status">
+                <span class="status-light"></span>
+                <span>Agent System Online</span>
+            </div>
+        </div>
+        
+        <footer style="text-align: center; padding: 20px; color: var(--text-secondary); font-size: 0.9rem;">
+            <p>&copy; 2025 Agent Coordination Dashboard - Home Vibe Coder Standards</p>
+        </footer>
+    </div>
+
+    <!-- Load Agent Widget JavaScript -->
+    <script type="module" src="widgets/agent-registry/agent-registry.js"></script>
+    <script type="module" src="widgets/task-assignment/task-assignment.js"></script>
+    <script type="module" src="widgets/agent-launcher/agent-launcher.js"></script>
+    
+    <!-- Load core JavaScript (EventBus, etc.) -->
+    <script type="module" src="js/core.js"></script>
+    
+    <!-- Load Tooltip System -->
+    <script src="js/tooltip-system.js"></script>
+    
+    <!-- Load Guided Tour System -->
+    <script src="js/guided-tour.js"></script>
+    
+    <!-- Load Interactive Hints System -->
+    <script src="js/interactive-hints.js"></script>
+    
+    <!-- Load Real TaskMaster API Integration -->
+    <script type="module" src="js/taskmaster-real-api.js"></script>
+    
+    <!-- Load Agent API Integration -->
+    <script type="module" src="js/agent-api-integration.js"></script>
+    
+    <!-- Load human-centered interaction enhancements -->
+    <script src="js/human-centered-interactions.js"></script>
+    
+    <!-- Load final UX improvements -->
+    <script src="js/final-ux-improvements.js"></script>
+    
+    <!-- Dashboard-specific functionality -->
+    <script>
+        // Simple EventBus for widget communication
+        class EventBus {
+            constructor() {
+                this.events = {};
+            }
+            
+            on(event, callback) {
+                if (!this.events[event]) {
+                    this.events[event] = [];
+                }
+                this.events[event].push(callback);
+            }
+            
+            emit(event, data) {
+                if (this.events[event]) {
+                    this.events[event].forEach(callback => callback(data));
+                }
+            }
+            
+            off(event, callback = null) {
+                if (this.events[event]) {
+                    if (callback) {
+                        this.events[event] = this.events[event].filter(cb => cb !== callback);
+                    } else {
+                        delete this.events[event];
+                    }
+                }
+            }
+        }
+        
+        // Initialize global event bus
+        window.eventBus = new EventBus();
+        
+        // Helper functions for settings
+        function disableTooltips() {
+            // Remove all tooltip attributes
+            document.querySelectorAll('[data-tooltip]').forEach(el => {
+                el.removeAttribute('data-tooltip');
+                el.removeAttribute('data-tooltip-title');
+                el.removeAttribute('data-tooltip-position');
+            });
+            
+            // Remove existing tooltips
+            document.querySelectorAll('.tooltip').forEach(el => el.remove());
+            
+            console.log('All tooltips disabled');
+        }
+        
+        function updateRefreshInterval(interval) {
+            if (window.agentRegistry) {
+                clearInterval(window.agentRegistry.refreshTimer);
+                if (interval > 0) {
+                    window.agentRegistry.refreshTimer = setInterval(() => {
+                        window.agentRegistry.loadAgents();
+                    }, interval);
+                }
+            }
+        }
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            
+            // Initialize TaskMaster integration
+            initializeTaskMasterDashboard();
+            
+            // Initialize Agent Launcher Widget
+            initializeAgentLauncher();
+            
+            // Initialize Agent Registry Widget
+            initializeAgentRegistry();
+            
+            // Setup navigation buttons
+            const refreshAllBtn = document.getElementById('refresh-all');
+            const autoModeBtn = document.getElementById('auto-mode');
+            const settingsBtn = document.getElementById('settings');
+            const layoutToggleBtn = document.getElementById('layout-toggle');
+            
+            refreshAllBtn.addEventListener('click', function() {
+                window.eventBus.emit('dashboard:refresh:all');
+                this.textContent = '🔄 Refreshing...';
+                setTimeout(() => {
+                    this.textContent = '🔄 Refresh All';
+                }, 2000);
+            });
+            
+            autoModeBtn.addEventListener('click', function() {
+                const isAuto = this.textContent.includes('Auto Mode');
+                if (isAuto) {
+                    this.textContent = '⏸️ Manual Mode';
+                    window.eventBus.emit('dashboard:mode:auto');
+                } else {
+                    this.textContent = '🤖 Auto Mode';
+                    window.eventBus.emit('dashboard:mode:manual');
+                }
+            });
+            
+            // Layout toggle functionality
+            let isCompactLayout = false;
+            layoutToggleBtn.addEventListener('click', function() {
+                const dashboard = document.querySelector('.agent-dashboard-grid');
+                const modeText = document.getElementById('layout-mode-text');
+                
+                if (isCompactLayout) {
+                    // Switch to desktop layout
+                    dashboard.style.gridTemplateAreas = '"registry launcher" "assignment assignment" "status-monitor capability-matrix"';
+                    dashboard.style.gridTemplateColumns = '1fr 1fr';
+                    dashboard.style.maxWidth = '1400px';
+                    modeText.textContent = 'Desktop';
+                    isCompactLayout = false;
+                } else {
+                    // Switch to mobile-friendly layout
+                    dashboard.style.gridTemplateAreas = '"registry" "launcher" "assignment" "status-monitor" "capability-matrix"';
+                    dashboard.style.gridTemplateColumns = '1fr';
+                    dashboard.style.maxWidth = '800px';
+                    modeText.textContent = 'Mobile';
+                    isCompactLayout = true;
+                }
+            });
+
+            settingsBtn.addEventListener('click', function() {
+                window.eventBus.emit('dashboard:settings:open');
+                
+                // Show improved settings menu
+                const settingsMenu = `
+                    <div style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); 
+                                background: white; padding: 24px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); 
+                                z-index: 25000; min-width: 350px; max-width: 500px;">
+                        <h3 style="margin: 0 0 20px 0; color: #374151; font-size: 1.25rem;">⚙️ Dashboard Settings</h3>
+                        
+                        <div style="margin-bottom: 16px;">
+                            <label style="display: block; margin-bottom: 8px; font-weight: 500; color: #374151;">Layout Options</label>
+                            <button onclick="document.getElementById('layout-toggle').click(); document.querySelector('.settings-overlay').remove();" 
+                                    style="width: 100%; padding: 12px; background: #3b82f6; color: white; border: none; 
+                                           border-radius: 6px; cursor: pointer; margin-bottom: 8px;">
+                                📱 Toggle Layout Mode
+                            </button>
+                        </div>
+                        
+                        <div style="margin-bottom: 16px;">
+                            <label style="display: block; margin-bottom: 8px; font-weight: 500; color: #374151;">Tooltips & Hints</label>
+                            <button onclick="disableTooltips(); document.querySelector('.settings-overlay').remove();" 
+                                    style="width: 100%; padding: 12px; background: #dc3545; color: white; border: none; 
+                                           border-radius: 6px; cursor: pointer; margin-bottom: 8px;">
+                                🚫 Disable All Tooltips
+                            </button>
+                        </div>
+                        
+                        <div style="margin-bottom: 16px;">
+                            <label style="display: block; margin-bottom: 8px; font-weight: 500; color: #374151;">Data Refresh</label>
+                            <button onclick="document.getElementById('refresh-all').click(); document.querySelector('.settings-overlay').remove();" 
+                                    style="width: 100%; padding: 12px; background: #28a745; color: white; border: none; 
+                                           border-radius: 6px; cursor: pointer; margin-bottom: 8px;">
+                                🔄 Refresh All Data
+                            </button>
+                        </div>
+                        
+                        <div style="margin-bottom: 16px;">
+                            <label style="display: block; margin-bottom: 8px; font-weight: 500; color: #374151;">Auto-refresh Settings</label>
+                            <select id="refresh-interval" onchange="updateRefreshInterval(this.value)" style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 6px; margin-bottom: 8px;">
+                                <option value="30000" selected>Every 30 seconds</option>
+                                <option value="60000">Every minute</option>
+                                <option value="300000">Every 5 minutes</option>
+                                <option value="0">Disabled</option>
+                            </select>
+                        </div>
+                        
+                        <div style="text-align: center; border-top: 1px solid #e5e7eb; padding-top: 16px;">
+                            <button onclick="document.querySelector('.settings-overlay').remove();" 
+                                    style="padding: 10px 20px; background: #6b7280; color: white; border: none; 
+                                           border-radius: 6px; cursor: pointer; font-size: 0.9rem;">
+                                Close Settings
+                            </button>
+                        </div>
+                    </div>
+                    <div onclick="this.remove();" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+                                                        background: rgba(0,0,0,0.5); z-index: 24999;"></div>
+                `;
+                
+                const overlay = document.createElement('div');
+                overlay.className = 'settings-overlay';
+                overlay.innerHTML = settingsMenu;
+                document.body.appendChild(overlay);
+            });
+            
+            // Listen for cross-widget events
+            window.eventBus.on('task:assigned', function(data) {
+                updateSystemStatus(`Task ${data.taskId} assigned to ${data.agent}`);
+            });
+            
+            window.eventBus.on('agent:status:changed', function(data) {
+                updateSystemStatus(`${data.agentId} is now ${data.status}`);
+            });
+            
+            function updateSystemStatus(message) {
+                const statusText = document.querySelector('.system-status span:last-child');
+                if (statusText) {
+                    const originalText = statusText.textContent;
+                    statusText.textContent = message;
+                    setTimeout(() => {
+                        statusText.textContent = originalText;
+                    }, 3000);
+                }
+            }
+        });
+
+        /**
+         * Initialize Agent Registry Widget
+         */
+        function initializeAgentRegistry() {
+            const container = document.querySelector('.agent-registry-container');
+            if (container && window.AgentRegistryWidget) {
+                window.agentRegistry = new AgentRegistryWidget(container, {
+                    refreshInterval: 30000,
+                    maxAgents: 20
+                });
+                
+                // Add placeholder methods for button clicks
+                window.agentRegistry.viewAgentDetails = function(agentId) {
+                    console.log('View details for agent:', agentId);
+                    alert(`Agent Details: ${agentId}\n\nThis would show detailed agent information.`);
+                };
+                
+                window.agentRegistry.assignTask = function(agentId) {
+                    console.log('Assign task to agent:', agentId);
+                    alert(`Assign Task to: ${agentId}\n\nThis would open task assignment interface.`);
+                };
+                
+                window.agentRegistry.pauseAgent = function(agentId) {
+                    console.log('Pause agent:', agentId);
+                    alert(`Pause Agent: ${agentId}\n\nThis would pause the agent.`);
+                };
+                
+                window.agentRegistry.activateAgent = function(agentId) {
+                    console.log('Activate agent:', agentId);
+                    alert(`Activate Agent: ${agentId}\n\nThis would activate the agent.`);
+                };
+                
+                console.log('Agent Registry Widget initialized');
+            } else {
+                console.warn('Agent Registry Widget not available or container not found');
+            }
+        }
+
+        /**
+         * Initialize Agent Launcher Widget
+         */
+        function initializeAgentLauncher() {
+            const container = document.querySelector('.agent-launcher-container');
+            if (container && window.AgentLauncherWidget) {
+                window.agentLauncher = new AgentLauncherWidget(container, {
+                    apiEndpoint: 'http://localhost:3001/api/agents'
+                });
+                
+                // Listen for successful agent launches and refresh registry
+                window.eventBus.on('agent:launched', function(agent) {
+                    console.log('Agent launched:', agent);
+                    // Refresh the agent registry to show new agent
+                    window.eventBus.emit('agents:refresh');
+                });
+                
+                console.log('Agent Launcher Widget initialized');
+            } else {
+                console.warn('Agent Launcher Widget not available or container not found');
+            }
+        }
+
+        /**
+         * Initialize TaskMaster Dashboard Integration
+         */
+        async function initializeTaskMasterDashboard() {
+            console.log('Initializing TaskMaster Dashboard...');
+            
+            try {
+                // Wait for TaskMaster API to be available
+                if (!window.taskMasterAPI) {
+                    console.warn('TaskMaster API not yet available, retrying...');
+                    setTimeout(initializeTaskMasterDashboard, 500);
+                    return;
+                }
+                
+                // Fetch all tags and tasks
+                const dashboardData = await window.taskMasterAPI.getDashboardSummary();
+                
+                // Update task context filter
+                updateTaskContextFilter(dashboardData.tags);
+                
+                // Update task summary
+                updateTaskSummary(dashboardData.overview);
+                
+                // Display tasks
+                displayTasks(dashboardData.overview.tasksByTag, dashboardData.tags);
+                
+                console.log('TaskMaster Dashboard initialized successfully');
+                
+            } catch (error) {
+                console.error('Failed to initialize TaskMaster Dashboard:', error);
+                
+                // Show fallback data
+                showFallbackTaskData();
+            }
+            
+            // Set up event listeners for TaskMaster events
+            setupTaskMasterEventListeners();
+        }
+
+        function updateTaskContextFilter(tags) {
+            const filter = document.getElementById('task-context-filter');
+            if (!filter) return;
+            
+            // Clear existing options except the first one
+            filter.innerHTML = '<option value="all">All Contexts (' + tags.reduce((sum, tag) => sum + tag.tasks, 0) + ' tasks)</option>';
+            
+            // Add tag options
+            tags.forEach(tag => {
+                const option = document.createElement('option');
+                option.value = tag.name;
+                option.textContent = `${tag.name} (${tag.tasks} tasks)`;
+                filter.appendChild(option);
+            });
+        }
+
+        function updateTaskSummary(overview) {
+            document.getElementById('total-tasks').textContent = overview.totalTasks || 0;
+            document.getElementById('done-tasks').textContent = overview.tasksByStatus.done || 0;
+            document.getElementById('progress-tasks').textContent = overview.tasksByStatus['in-progress'] || 0;
+            document.getElementById('pending-tasks').textContent = overview.tasksByStatus.pending || 0;
+        }
+
+        function displayTasks(tasksByTag, tags) {
+            const container = document.getElementById('tasks-container');
+            if (!container) return;
+            
+            let html = '';
+            
+            // Create sections for each tag
+            Object.entries(tasksByTag).forEach(([tagName, taskCount]) => {
+                const tag = tags.find(t => t.name === tagName);
+                const description = tag ? tag.description : '';
+                
+                html += `
+                    <div class="tag-section" style="margin-bottom: 20px; border: 1px solid #e9ecef; border-radius: 8px; padding: 16px;">
+                        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+                            <h4 style="margin: 0; color: #495057; font-size: 1rem;">
+                                🏷️ ${tagName} 
+                                <span style="font-weight: normal; color: #6c757d; font-size: 0.85rem;">(${taskCount} tasks)</span>
+                            </h4>
+                            <span style="font-size: 0.8rem; color: #6c757d; max-width: 200px; text-align: right;">
+                                ${description}
+                            </span>
+                        </div>
+                        
+                        <div class="tag-task-breakdown" style="display: flex; gap: 15px; font-size: 0.85rem;">
+                `;
+                
+                if (tag && tag.taskBreakdown) {
+                    const breakdown = tag.taskBreakdown;
+                    html += `
+                        <span>✅ Done: ${breakdown.byStatus.done || 0}</span>
+                        <span>🔄 In Progress: ${breakdown.byStatus['in-progress'] || 0}</span>
+                        <span>⏳ Pending: ${breakdown.byStatus.pending || 0}</span>
+                        <span style="margin-left: auto; color: #007bff;">
+                            📈 ${Math.round((breakdown.byStatus.done || 0) / breakdown.total * 100)}% Complete
+                        </span>
+                    `;
+                }
+                
+                html += `
+                        </div>
+                    </div>
+                `;
+            });
+            
+            // Add summary stats
+            html += `
+                <div style="margin-top: 20px; padding: 16px; background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); border-radius: 8px;">
+                    <h4 style="margin: 0 0 12px 0; color: #495057;">📊 TaskMaster Overview</h4>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 12px; font-size: 0.85rem;">
+                        <div style="text-align: center; padding: 8px; background: white; border-radius: 4px;">
+                            <div style="font-weight: bold; color: #007bff;">${tags.length}</div>
+                            <div style="color: #6c757d;">Contexts</div>
+                        </div>
+                        <div style="text-align: center; padding: 8px; background: white; border-radius: 4px;">
+                            <div style="font-weight: bold; color: #28a745;">${Object.values(tasksByTag).reduce((sum, count) => sum + count, 0)}</div>
+                            <div style="color: #6c757d;">Total Tasks</div>
+                        </div>
+                        <div style="text-align: center; padding: 8px; background: white; border-radius: 4px;">
+                            <div style="font-weight: bold; color: #ffc107;">34</div>
+                            <div style="color: #6c757d;">Integration</div>
+                        </div>
+                        <div style="text-align: center; padding: 8px; background: white; border-radius: 4px;">
+                            <div style="font-weight: bold; color: #dc3545;">Google AI</div>
+                            <div style="color: #6c757d;">Ready</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            container.innerHTML = html;
+        }
+
+        function showFallbackTaskData() {
+            const container = document.getElementById('tasks-container');
+            if (!container) return;
+            
+            container.innerHTML = `
+                <div style="padding: 20px; text-align: center; color: #6c757d;">
+                    <h4>⚠️ TaskMaster API Unavailable</h4>
+                    <p>Showing known task contexts:</p>
+                    <div style="margin-top: 16px;">
+                        <div>🏷️ integration-specialist-tasks: <strong>34 tasks</strong> (Google AI, HTTP/Fetch MCP, etc.)</div>
+                        <div>🏷️ server-agent: <strong>8 tasks</strong> (Server operations)</div>
+                        <div>🏷️ ui-developer: <strong>7 tasks</strong> (CSS, HTML, widgets)</div>
+                        <div>🏷️ qa-specialist: <strong>6 tasks</strong> (Testing, QA)</div>
+                        <div>🏷️ master: <strong>8 tasks</strong> (Core tasks)</div>
+                    </div>
+                    <p style="margin-top: 16px; font-size: 0.9rem;">
+                        <strong>Total: 63 tasks across 5 contexts</strong><br>
+                        To see real-time data, implement TaskMaster API server.
+                    </p>
+                </div>
+            `;
+            
+            // Update summary with fallback data
+            document.getElementById('total-tasks').textContent = '63';
+            document.getElementById('done-tasks').textContent = '23';
+            document.getElementById('progress-tasks').textContent = '12';
+            document.getElementById('pending-tasks').textContent = '28';
+        }
+
+        function setupTaskMasterEventListeners() {
+            // Listen for refresh requests
+            window.eventBus.on('dashboard:refresh:all', async function() {
+                try {
+                    console.log('Refreshing TaskMaster data...');
+                    const dashboardData = await window.taskMasterAPI.getDashboardSummary();
+                    updateTaskSummary(dashboardData.overview);
+                    displayTasks(dashboardData.overview.tasksByTag, dashboardData.tags);
+                } catch (error) {
+                    console.error('Failed to refresh TaskMaster data:', error);
+                }
+            });
+            
+            // Listen for task context filter changes
+            const filter = document.getElementById('task-context-filter');
+            if (filter) {
+                filter.addEventListener('change', function() {
+                    const selectedTag = this.value;
+                    console.log('Filtering tasks by tag:', selectedTag);
+                    // TODO: Implement tag filtering
+                });
+            }
+        }
+    </script>
+</body>
+</html>

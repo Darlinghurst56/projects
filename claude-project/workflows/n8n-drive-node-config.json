@@ -1,0 +1,254 @@
+{
+  "name": "Google Drive API Node Configuration",
+  "nodes": [
+    {
+      "id": "telegram-trigger",
+      "name": "Telegram Bot",
+      "type": "@n8n/n8n-nodes-base.telegramTrigger",
+      "position": [200, 300],
+      "parameters": {
+        "contentType": "automatic",
+        "replyToMessage": false,
+        "download": true
+      },
+      "credentials": {
+        "telegramApi": {
+          "id": "telegram-bot-credentials",
+          "name": "Telegram Bot Credentials"
+        }
+      }
+    },
+    {
+      "id": "drive-command-parser",
+      "name": "Parse Drive Command",
+      "type": "@n8n/n8n-nodes-base.function",
+      "position": [400, 300],
+      "parameters": {
+        "functionCode": "// Parse /upload_file command and handle file uploads\nconst text = $input.first().json.message?.text || '';\nconst userId = $input.first().json.message?.from?.id;\nconst document = $input.first().json.message?.document;\nconst photo = $input.first().json.message?.photo;\n\n// Security validation - authorized users only\nconst authorizedUsers = [123456789]; // Replace with actual user IDs\nif (!authorizedUsers.includes(userId)) {\n  return [{\n    json: {\n      error: 'Unauthorized user',\n      userId: userId,\n      authorized: false\n    }\n  }];\n}\n\n// Handle file upload via document attachment\nif (document) {\n  const fileName = document.file_name || 'uploaded_file';\n  const fileSize = document.file_size || 0;\n  const mimeType = document.mime_type || 'application/octet-stream';\n  \n  // File size validation (max 20MB)\n  if (fileSize > 20 * 1024 * 1024) {\n    return [{\n      json: {\n        error: 'File too large (max 20MB)',\n        fileSize: fileSize,\n        authorized: true\n      }\n    }];\n  }\n  \n  return [{\n    json: {\n      fileId: document.file_id,\n      fileName: fileName,\n      fileSize: fileSize,\n      mimeType: mimeType,\n      uploadType: 'document',\n      fromUserId: userId,\n      authorized: true,\n      timestamp: new Date().toISOString()\n    }\n  }];\n}\n\n// Handle photo upload\nif (photo && photo.length > 0) {\n  const largestPhoto = photo[photo.length - 1]; // Get highest resolution\n  const fileName = `photo_${Date.now()}.jpg`;\n  \n  return [{\n    json: {\n      fileId: largestPhoto.file_id,\n      fileName: fileName,\n      fileSize: largestPhoto.file_size || 0,\n      mimeType: 'image/jpeg',\n      uploadType: 'photo',\n      fromUserId: userId,\n      authorized: true,\n      timestamp: new Date().toISOString()\n    }\n  }];\n}\n\n// Handle /upload_file command format: /upload_file folder:FolderName name:CustomName.ext\nif (text.startsWith('/upload_file')) {\n  return [{\n    json: {\n      error: 'Please attach a file to upload',\n      expectedAction: 'Send a file attachment with optional /upload_file folder:FolderName name:CustomName.ext',\n      authorized: true\n    }\n  }];\n}\n\n// Not a file upload command\nreturn [{\n  json: {\n    error: 'Not a file upload command',\n    expectedFormat: 'Send a file attachment or use /upload_file',\n    authorized: true\n  }\n}];"
+      }
+    },
+    {
+      "id": "telegram-download",
+      "name": "Download File from Telegram",
+      "type": "@n8n/n8n-nodes-base.telegram",
+      "position": [550, 300],
+      "parameters": {
+        "operation": "getFile",
+        "fileId": "={{ $json.fileId }}"
+      },
+      "credentials": {
+        "telegramApi": {
+          "id": "telegram-bot-credentials",
+          "name": "Telegram Bot Credentials"
+        }
+      }
+    },
+    {
+      "id": "drive-upload",
+      "name": "Google Drive Upload",
+      "type": "@n8n/n8n-nodes-base.googleDrive",
+      "position": [700, 300],
+      "parameters": {
+        "operation": "upload",
+        "name": "={{ $('Parse Drive Command').first().json.fileName }}",
+        "binaryData": true,
+        "binaryPropertyName": "data",
+        "parentId": "",
+        "options": {
+          "description": "Uploaded via Telegram Bot on {{ new Date().toISOString() }}"
+        }
+      },
+      "credentials": {
+        "googleDriveOAuth2": {
+          "id": "google-drive-oauth2-credentials",
+          "name": "Google Drive OAuth2 Credentials"
+        }
+      }
+    },
+    {
+      "id": "drive-success-reply",
+      "name": "Drive Success Reply",
+      "type": "@n8n/n8n-nodes-base.telegram",
+      "position": [900, 200],
+      "parameters": {
+        "operation": "sendMessage",
+        "chatId": "={{ $('Telegram Bot').first().json.message.chat.id }}",
+        "text": "📁 File uploaded to Google Drive successfully!\n\n📎 File: {{ $('Parse Drive Command').first().json.fileName }}\n📊 Size: {{ Math.round($('Parse Drive Command').first().json.fileSize / 1024) }} KB\n📋 Type: {{ $('Parse Drive Command').first().json.mimeType }}\n🔗 Drive ID: {{ $json.id }}\n🌐 View Link: https://drive.google.com/file/d/{{ $json.id }}/view\n\n✅ File is now available in your Google Drive!"
+      },
+      "credentials": {
+        "telegramApi": {
+          "id": "telegram-bot-credentials",
+          "name": "Telegram Bot Credentials"
+        }
+      }
+    },
+    {
+      "id": "drive-error-reply",
+      "name": "Drive Error Reply",
+      "type": "@n8n/n8n-nodes-base.telegram",
+      "position": [900, 400],
+      "parameters": {
+        "operation": "sendMessage",
+        "chatId": "={{ $('Telegram Bot').first().json.message.chat.id }}",
+        "text": "❌ File upload to Google Drive failed!\n\nError: {{ $json.error || 'Unknown error occurred' }}\n\nPlease try:\n1. Send a document/photo attachment\n2. Ensure file is under 20MB\n3. Check your Google Drive permissions"
+      },
+      "credentials": {
+        "telegramApi": {
+          "id": "telegram-bot-credentials",
+          "name": "Telegram Bot Credentials"
+        }
+      }
+    },
+    {
+      "id": "drive-validation-error",
+      "name": "Drive Validation Error",
+      "type": "@n8n/n8n-nodes-base.telegram",
+      "position": [700, 500],
+      "parameters": {
+        "operation": "sendMessage",
+        "chatId": "={{ $('Telegram Bot').first().json.message.chat.id }}",
+        "text": "⚠️ Upload Error:\n\n{{ $('Parse Drive Command').first().json.error }}\n\n{{ $('Parse Drive Command').first().json.expectedAction || $('Parse Drive Command').first().json.expectedFormat || '' }}"
+      },
+      "credentials": {
+        "telegramApi": {
+          "id": "telegram-bot-credentials",
+          "name": "Telegram Bot Credentials"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Telegram Bot": {
+      "main": [
+        [
+          {
+            "node": "Parse Drive Command",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Drive Command": {
+      "main": [
+        [
+          {
+            "node": "Download File from Telegram",
+            "type": "main",
+            "index": 0,
+            "conditions": {
+              "type": "filter",
+              "conditions": {
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.authorized }}",
+                    "rightValue": true,
+                    "operator": {
+                      "type": "boolean",
+                      "operation": "equals"
+                    }
+                  },
+                  {
+                    "leftValue": "={{ $json.fileId }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "string",
+                      "operation": "notEquals"
+                    }
+                  },
+                  {
+                    "leftValue": "={{ $json.error }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "node": "Drive Validation Error",
+            "type": "main",
+            "index": 0,
+            "conditions": {
+              "type": "filter",
+              "conditions": {
+                "combinator": "or",
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.authorized }}",
+                    "rightValue": false,
+                    "operator": {
+                      "type": "boolean",
+                      "operation": "equals"
+                    }
+                  },
+                  {
+                    "leftValue": "={{ $json.error }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "string",
+                      "operation": "notEquals"
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      ]
+    },
+    "Download File from Telegram": {
+      "main": [
+        [
+          {
+            "node": "Google Drive Upload",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Drive Upload": {
+      "main": [
+        [
+          {
+            "node": "Drive Success Reply",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ],
+      "error": [
+        [
+          {
+            "node": "Drive Error Reply",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": {},
+  "tags": [
+    {
+      "createdAt": "2025-07-07T07:37:00.000Z",
+      "updatedAt": "2025-07-07T07:37:00.000Z",
+      "id": "drive-config",
+      "name": "drive-config"
+    }
+  ],
+  "triggerCount": 1,
+  "meta": {
+    "templateCredsSetupCompleted": false
+  },
+  "id": "drive-node-config",
+  "versionId": "1"
+}

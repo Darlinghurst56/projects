@@ -1,0 +1,31 @@
+name: Test Ollama Models
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+jobs:
+  test-ollama-models:
+    runs-on: ubuntu-latest
+    env:
+      OLLAMA_HOST: ${{ secrets.OLLAMA_HOST || 'localhost:11434' }}
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: sudo apt-get update && sudo apt-get install -y jq curl
+
+      - name: Make test script executable
+        run: chmod +x ./test-ollama-models.sh
+
+      - name: Run Ollama model test script
+        run: ./test-ollama-models.sh
+
+      - name: Upload results log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ollama-model-test-results
+          path: ollama-model-test-results.log 

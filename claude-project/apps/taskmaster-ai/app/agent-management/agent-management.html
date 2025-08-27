@@ -1,0 +1,927 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TaskMaster AI - Agent Management</title>
+    <link rel="stylesheet" href="/app/web/css/common.css">
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --success-color: #059669;
+            --warning-color: #d97706;
+            --error-color: #dc2626;
+            --info-color: #0891b2;
+            --background-light: #f8fafc;
+            --background-dark: #1e293b;
+            --text-primary: #0f172a;
+            --text-secondary: #64748b;
+            --border-color: #e2e8f0;
+            --card-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            --card-shadow-hover: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--background-light);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary-color) 0%, #1e40af 100%);
+            color: white;
+            padding: 1.5rem;
+            box-shadow: var(--card-shadow);
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .header-title {
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+
+        .header-subtitle {
+            opacity: 0.9;
+            font-size: 0.95rem;
+        }
+
+        .system-status {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .status-indicator {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--success-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 0.75rem;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .section {
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .agents-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .agent-card {
+            background: white;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            box-shadow: var(--card-shadow);
+            transition: all 0.3s ease;
+            border: 1px solid var(--border-color);
+        }
+
+        .agent-card:hover {
+            box-shadow: var(--card-shadow-hover);
+            transform: translateY(-2px);
+        }
+
+        .agent-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .agent-name {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .agent-status {
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            text-transform: uppercase;
+        }
+
+        .agent-status.available {
+            background: #dcfce7;
+            color: var(--success-color);
+        }
+
+        .agent-status.busy {
+            background: #fef3c7;
+            color: var(--warning-color);
+        }
+
+        .agent-status.offline {
+            background: #fee2e2;
+            color: var(--error-color);
+        }
+
+        .agent-description {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            margin-bottom: 1rem;
+        }
+
+        .agent-capabilities {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .capability-tag {
+            background: #eff6ff;
+            color: var(--primary-color);
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.375rem;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .agent-controls {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 0.375rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #1d4ed8;
+        }
+
+        .btn-secondary {
+            background: var(--text-secondary);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #475569;
+        }
+
+        .btn-danger {
+            background: var(--error-color);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #b91c1c;
+        }
+
+        .btn-success {
+            background: var(--success-color);
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #047857;
+        }
+
+        .task-assignment {
+            background: white;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            box-shadow: var(--card-shadow);
+            border: 1px solid var(--border-color);
+        }
+
+        .task-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-label {
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .form-input, .form-select, .form-textarea {
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: 0.375rem;
+            font-size: 0.875rem;
+            transition: border-color 0.2s ease;
+        }
+
+        .form-input:focus, .form-select:focus, .form-textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .quick-tasks {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .quick-task {
+            background: #f8fafc;
+            border: 1px solid var(--border-color);
+            border-radius: 0.5rem;
+            padding: 1rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .quick-task:hover {
+            background: #f1f5f9;
+            border-color: var(--primary-color);
+        }
+
+        .quick-task-title {
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .quick-task-description {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        .activity-feed {
+            background: white;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            box-shadow: var(--card-shadow);
+            border: 1px solid var(--border-color);
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .activity-item {
+            display: flex;
+            gap: 1rem;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+
+        .activity-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--info-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 0.75rem;
+            flex-shrink: 0;
+        }
+
+        .activity-content {
+            flex: 1;
+        }
+
+        .activity-message {
+            font-size: 0.875rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .activity-time {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        .error-message {
+            background: #fee2e2;
+            border: 1px solid #fecaca;
+            color: var(--error-color);
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .success-message {
+            background: #dcfce7;
+            border: 1px solid #bbf7d0;
+            color: var(--success-color);
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        /* Mobile responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .agents-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .agent-controls {
+                flex-direction: column;
+            }
+
+            .btn {
+                justify-content: center;
+            }
+        }
+
+        /* Touch-friendly controls */
+        @media (max-width: 480px) {
+            .btn {
+                padding: 0.75rem 1rem;
+                font-size: 0.9rem;
+                min-height: 44px;
+            }
+
+            .agent-card {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-content">
+            <div>
+                <h1 class="header-title">TaskMaster AI - Agent Management</h1>
+                <p class="header-subtitle">Manage your 5-agent system for family task coordination</p>
+            </div>
+            <div class="system-status">
+                <div class="status-indicator" id="systemStatus">✓</div>
+                <div>
+                    <div style="font-size: 0.875rem; font-weight: 500;">System Status</div>
+                    <div style="font-size: 0.75rem; opacity: 0.9;" id="statusText">Loading...</div>
+                </div>
+                <button class="btn btn-secondary" onclick="refreshData()" style="margin-left: 1rem;">Refresh</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Error/Success Messages -->
+        <div id="messageContainer"></div>
+
+        <!-- Agent Status Grid -->
+        <div class="section">
+            <h2 class="section-title">Agent Status & Controls</h2>
+            <div class="agents-grid" id="agentsGrid">
+                <!-- Agent cards will be populated here -->
+            </div>
+        </div>
+
+        <!-- Quick Task Assignment -->
+        <div class="section">
+            <h2 class="section-title">Quick Task Assignment</h2>
+            <div class="task-assignment">
+                <div class="task-form">
+                    <div class="form-group">
+                        <label class="form-label">Task Title</label>
+                        <input type="text" class="form-input" id="taskTitle" placeholder="Enter task title...">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Task Description</label>
+                        <textarea class="form-textarea" id="taskDescription" placeholder="Describe the task..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Assign to Agent</label>
+                        <select class="form-select" id="assignToAgent">
+                            <option value="">Select an agent...</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Priority</label>
+                        <select class="form-select" id="taskPriority">
+                            <option value="medium">Medium</option>
+                            <option value="high">High</option>
+                            <option value="low">Low</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-primary" onclick="assignTask()">Assign Task</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Available Tasks -->
+        <div class="section">
+            <h2 class="section-title">Available Tasks for Assignment</h2>
+            <div class="quick-tasks" id="quickTasks">
+                <!-- Available tasks will be populated here -->
+            </div>
+        </div>
+
+        <!-- Activity Feed -->
+        <div class="section">
+            <h2 class="section-title">Recent Activity</h2>
+            <div class="activity-feed" id="activityFeed">
+                <!-- Activity items will be populated here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global state
+        let agents = [];
+        let activities = [];
+        let systemHealth = null;
+
+        // Global state
+        let currentTasks = [];
+        let availableTasks = [];
+
+        // Initialize the interface
+        async function init() {
+            try {
+                await loadSystemHealth();
+                await loadAgents();
+                await loadTasks();
+                await loadActivities();
+                setupEventListeners();
+                populateAvailableTasks();
+            } catch (error) {
+                console.error('Initialization error:', error);
+                showMessage('Failed to initialize agent management interface', 'error');
+            }
+        }
+
+        // Load system health status
+        async function loadSystemHealth() {
+            try {
+                const response = await fetch('/api/health');
+                systemHealth = await response.json();
+                
+                const statusIndicator = document.getElementById('systemStatus');
+                const statusText = document.getElementById('statusText');
+                
+                if (systemHealth.status === 'healthy') {
+                    statusIndicator.textContent = '✓';
+                    statusIndicator.style.background = 'var(--success-color)';
+                    statusText.textContent = 'System Healthy';
+                } else if (systemHealth.status === 'warning') {
+                    statusIndicator.textContent = '!';
+                    statusIndicator.style.background = 'var(--warning-color)';
+                    statusText.textContent = 'System Warning';
+                } else {
+                    statusIndicator.textContent = '✗';
+                    statusIndicator.style.background = 'var(--error-color)';
+                    statusText.textContent = 'System Degraded';
+                }
+            } catch (error) {
+                console.error('Failed to load system health:', error);
+                const statusIndicator = document.getElementById('systemStatus');
+                const statusText = document.getElementById('statusText');
+                statusIndicator.textContent = '✗';
+                statusIndicator.style.background = 'var(--error-color)';
+                statusText.textContent = 'System Offline';
+            }
+        }
+
+        // Load agents from API
+        async function loadAgents() {
+            try {
+                const response = await fetch('/api/v2/agents');
+                const data = await response.json();
+                agents = data.agents || [];
+                
+                renderAgents();
+                populateAgentSelect();
+            } catch (error) {
+                console.error('Failed to load agents:', error);
+                showMessage('Failed to load agents from API', 'error');
+            }
+        }
+
+        // Load tasks from API
+        async function loadTasks() {
+            try {
+                const response = await fetch('/api/v2/tasks');
+                const data = await response.json();
+                currentTasks = data.tasks || [];
+                
+                // Show ALL tasks that are pending or in-progress (no hardcoded project filter)
+                availableTasks = currentTasks.filter(task => 
+                    ['pending', 'in-progress'].includes(task.status)
+                );
+                
+                console.log('Loaded tasks:', currentTasks.length, 'Available tasks for assignment:', availableTasks.length);
+            } catch (error) {
+                console.error('Failed to load tasks:', error);
+                showMessage('Failed to load tasks from API', 'error');
+            }
+        }
+
+        // Render agent cards
+        function renderAgents() {
+            const agentsGrid = document.getElementById('agentsGrid');
+            
+            if (agents.length === 0) {
+                agentsGrid.innerHTML = '<div class="error-message">No agents available. Please check your TaskMaster system.</div>';
+                return;
+            }
+
+            agentsGrid.innerHTML = agents.map(agent => `
+                <div class="agent-card">
+                    <div class="agent-header">
+                        <div class="agent-name">${agent.id}</div>
+                        <div class="agent-status ${agent.status || 'offline'}">${agent.status || 'offline'}</div>
+                    </div>
+                    <div class="agent-description">
+                        ${getAgentDescription(agent.id)}
+                    </div>
+                    <div class="agent-capabilities">
+                        ${agent.capabilities.map(cap => `<span class="capability-tag">${cap}</span>`).join('')}
+                    </div>
+                    <div class="agent-controls">
+                        <button class="btn btn-primary" onclick="viewAgentTasks('${agent.id}')">View Tasks</button>
+                        <button class="btn btn-success" onclick="assignAvailableTask('${agent.id}')">Auto-Assign</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Get agent description
+        function getAgentDescription(agentId) {
+            const descriptions = {
+                'frontend-agent': 'UI/UX development with React, TypeScript, and responsive design',
+                'backend-agent': 'Node.js APIs, Express servers, data management, and backend integration',
+                'devops-agent': 'Server operations, deployment, build systems, and infrastructure management',
+                'qa-specialist': 'Testing, validation, debugging, and quality assurance',
+                'orchestrator-agent': 'Task coordination, multi-agent coordination, and developer interaction'
+            };
+            return descriptions[agentId] || 'Specialized agent for task execution';
+        }
+
+        // Populate agent select dropdown
+        function populateAgentSelect() {
+            const select = document.getElementById('assignToAgent');
+            select.innerHTML = '<option value="">Select an agent...</option>' + 
+                agents.map(agent => `<option value="${agent.id}">${agent.id}</option>`).join('');
+        }
+
+        // Populate available family tasks
+        function populateAvailableTasks() {
+            const quickTasksContainer = document.getElementById('quickTasks');
+            
+            if (availableTasks.length === 0) {
+                quickTasksContainer.innerHTML = '<div class="error-message">No tasks available for assignment.</div>';
+                return;
+            }
+            
+            quickTasksContainer.innerHTML = availableTasks.map(task => `
+                <div class="quick-task" onclick="useExistingTask('${task.id}', '${task.title}', '${task.description}', '${task.priority}')">
+                    <div class="quick-task-title">${task.title}</div>
+                    <div class="quick-task-description">${task.description}</div>
+                    <div style="font-size: 0.75rem; color: var(--text-secondary); margin-top: 0.5rem;">
+                        Status: ${task.status} | Priority: ${task.priority} | ID: ${task.id}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Use an existing task
+        function useExistingTask(taskId, title, description, priority) {
+            document.getElementById('taskTitle').value = title;
+            document.getElementById('taskDescription').value = description;
+            document.getElementById('taskPriority').value = priority;
+            
+            // Store task ID for assignment
+            document.getElementById('taskTitle').dataset.taskId = taskId;
+            
+            // Scroll to task form
+            document.querySelector('.task-assignment').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Assign task
+        async function assignTask() {
+            const title = document.getElementById('taskTitle').value;
+            const description = document.getElementById('taskDescription').value;
+            const agent = document.getElementById('assignToAgent').value;
+            const priority = document.getElementById('taskPriority').value;
+            const taskId = document.getElementById('taskTitle').dataset.taskId;
+
+            if (!title || !agent) {
+                showMessage('Please select a task and agent', 'error');
+                return;
+            }
+
+            try {
+                // Show loading state
+                showMessage('Assigning task to agent...', 'info');
+
+                // Use the existing task assignment API
+                const response = await fetch(`/api/v2/agents/${agent}/assign-task`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        taskId: taskId,
+                        priority: priority
+                    })
+                });
+
+                if (response.ok) {
+                    const result = await response.json();
+                    showMessage(`Task "${title}" assigned to ${agent}`, 'success');
+                    addActivity(`Task "${title}" (ID: ${taskId}) assigned to ${agent}`, 'task');
+                    
+                    // Clear form
+                    document.getElementById('taskTitle').value = '';
+                    document.getElementById('taskDescription').value = '';
+                    document.getElementById('assignToAgent').value = '';
+                    document.getElementById('taskPriority').value = 'medium';
+                    delete document.getElementById('taskTitle').dataset.taskId;
+                    
+                    // Refresh tasks
+                    await loadTasks();
+                    populateAvailableTasks();
+                } else {
+                    const error = await response.json();
+                    showMessage(`Failed to assign task: ${error.error}`, 'error');
+                }
+
+            } catch (error) {
+                console.error('Failed to assign task:', error);
+                showMessage('Failed to assign task', 'error');
+            }
+        }
+
+        // View agent tasks
+        function viewAgentTasks(agentId) {
+            // Show assigned tasks for this agent
+            const assignedTasks = currentTasks.filter(task => 
+                task.agentMetadata?.assignedAgent === agentId ||
+                task.details?.includes(agentId)
+            );
+            
+            addActivity(`Viewing tasks for ${agentId}`, 'info');
+            
+            if (assignedTasks.length === 0) {
+                showMessage(`No tasks assigned to ${agentId}`, 'info');
+            } else {
+                const taskList = assignedTasks.map(task => 
+                    `${task.title} (${task.status})`
+                ).join(', ');
+                showMessage(`${agentId} has ${assignedTasks.length} tasks: ${taskList}`, 'info');
+            }
+        }
+
+        // Auto-assign an available task to agent
+        async function assignAvailableTask(agentId) {
+            try {
+                showMessage(`Finding suitable task for ${agentId}...`, 'info');
+                
+                // Find a suitable task based on agent role
+                const suitableTask = findSuitableTask(agentId);
+                
+                if (!suitableTask) {
+                    showMessage(`No suitable tasks found for ${agentId}`, 'warning');
+                    return;
+                }
+                
+                // Auto-assign the task
+                const response = await fetch(`/api/v2/agents/${agentId}/assign-task`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        taskId: suitableTask.id,
+                        priority: suitableTask.priority
+                    })
+                });
+
+                if (response.ok) {
+                    showMessage(`Auto-assigned "${suitableTask.title}" to ${agentId}`, 'success');
+                    addActivity(`Auto-assigned task ${suitableTask.id} to ${agentId}`, 'task');
+                    
+                    // Refresh data
+                    await loadTasks();
+                    populateAvailableTasks();
+                } else {
+                    const error = await response.json();
+                    showMessage(`Failed to auto-assign: ${error.error}`, 'error');
+                }
+                
+            } catch (error) {
+                console.error('Failed to auto-assign task:', error);
+                showMessage(`Failed to auto-assign task to ${agentId}`, 'error');
+            }
+        }
+
+        // Find suitable task for agent
+        function findSuitableTask(agentId) {
+            // Define task matching rules
+            const taskRules = {
+                'frontend-agent': ['ui', 'dashboard', 'component', 'responsive', 'design'],
+                'backend-agent': ['api', 'data', 'server', 'integration', 'authentication'],
+                'qa-specialist': ['test', 'validation', 'quality', 'qa', 'accessibility'],
+                'devops-agent': ['deployment', 'infrastructure', 'build', 'docker', 'server'],
+                'orchestrator-agent': ['coordination', 'management', 'workflow', 'integration']
+            };
+
+            const rules = taskRules[agentId] || [];
+            
+            // Find tasks that match the agent's specialty
+            const matchingTasks = availableTasks.filter(task => {
+                const taskText = (task.title + ' ' + task.description).toLowerCase();
+                return rules.some(rule => taskText.includes(rule));
+            });
+
+            // Return highest priority matching task
+            return matchingTasks.sort((a, b) => {
+                const priorityOrder = { 'high': 3, 'medium': 2, 'low': 1 };
+                return priorityOrder[b.priority] - priorityOrder[a.priority];
+            })[0];
+        }
+
+        // Show message
+        function showMessage(message, type) {
+            const messageContainer = document.getElementById('messageContainer');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `${type}-message`;
+            messageDiv.textContent = message;
+            
+            messageContainer.appendChild(messageDiv);
+            
+            // Remove message after 5 seconds
+            setTimeout(() => {
+                messageDiv.remove();
+            }, 5000);
+        }
+
+        // Add activity
+        function addActivity(message, type) {
+            const activity = {
+                message,
+                type,
+                timestamp: new Date().toISOString()
+            };
+            
+            activities.unshift(activity);
+            
+            // Keep only last 20 activities
+            if (activities.length > 20) {
+                activities = activities.slice(0, 20);
+            }
+            
+            renderActivities();
+        }
+
+        // Load activities (placeholder)
+        async function loadActivities() {
+            // Initialize with some sample activities
+            activities = [
+                {
+                    message: 'Agent management interface initialized',
+                    type: 'system',
+                    timestamp: new Date().toISOString()
+                }
+            ];
+            renderActivities();
+        }
+
+        // Render activities
+        function renderActivities() {
+            const activityFeed = document.getElementById('activityFeed');
+            
+            if (activities.length === 0) {
+                activityFeed.innerHTML = '<div style="text-align: center; color: var(--text-secondary);">No recent activity</div>';
+                return;
+            }
+
+            activityFeed.innerHTML = activities.map(activity => `
+                <div class="activity-item">
+                    <div class="activity-icon">${getActivityIcon(activity.type)}</div>
+                    <div class="activity-content">
+                        <div class="activity-message">${activity.message}</div>
+                        <div class="activity-time">${formatTime(activity.timestamp)}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Get activity icon
+        function getActivityIcon(type) {
+            const icons = {
+                'task': '📋',
+                'agent': '🤖',
+                'system': '⚙️',
+                'info': 'ℹ️',
+                'error': '❌',
+                'success': '✅'
+            };
+            return icons[type] || '•';
+        }
+
+        // Format time
+        function formatTime(timestamp) {
+            const date = new Date(timestamp);
+            return date.toLocaleTimeString(undefined, { 
+                hour: '2-digit', 
+                minute: '2-digit'
+            });
+        }
+
+        // Manual refresh function
+        async function refreshData() {
+            try {
+                showMessage('Refreshing data...', 'info');
+                await loadSystemHealth();
+                await loadAgents();
+                await loadTasks();
+                populateAvailableTasks();
+                showMessage('Data refreshed successfully', 'success');
+            } catch (error) {
+                console.error('Refresh error:', error);
+                showMessage('Failed to refresh data', 'error');
+            }
+        }
+
+        // Setup event listeners
+        function setupEventListeners() {
+            // Add any additional event listeners here
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+    <script src="/app/web/components/navigation.js"></script>
+</body>
+</html>

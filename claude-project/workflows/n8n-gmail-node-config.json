@@ -1,0 +1,216 @@
+{
+  "name": "Gmail API Node Configuration",
+  "nodes": [
+    {
+      "id": "telegram-trigger",
+      "name": "Telegram Bot",
+      "type": "@n8n/n8n-nodes-base.telegramTrigger",
+      "position": [200, 300],
+      "parameters": {
+        "contentType": "automatic",
+        "replyToMessage": false,
+        "download": false
+      },
+      "credentials": {
+        "telegramApi": {
+          "id": "telegram-bot-credentials",
+          "name": "Telegram Bot Credentials"
+        }
+      }
+    },
+    {
+      "id": "command-parser",
+      "name": "Parse Email Command",
+      "type": "@n8n/n8n-nodes-base.function",
+      "position": [400, 300],
+      "parameters": {
+        "functionCode": "// Parse /send_email command\nconst text = $input.first().json.message.text || '';\nconst userId = $input.first().json.message.from.id;\n\n// Security validation - authorized users only\nconst authorizedUsers = [123456789]; // Replace with actual user IDs\nif (!authorizedUsers.includes(userId)) {\n  return [{\n    json: {\n      error: 'Unauthorized user',\n      userId: userId,\n      authorized: false\n    }\n  }];\n}\n\n// Parse email command format: /send_email to:email@domain.com subject:Subject body:Message body\nif (!text.startsWith('/send_email')) {\n  return [{\n    json: {\n      error: 'Invalid command format',\n      expectedFormat: '/send_email to:email@domain.com subject:Subject body:Message',\n      authorized: true\n    }\n  }];\n}\n\nconst emailRegex = /to:([\\w\\.-]+@[\\w\\.-]+\\.\\w+)\\s+subject:([^\\n]+?)\\s+body:([\\s\\S]+)/;\nconst match = text.match(emailRegex);\n\nif (!match) {\n  return [{\n    json: {\n      error: 'Invalid email format',\n      expectedFormat: '/send_email to:email@domain.com subject:Subject body:Message',\n      authorized: true\n    }\n  }];\n}\n\nreturn [{\n  json: {\n    to: match[1],\n    subject: match[2].trim(),\n    body: match[3].trim(),\n    fromUserId: userId,\n    authorized: true,\n    timestamp: new Date().toISOString()\n  }\n}];"
+      }
+    },
+    {
+      "id": "gmail-send",
+      "name": "Gmail Send Email",
+      "type": "@n8n/n8n-nodes-base.gmail",
+      "position": [600, 300],
+      "parameters": {
+        "operation": "send",
+        "sendTo": "={{ $json.to }}",
+        "subject": "={{ $json.subject }}",
+        "message": "={{ $json.body }}",
+        "messageType": "text"
+      },
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "gmail-oauth2-credentials",
+          "name": "Gmail OAuth2 Credentials"
+        }
+      }
+    },
+    {
+      "id": "success-reply",
+      "name": "Success Reply",
+      "type": "@n8n/n8n-nodes-base.telegram",
+      "position": [800, 200],
+      "parameters": {
+        "operation": "sendMessage",
+        "chatId": "={{ $('Telegram Bot').first().json.message.chat.id }}",
+        "text": "✅ Email sent successfully!\n\nTo: {{ $('Parse Email Command').first().json.to }}\nSubject: {{ $('Parse Email Command').first().json.subject }}\nSent at: {{ new Date().toLocaleString() }}"
+      },
+      "credentials": {
+        "telegramApi": {
+          "id": "telegram-bot-credentials",
+          "name": "Telegram Bot Credentials"
+        }
+      }
+    },
+    {
+      "id": "error-reply",
+      "name": "Error Reply",
+      "type": "@n8n/n8n-nodes-base.telegram",
+      "position": [800, 400],
+      "parameters": {
+        "operation": "sendMessage",
+        "chatId": "={{ $('Telegram Bot').first().json.message.chat.id }}",
+        "text": "❌ Email sending failed!\n\nError: {{ $json.error || 'Unknown error occurred' }}\n\nPlease check your command format:\n/send_email to:recipient@domain.com subject:Your Subject body:Your message"
+      },
+      "credentials": {
+        "telegramApi": {
+          "id": "telegram-bot-credentials",
+          "name": "Telegram Bot Credentials"
+        }
+      }
+    },
+    {
+      "id": "validation-error",
+      "name": "Validation Error",
+      "type": "@n8n/n8n-nodes-base.telegram",
+      "position": [600, 500],
+      "parameters": {
+        "operation": "sendMessage",
+        "chatId": "={{ $('Telegram Bot').first().json.message.chat.id }}",
+        "text": "⚠️ Command Error:\n\n{{ $('Parse Email Command').first().json.error }}\n\n{{ $('Parse Email Command').first().json.expectedFormat ? 'Format: ' + $('Parse Email Command').first().json.expectedFormat : '' }}"
+      },
+      "credentials": {
+        "telegramApi": {
+          "id": "telegram-bot-credentials",
+          "name": "Telegram Bot Credentials"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Telegram Bot": {
+      "main": [
+        [
+          {
+            "node": "Parse Email Command",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Email Command": {
+      "main": [
+        [
+          {
+            "node": "Gmail Send Email",
+            "type": "main",
+            "index": 0,
+            "conditions": {
+              "type": "filter",
+              "conditions": {
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.authorized }}",
+                    "rightValue": true,
+                    "operator": {
+                      "type": "boolean",
+                      "operation": "equals"
+                    }
+                  },
+                  {
+                    "leftValue": "={{ $json.error }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "node": "Validation Error",
+            "type": "main",
+            "index": 0,
+            "conditions": {
+              "type": "filter",
+              "conditions": {
+                "combinator": "or",
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.authorized }}",
+                    "rightValue": false,
+                    "operator": {
+                      "type": "boolean",
+                      "operation": "equals"
+                    }
+                  },
+                  {
+                    "leftValue": "={{ $json.error }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "string",
+                      "operation": "notEquals"
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      ]
+    },
+    "Gmail Send Email": {
+      "main": [
+        [
+          {
+            "node": "Success Reply",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ],
+      "error": [
+        [
+          {
+            "node": "Error Reply",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": {},
+  "tags": [
+    {
+      "createdAt": "2025-07-07T07:32:00.000Z",
+      "updatedAt": "2025-07-07T07:32:00.000Z",
+      "id": "gmail-config",
+      "name": "gmail-config"
+    }
+  ],
+  "triggerCount": 1,
+  "meta": {
+    "templateCredsSetupCompleted": false
+  },
+  "id": "gmail-node-config",
+  "versionId": "1"
+}

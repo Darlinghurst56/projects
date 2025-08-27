@@ -1,0 +1,29 @@
+# Task ID: 35
+# Title: Test Google Gemini Integration
+# Status: pending
+# Dependencies: 10, 19, 20, 21
+# Priority: medium
+# Description: Verify the Google Gemini integration is functioning correctly after switching from the Claude-Code provider. This task involves testing the core functionalities and ensuring seamless integration with existing workflows.
+# Details:
+1.  **Update MCP Server Configurations:** Modify the MCP server configurations to utilize Google Gemini instead of Claude-Code for relevant tasks (e.g., code generation, intent recognition). Ensure the necessary API keys and credentials are set up correctly.
+2.  **Codebase Updates:** Update any code that directly references the Claude-Code provider to use the Google Gemini provider. This includes updating function calls, data structures, and any related logic.
+3.  **Integration Testing:** Test the integration of Google Gemini with the Task Master AI MCP server, ESLint MCP server, HTTP/Fetch MCP server, and Puppeteer MCP server. Verify that each server can successfully communicate with Google Gemini and perform its intended functions.
+4.  **Workflow Validation:** Validate existing n8n workflows that rely on the AI provider. Ensure that the workflows continue to function correctly with Google Gemini and that the outputs are as expected.
+5.  **Error Handling:** Implement robust error handling to gracefully manage any issues that may arise during the integration, such as API errors, authentication failures, or unexpected responses from Google Gemini.
+
+# Test Strategy:
+1.  **MCP Server Functionality Tests:**
+    *   Run `claude --mcp-debug` to verify all MCP servers are connected and using Google Gemini.
+    *   Execute core functions from each MCP server (task-master help, eslint lint_file, http/fetch fetch_json, puppeteer navigate) and verify that they are utilizing Google Gemini.
+    *   Verify API responses are valid and expected.
+    *   Test error handling by attempting to trigger errors and verifying that they are handled gracefully.
+2.  **n8n Workflow Tests:**
+    *   Create n8n workflows that utilize Google Gemini for various tasks (e.g., generating code, recognizing intents).
+    *   Trigger workflows via Telegram bot commands.
+    *   Verify that Google Gemini is performing the tasks correctly and that the outputs are as expected.
+3.  **Performance Testing:**
+    *   Measure the performance of Google Gemini compared to Claude-Code in terms of response time and resource usage.
+    *   Identify any performance bottlenecks and optimize the integration accordingly.
+4.  **Regression Testing:**
+    *   Run existing test suites to ensure that the integration of Google Gemini has not introduced any regressions.
+    *   Address any regressions that are identified.

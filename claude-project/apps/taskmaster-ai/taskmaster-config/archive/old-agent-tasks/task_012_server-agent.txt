@@ -1,0 +1,24 @@
+# Task ID: 12
+# Title: Deploy Agent Dashboard Onboarding System to Production Server
+# Status: done
+# Dependencies: 8, 11
+# Priority: high
+# Description: Deploy the QA-approved Agent Dashboard Onboarding System to the production server. This includes installing dependencies, updating server files, restarting services, and verifying the enhanced dashboard functionality.
+
+PROJECT: House AI - Family Home Page | SUBPROJECT: Dashboard UI System
+# Details:
+1. Update the production server deployment with the QA-approved onboarding help system code.
+2. Install any new dependencies required for the onboarding system.
+3. Update server files to include the new JavaScript files and configurations for the onboarding features.
+4. Restart necessary services to apply the changes.
+5. Verify the enhanced dashboard with tooltips, guided tours, and interactive hints is running correctly on the production server.
+6. Ensure all new JavaScript files are served properly and the onboarding features work as expected in the production environment.
+7. Configure production server environment with proper routing from the load balancer to the application server.
+
+# Test Strategy:
+1. Verify the production build completes successfully with no errors or warnings after deploying the onboarding system.
+2. Test dashboard accessibility via the production URL with HTTPS.
+3. Confirm that the onboarding system's tooltips, guided tours, and interactive hints are functioning correctly.
+4. Verify that all new JavaScript files are loaded and executed without errors.
+5. Test the onboarding features across different browsers and devices to ensure compatibility.
+6. Monitor server logs for any errors or issues related to the new deployment.

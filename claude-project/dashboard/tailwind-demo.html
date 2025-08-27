@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tailwind Design System Integration Demo</title>
+    <link rel="stylesheet" href="styles/base.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        // Configure Tailwind to use our custom config
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            DEFAULT: "var(--color-primary)",
+                            dark: "var(--color-primary-dark)",
+                            light: "var(--color-primary-light)",
+                            foreground: "var(--color-text-inverse)",
+                        },
+                        success: {
+                            DEFAULT: "var(--color-success)",
+                            light: "var(--color-success-light)",
+                            dark: "var(--color-success-dark)",
+                            foreground: "var(--color-text-inverse)",
+                        },
+                        warning: {
+                            DEFAULT: "var(--color-warning)",
+                            light: "var(--color-warning-light)",
+                            dark: "var(--color-warning-dark)",
+                            foreground: "var(--color-text-inverse)",
+                        },
+                        danger: {
+                            DEFAULT: "var(--color-danger)",
+                            light: "var(--color-danger-light)",
+                            dark: "var(--color-danger-dark)",
+                            foreground: "var(--color-text-inverse)",
+                        },
+                        bg: {
+                            primary: "var(--color-bg-primary)",
+                            secondary: "var(--color-bg-secondary)",
+                            tertiary: "var(--color-bg-tertiary)",
+                        },
+                        text: {
+                            primary: "var(--color-text-primary)",
+                            secondary: "var(--color-text-secondary)",
+                            muted: "var(--color-text-muted)",
+                            inverse: "var(--color-text-inverse)",
+                        },
+                        'border-color': {
+                            DEFAULT: "var(--color-border)",
+                            dark: "var(--color-border-dark)",
+                        }
+                    },
+                    spacing: {
+                        'xs': "var(--spacing-xs)",
+                        'sm': "var(--spacing-sm)", 
+                        'md': "var(--spacing-md)",
+                        'lg': "var(--spacing-lg)",
+                        'xl': "var(--spacing-xl)",
+                        'xxl': "var(--spacing-xxl)",
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-bg-secondary font-sans">
+    <!-- Header -->
+    <header class="bg-bg-primary border-b border-border-color p-lg flex justify-between items-center shadow-sm">
+        <h1 class="text-xl font-semibold text-primary">Tailwind Design System Demo</h1>
+        <nav class="flex gap-sm">
+            <button class="bg-primary hover:bg-primary-dark text-primary-foreground px-md py-sm rounded font-medium transition-all duration-150">
+                Dashboard
+            </button>
+            <button class="bg-success hover:bg-success-dark text-success-foreground px-md py-sm rounded font-medium transition-all duration-150">
+                Status
+            </button>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-6xl mx-auto p-lg">
+        <!-- Color Palette Demo -->
+        <section class="mb-xxl">
+            <h2 class="text-lg font-semibold text-text-primary mb-lg">Color System</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-md">
+                <!-- Primary Colors -->
+                <div class="bg-bg-primary border border-border-color rounded-lg p-md">
+                    <h3 class="font-medium text-text-primary mb-sm">Primary</h3>
+                    <div class="space-y-xs">
+                        <div class="bg-primary-light text-primary-foreground p-xs rounded text-sm">Light</div>
+                        <div class="bg-primary text-primary-foreground p-xs rounded text-sm">Default</div>
+                        <div class="bg-primary-dark text-primary-foreground p-xs rounded text-sm">Dark</div>
+                    </div>
+                </div>
+
+                <!-- Success Colors -->
+                <div class="bg-bg-primary border border-border-color rounded-lg p-md">
+                    <h3 class="font-medium text-text-primary mb-sm">Success</h3>
+                    <div class="space-y-xs">
+                        <div class="bg-success-light text-success-foreground p-xs rounded text-sm">Light</div>
+                        <div class="bg-success text-success-foreground p-xs rounded text-sm">Default</div>
+                        <div class="bg-success-dark text-success-foreground p-xs rounded text-sm">Dark</div>
+                    </div>
+                </div>
+
+                <!-- Warning Colors -->
+                <div class="bg-bg-primary border border-border-color rounded-lg p-md">
+                    <h3 class="font-medium text-text-primary mb-sm">Warning</h3>
+                    <div class="space-y-xs">
+                        <div class="bg-warning-light text-warning-foreground p-xs rounded text-sm">Light</div>
+                        <div class="bg-warning text-warning-foreground p-xs rounded text-sm">Default</div>
+                        <div class="bg-warning-dark text-warning-foreground p-xs rounded text-sm">Dark</div>
+                    </div>
+                </div>
+
+                <!-- Danger Colors -->
+                <div class="bg-bg-primary border border-border-color rounded-lg p-md">
+                    <h3 class="font-medium text-text-primary mb-sm">Danger</h3>
+                    <div class="space-y-xs">
+                        <div class="bg-danger-light text-danger-foreground p-xs rounded text-sm">Light</div>
+                        <div class="bg-danger text-danger-foreground p-xs rounded text-sm">Default</div>
+                        <div class="bg-danger-dark text-danger-foreground p-xs rounded text-sm">Dark</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Widget Examples -->
+        <section class="mb-xxl">
+            <h2 class="text-lg font-semibold text-text-primary mb-lg">Dashboard Widgets with Tailwind</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-lg">
+                
+                <!-- DNS Status Widget -->
+                <div class="bg-bg-primary border border-border-color rounded-lg shadow hover:shadow-lg transition-all min-h-80 flex flex-col">
+                    <!-- Widget Header -->
+                    <div class="bg-bg-secondary border-b border-border-color p-md flex justify-between items-center">
+                        <h3 class="font-semibold text-text-primary">DNS Status</h3>
+                        <div class="flex gap-xs">
+                            <button class="w-7 h-7 flex items-center justify-center border border-border-color rounded-sm hover:bg-bg-tertiary hover:text-text-primary text-text-secondary transition-all duration-150">
+                                ↻
+                            </button>
+                            <button class="w-7 h-7 flex items-center justify-center border border-border-color rounded-sm hover:bg-bg-tertiary hover:text-warning text-text-secondary transition-all duration-150">
+                                ⚙
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Widget Content -->
+                    <div class="flex-1 p-md flex flex-col gap-md">
+                        <!-- Status Indicator -->
+                        <div class="flex items-center gap-sm">
+                            <div class="w-3 h-3 rounded-full bg-success"></div>
+                            <span class="font-medium text-text-primary">Active</span>
+                            <span class="text-text-muted text-sm ml-auto">Online</span>
+                        </div>
+                        
+                        <!-- Metrics -->
+                        <div class="bg-bg-secondary border border-border-color rounded p-md text-center">
+                            <div class="text-xl font-bold text-primary mb-xs">12ms</div>
+                            <div class="text-xs text-text-secondary uppercase tracking-wide">Latency</div>
+                        </div>
+                        
+                        <!-- Details -->
+                        <div class="space-y-xs text-sm">
+                            <div class="flex justify-between">
+                                <span class="text-text-secondary">Server:</span>
+                                <span class="text-text-primary">US East</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-text-secondary">Uptime:</span>
+                                <span class="text-success">99.9%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Task Assignment Widget -->
+                <div class="bg-bg-primary border border-border-color rounded-lg shadow hover:shadow-lg transition-all min-h-80 flex flex-col">
+                    <div class="bg-bg-secondary border-b border-border-color p-md">
+                        <h3 class="font-semibold text-text-primary">Task Assignment</h3>
+                    </div>
+                    <div class="flex-1 p-md flex flex-col gap-md">
+                        <!-- Agent List -->
+                        <div class="space-y-sm">
+                            <div class="flex items-center justify-between p-xs bg-bg-secondary rounded">
+                                <div class="flex items-center gap-xs">
+                                    <div class="w-2 h-2 rounded-full bg-success"></div>
+                                    <span class="text-sm font-medium">frontend-agent</span>
+                                </div>
+                                <span class="text-xs bg-primary text-primary-foreground px-xs py-0.5 rounded">3 tasks</span>
+                            </div>
+                            <div class="flex items-center justify-between p-xs bg-bg-secondary rounded">
+                                <div class="flex items-center gap-xs">
+                                    <div class="w-2 h-2 rounded-full bg-warning"></div>
+                                    <span class="text-sm font-medium">backend-agent</span>
+                                </div>
+                                <span class="text-xs bg-warning text-warning-foreground px-xs py-0.5 rounded">1 task</span>
+                            </div>
+                            <div class="flex items-center justify-between p-xs bg-bg-secondary rounded">
+                                <div class="flex items-center gap-xs">
+                                    <div class="w-2 h-2 rounded-full bg-text-muted"></div>
+                                    <span class="text-sm font-medium">qa-agent</span>
+                                </div>
+                                <span class="text-xs bg-bg-tertiary text-text-secondary px-xs py-0.5 rounded">0 tasks</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Control Panel Widget -->
+                <div class="bg-bg-primary border border-border-color rounded-lg shadow hover:shadow-lg transition-all min-h-80 flex flex-col">
+                    <div class="bg-bg-secondary border-b border-border-color p-md">
+                        <h3 class="font-semibold text-text-primary">Control Panel</h3>
+                    </div>
+                    <div class="flex-1 p-md flex flex-col gap-md">
+                        <!-- Control Buttons -->
+                        <div class="flex flex-col gap-sm">
+                            <button class="bg-success hover:bg-success-dark text-success-foreground px-md py-sm rounded font-medium transition-all duration-150 w-full">
+                                Start Service
+                            </button>
+                            <button class="bg-warning hover:bg-warning-dark text-warning-foreground px-md py-sm rounded font-medium transition-all duration-150 w-full">
+                                Pause Service
+                            </button>
+                            <button class="bg-danger hover:bg-danger-dark text-danger-foreground px-md py-sm rounded font-medium transition-all duration-150 w-full">
+                                Stop Service
+                            </button>
+                        </div>
+                        
+                        <!-- Status Display -->
+                        <div class="bg-bg-secondary border border-border-color rounded p-md min-h-20 flex items-center justify-center">
+                            <span class="text-text-muted text-sm italic">Ready for commands</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Spacing & Typography Demo -->
+        <section class="mb-xxl">
+            <h2 class="text-lg font-semibold text-text-primary mb-lg">Spacing & Typography</h2>
+            <div class="bg-bg-primary border border-border-color rounded-lg p-lg">
+                <div class="space-y-md">
+                    <div class="bg-bg-secondary p-xs rounded">Extra Small Padding (xs)</div>
+                    <div class="bg-bg-secondary p-sm rounded">Small Padding (sm)</div>
+                    <div class="bg-bg-secondary p-md rounded">Medium Padding (md)</div>
+                    <div class="bg-bg-secondary p-lg rounded">Large Padding (lg)</div>
+                    <div class="bg-bg-secondary p-xl rounded">Extra Large Padding (xl)</div>
+                </div>
+                
+                <div class="mt-lg space-y-sm">
+                    <p class="text-text-primary text-lg font-bold">Primary Text - Large & Bold</p>
+                    <p class="text-text-primary">Primary Text - Regular</p>
+                    <p class="text-text-secondary">Secondary Text</p>
+                    <p class="text-text-muted text-sm">Muted Text - Small</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Status Indicators -->
+        <section>
+            <h2 class="text-lg font-semibold text-text-primary mb-lg">Status Indicators</h2>
+            <div class="bg-bg-primary border border-border-color rounded-lg p-lg">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-md">
+                    <div class="space-y-sm">
+                        <h3 class="font-medium text-text-primary">Service Status</h3>
+                        <div class="flex items-center gap-sm p-sm bg-success/10 border border-success/20 rounded">
+                            <div class="w-2 h-2 rounded-full bg-success"></div>
+                            <span class="text-success font-medium">All Systems Operational</span>
+                        </div>
+                        <div class="flex items-center gap-sm p-sm bg-warning/10 border border-warning/20 rounded">
+                            <div class="w-2 h-2 rounded-full bg-warning"></div>
+                            <span class="text-warning font-medium">Minor Issues Detected</span>
+                        </div>
+                        <div class="flex items-center gap-sm p-sm bg-danger/10 border border-danger/20 rounded">
+                            <div class="w-2 h-2 rounded-full bg-danger"></div>
+                            <span class="text-danger font-medium">Service Unavailable</span>
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-sm">
+                        <h3 class="font-medium text-text-primary">Connection Status</h3>
+                        <div class="space-y-xs text-sm">
+                            <div class="flex justify-between">
+                                <span class="text-text-secondary">DNS Server:</span>
+                                <span class="text-success">Connected</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-text-secondary">API Gateway:</span>
+                                <span class="text-success">Online</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-text-secondary">Database:</span>
+                                <span class="text-warning">Slow</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-text-secondary">Cache:</span>
+                                <span class="text-danger">Offline</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-bg-primary border-t border-border-color p-md text-center text-text-secondary text-sm mt-xxl">
+        Tailwind CSS integrated with Dashboard Design System
+    </footer>
+</body>
+</html>

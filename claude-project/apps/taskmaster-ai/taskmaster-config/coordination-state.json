@@ -1,0 +1,187 @@
+{
+  "activeAgents": {
+    "qa-specialist": {
+      "role": "qa-specialist",
+      "registeredAt": "2025-07-06T12:26:49.774Z",
+      "lastActivity": "2025-07-06T12:26:49.774Z",
+      "status": "active"
+    },
+    "qa-agent-1": {
+      "role": "qa-specialist",
+      "registeredAt": "2025-07-06T12:34:20.117Z",
+      "lastActivity": "2025-07-06T12:34:20.118Z",
+      "status": "active"
+    },
+    "claude-agent-mcp": {
+      "role": "integration-specialist",
+      "registeredAt": "2025-07-07T13:20:09.765Z",
+      "lastActivity": "2025-07-07T13:20:09.765Z",
+      "status": "active"
+    },
+    "claude-backend-agent": {
+      "role": "integration-specialist",
+      "registeredAt": "2025-07-07T14:06:06.706Z",
+      "lastActivity": "2025-07-07T14:06:06.706Z",
+      "status": "active"
+    },
+    "test-frontend-agent": {
+      "role": "frontend-architect",
+      "registeredAt": "2025-07-07T14:14:42.398Z",
+      "lastActivity": "2025-07-07T14:14:42.398Z",
+      "status": "active"
+    },
+    "claude-frontend-agent": {
+      "role": "ui-developer",
+      "registeredAt": "2025-07-07T14:17:14.718Z",
+      "lastActivity": "2025-07-07T14:17:14.719Z",
+      "status": "active"
+    },
+    "qa-specialist-task1": {
+      "role": "qa-specialist",
+      "registeredAt": "2025-07-09T09:22:00.603Z",
+      "lastActivity": "2025-07-09T09:22:00.604Z",
+      "status": "active"
+    },
+    "claude-qa-agent-001": {
+      "role": "qa-specialist",
+      "registeredAt": "2025-07-09T15:27:08.554Z",
+      "lastActivity": "2025-07-09T15:27:08.555Z",
+      "status": "active"
+    },
+    "ui-developer-agent": {
+      "role": "ui-developer",
+      "registeredAt": "2025-07-11T11:47:22.730Z",
+      "lastActivity": "2025-07-11T11:47:22.730Z",
+      "status": "active"
+    },
+    "integration-specialist-agent": {
+      "role": "integration-specialist",
+      "registeredAt": "2025-07-11T11:47:31.478Z",
+      "lastActivity": "2025-07-11T11:47:31.478Z",
+      "status": "active"
+    },
+    "qa-specialist-agent": {
+      "role": "qa-specialist",
+      "registeredAt": "2025-07-11T11:47:37.095Z",
+      "lastActivity": "2025-07-11T11:47:37.095Z",
+      "status": "active"
+    },
+    "claude-ui-specialist": {
+      "role": "ui-developer",
+      "registeredAt": "2025-07-13T12:16:55.334Z",
+      "lastActivity": "2025-07-13T12:16:55.334Z",
+      "status": "active"
+    },
+    "server-agent-001": {
+      "role": "server-agent",
+      "registeredAt": "2025-07-13T16:20:14.675Z",
+      "lastActivity": "2025-07-13T16:20:14.675Z",
+      "status": "active"
+    }
+  },
+  "taskAssignments": {
+    "1": [
+      {
+        "roleName": "qa-specialist",
+        "agentId": "qa-specialist-task1",
+        "action": "HANDOFF_INITIATED",
+        "details": "Handoff from qa-specialist-task1(qa-specialist) to frontend-agent-widget-fix(frontend-agent). Reason: ",
+        "timestamp": "2025-07-09T09:41:12.270Z"
+      }
+    ]
+  },
+  "handoffQueue": [],
+  "roleHistory": {
+    "qa-specialist": [
+      {
+        "agentId": "qa-specialist",
+        "action": "registered",
+        "timestamp": "2025-07-06T12:26:49.774Z"
+      },
+      {
+        "agentId": "qa-agent-1",
+        "action": "registered",
+        "timestamp": "2025-07-06T12:34:20.118Z"
+      },
+      {
+        "agentId": "qa-specialist-task1",
+        "action": "registered",
+        "timestamp": "2025-07-09T09:22:00.604Z"
+      },
+      {
+        "agentId": "claude-qa-agent-001",
+        "action": "registered",
+        "timestamp": "2025-07-09T15:27:08.555Z"
+      },
+      {
+        "agentId": "qa-specialist-agent",
+        "action": "registered",
+        "timestamp": "2025-07-11T11:47:37.095Z"
+      }
+    ],
+    "integration-specialist": [
+      {
+        "agentId": "claude-agent-mcp",
+        "action": "registered",
+        "timestamp": "2025-07-07T13:20:09.765Z"
+      },
+      {
+        "agentId": "claude-backend-agent",
+        "action": "registered",
+        "timestamp": "2025-07-07T14:06:06.706Z"
+      },
+      {
+        "agentId": "integration-specialist-agent",
+        "action": "registered",
+        "timestamp": "2025-07-11T11:47:31.478Z"
+      }
+    ],
+    "frontend-architect": [
+      {
+        "agentId": "test-frontend-agent",
+        "action": "registered",
+        "timestamp": "2025-07-07T14:14:42.398Z"
+      }
+    ],
+    "ui-developer": [
+      {
+        "agentId": "claude-frontend-agent",
+        "action": "registered",
+        "timestamp": "2025-07-07T14:17:14.719Z"
+      },
+      {
+        "agentId": "ui-developer-agent",
+        "action": "registered",
+        "timestamp": "2025-07-11T11:47:22.730Z"
+      },
+      {
+        "agentId": "claude-ui-specialist",
+        "action": "registered",
+        "timestamp": "2025-07-13T12:16:55.334Z"
+      }
+    ],
+    "server-agent": [
+      {
+        "agentId": "server-agent-001",
+        "action": "registered",
+        "timestamp": "2025-07-13T16:20:14.675Z"
+      }
+    ]
+  },
+  "lastSync": "2025-07-14T07:33:49.329Z",
+  "priorityDecisions": [
+    {
+      "timestamp": "2025-07-14T07:33:49.328Z",
+      "reason": "automatic_priority_resolution",
+      "winnerPriority": -1,
+      "loserPriority": -1
+    }
+  ],
+  "coordinationMetrics": {
+    "totalHandoffs": 0,
+    "successfulHandoffs": 0,
+    "priorityOverrides": 1,
+    "conflictsResolved": 1,
+    "handoffSuccessRate": "0%"
+  }
+}

@@ -1,0 +1,400 @@
+/**
+ * Layout System for Control D Dashboard
+ * CSS Grid and Flexbox implementation with fixed widget positioning
+ */
+
+/* Grid Container Layout */
+.widget-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    grid-template-rows: auto;
+    gap: var(--spacing-lg);
+    padding: var(--spacing-lg);
+    max-width: 1400px;
+    margin: 0 auto;
+    width: 100%;
+    min-height: calc(100vh - 120px); /* Account for header/footer */
+}
+
+/* Fixed Widget Grid Areas for DNS Widgets */
+.widget-grid.fixed-layout {
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(2, minmax(300px, auto));
+    grid-template-areas:
+        "dns-info dns-status"
+        "dns-profile dns-profile";
+}
+
+/* Individual Widget Positioning */
+.widget-dns-info {
+    grid-area: dns-info;
+}
+
+.widget-dns-status {
+    grid-area: dns-status;
+}
+
+.widget-dns-profile {
+    grid-area: dns-profile;
+}
+
+
+/* Widget Internal Layout using Flexbox */
+.widget {
+    display: flex;
+    flex-direction: column;
+    min-height: 300px;
+    max-height: 600px;
+    overflow: hidden;
+}
+
+.widget-header {
+    flex: 0 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--spacing-md);
+    background-color: var(--color-bg-secondary);
+    border-bottom: 1px solid var(--color-border);
+}
+
+.widget-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: var(--spacing-md);
+    overflow-y: auto;
+    gap: var(--spacing-sm);
+}
+
+/* DNS Widget Specific Layouts */
+
+/* DNS Info Widget - Analytics Grid */
+.dns-info-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto 1fr;
+    gap: var(--spacing-md);
+    grid-template-areas:
+        "controls controls"
+        "stats stats"
+        "chart companies";
+}
+
+.dns-info-controls {
+    grid-area: controls;
+    display: flex;
+    gap: var(--spacing-sm);
+    flex-wrap: wrap;
+}
+
+.dns-info-stats {
+    grid-area: stats;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: var(--spacing-sm);
+}
+
+.dns-info-chart {
+    grid-area: chart;
+}
+
+.dns-info-companies {
+    grid-area: companies;
+}
+
+/* DNS Status Widget - Status Grid */
+.dns-status-content {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto 1fr;
+    gap: var(--spacing-md);
+    grid-template-areas:
+        "connection"
+        "performance"
+        "health";
+}
+
+.dns-connection-status {
+    grid-area: connection;
+}
+
+.dns-performance-metrics {
+    grid-area: performance;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    gap: var(--spacing-sm);
+}
+
+.dns-health-status {
+    grid-area: health;
+}
+
+/* DNS Profile Widget - Profile Layout */
+.dns-profile-content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
+
+.profile-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--spacing-sm);
+    background-color: var(--color-bg-tertiary);
+    border-radius: var(--radius);
+}
+
+.profile-details {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: var(--spacing-sm) var(--spacing-md);
+    align-items: center;
+}
+
+/* Pause/Test Widget - Control Layout */
+.pause-test-content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-lg);
+    align-items: center;
+    justify-content: center;
+}
+
+.connection-controls {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+    width: 100%;
+    max-width: 250px;
+}
+
+.test-results {
+    width: 100%;
+    min-height: 100px;
+    background-color: var(--color-bg-secondary);
+    border-radius: var(--radius);
+    padding: var(--spacing-md);
+    overflow-y: auto;
+}
+
+/* Responsive Breakpoints */
+
+/* Mobile Phones (320px - 767px) */
+@media (max-width: 767px) {
+    .widget-grid {
+        grid-template-columns: 1fr;
+        padding: var(--spacing-md);
+        gap: var(--spacing-md);
+    }
+    
+    .widget-grid.fixed-layout {
+        grid-template-columns: 1fr;
+        grid-template-rows: repeat(4, minmax(250px, auto));
+        grid-template-areas:
+            "dns-info"
+            "dns-status"
+            "dns-profile"
+            "pause-test";
+    }
+    
+    .widget {
+        min-height: 250px;
+        max-height: 400px;
+    }
+    
+    .dns-info-content {
+        grid-template-columns: 1fr;
+        grid-template-areas:
+            "controls"
+            "stats"
+            "chart"
+            "companies";
+    }
+    
+    .dns-info-stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .dns-performance-metrics {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .connection-controls {
+        max-width: 100%;
+    }
+}
+
+/* Tablets (768px - 1023px) */
+@media (min-width: 768px) and (max-width: 1023px) {
+    .widget-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--spacing-md);
+    }
+    
+    .widget-grid.fixed-layout {
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: repeat(2, minmax(280px, auto));
+        grid-template-areas:
+            "dns-info dns-status"
+            "dns-profile pause-test";
+    }
+    
+    .widget {
+        min-height: 280px;
+        max-height: 500px;
+    }
+    
+    .dns-info-stats {
+        grid-template-columns: repeat(3, 1fr);
+    }
+    
+    .dns-performance-metrics {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+/* Desktop Small (1024px - 1199px) */
+@media (min-width: 1024px) and (max-width: 1199px) {
+    .widget-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .widget-grid.fixed-layout {
+        grid-template-columns: repeat(2, 1fr);
+        grid-template-rows: repeat(2, minmax(300px, auto));
+        grid-template-areas:
+            "dns-info dns-status"
+            "dns-profile pause-test";
+    }
+    
+    .dns-info-stats {
+        grid-template-columns: repeat(4, 1fr);
+    }
+    
+    .dns-performance-metrics {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+/* Desktop Large (1200px+) */
+@media (min-width: 1200px) {
+    .widget-grid {
+        grid-template-columns: repeat(2, 1fr);
+        max-width: 1400px;
+    }
+    
+    .widget-grid.fixed-layout {
+        grid-template-columns: repeat(2, 1fr);
+        grid-template-rows: repeat(2, minmax(320px, auto));
+        grid-template-areas:
+            "dns-info dns-status"
+            "dns-profile pause-test";
+    }
+    
+    .widget {
+        min-height: 320px;
+        max-height: 600px;
+    }
+}
+
+/* Extra Large Displays (1600px+) */
+@media (min-width: 1600px) {
+    .widget-grid {
+        max-width: 1600px;
+    }
+    
+    .widget-grid.fixed-layout {
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--spacing-xl);
+    }
+}
+
+/* Widget State Classes */
+.widget-loading {
+    position: relative;
+    opacity: 0.7;
+    pointer-events: none;
+}
+
+.widget-loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    margin: -10px 0 0 -10px;
+    border: 2px solid var(--color-border);
+    border-top-color: var(--color-primary);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.widget-error {
+    border-color: var(--color-danger);
+    background-color: rgba(220, 53, 69, 0.05);
+}
+
+.widget-success {
+    border-color: var(--color-success);
+}
+
+/* Layout Toggle Classes */
+.layout-fluid .widget-grid {
+    grid-template-areas: none !important;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)) !important;
+    grid-template-rows: auto !important;
+}
+
+.layout-fixed .widget-grid {
+    /* Use the fixed grid areas defined above */
+}
+
+/* Print Styles */
+@media print {
+    .widget-grid {
+        display: block;
+    }
+    
+    .widget {
+        break-inside: avoid;
+        margin-bottom: var(--spacing-lg);
+        box-shadow: none;
+        border: 1px solid var(--color-border);
+    }
+    
+    .widget-controls {
+        display: none;
+    }
+}
+
+/* High Contrast Mode Support */
+@media (prefers-contrast: high) {
+    .widget {
+        border-width: 2px;
+        border-color: var(--color-text-primary);
+    }
+    
+    .widget-header {
+        border-bottom-width: 2px;
+    }
+}
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+    .widget {
+        transition: none;
+    }
+    
+    .widget-loading::after {
+        animation: none;
+    }
+}

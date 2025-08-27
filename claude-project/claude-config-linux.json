@@ -1,0 +1,97 @@
+{
+    "mcps": {
+        "browser": {
+            "args": [
+                "@browsermcp/mcp@latest"
+            ],
+            "active": true,
+            "command": "npx",
+            "description": "Provides web browsing capabilities",
+            "port": 1337
+        },
+        "sequential": {
+            "args": [
+                "@modelcontextprotocol/server-sequential-thinking"
+            ],
+            "active": true,
+            "command": "npx",
+            "description": "Helps with complex reasoning tasks",
+            "port": 3002
+        },
+        "memory": {
+            "args": [
+                "@modelcontextprotocol/server-memory",
+                "--storage",
+                "/mnt/d/Projects/claude-project/memory"
+            ],
+            "active": true,
+            "command": "npx",
+            "description": "Enables persistent memory between sessions",
+            "port": 3000
+        },
+        "filesystem": {
+            "args": [
+                "@modelcontextprotocol/server-filesystem",
+                "--root",
+                "/mnt/d/Projects/claude-project"
+            ],
+            "active": true,
+            "command": "npx",
+            "description": "Provides access to project files",
+            "port": 3001
+        },
+        "github": {
+            "args": [
+                "@modelcontextprotocol/server-github"
+            ],
+            "active": true,
+            "command": "npx",
+            "description": "GitHub repository management",
+            "port": 3003
+        },
+        "brave-search": {
+            "args": [
+                "@modelcontextprotocol/server-brave-search"
+            ],
+            "active": true,
+            "command": "npx",
+            "description": "Web search capabilities",
+            "port": 3004
+        },
+        "context7": {
+            "args": [
+                "@modelcontextprotocol/server-context7"
+            ],
+            "active": true,
+            "command": "npx",
+            "description": "Documentation lookup",
+            "port": 3005
+        },
+        "taskmaster": {
+            "args": [
+                "@modelcontextprotocol/server-taskmaster"
+            ],
+            "active": true,
+            "command": "npx",
+            "description": "Advanced task management",
+            "port": 3006
+        }
+    },
+    "memory": {
+        "environment": {
+            "node_path": "/usr/bin/node"
+        },
+        "project": {
+            "path": "/mnt/d/Projects",
+            "key_files": [
+                "claude-config-linux.json"
+            ]
+        }
+    },
+    "project": {
+        "created": "2025-06-25",
+        "description": "A project to manage Claude MCP integrations",
+        "name": "Claude Project",
+        "version": "1.0.0"
+    }
+}

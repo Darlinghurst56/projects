@@ -1,0 +1,20 @@
+{
+  "family_member_1": {
+    "userId": "family_member_1",
+    "hash": "$2b$12$SUaUWPnyxsICCCm4tDWHT.EU.e6HrtYW7Ay1DcX4jssJKit8.LmdK",
+    "name": "Family Member 1",
+    "created": 1755253855853
+  },
+  "family_member_2": {
+    "userId": "family_member_2",
+    "hash": "$2b$12$3tBww/c5HPikzahl7.uie.zST756WBIa0hHTUjH39HFIa5farP6f6",
+    "name": "Family Member 2",
+    "created": 1755253855853
+  },
+  "admin_user": {
+    "userId": "admin_user",
+    "hash": "$2b$12$NFubzJaEXTU.VhrEoKfKGOTHqYbaIMJi6lNPJI1NgtvlJG0Aeuwd6",
+    "name": "Admin User",
+    "created": 1755253855853
+  }
+}

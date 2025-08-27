@@ -1,0 +1,74 @@
+# Task ID: 17
+# Title: MVP Priority 1: Single-Page Agent Control Hub
+# Status: done
+# Dependencies: 15, 16, 14, 7
+# Priority: medium
+# Description: Create a single-page agent control hub by extending the existing live-agent-dashboard.html with simple on/off switches for agents, basic task assignment dropdown, and mobile-friendly responsive design focused on essential controls for home users.
+# Details:
+1. **Extend live-agent-dashboard.html:** Modify the existing dashboard file to incorporate new control features while maintaining the current functionality. Keep the existing WebSocket/SSE connections for real-time updates.
+
+2. **Agent On/Off Switches:** Implement simple toggle switches for each agent using native HTML/CSS or lightweight components. Each switch should:
+   - Display agent name and current status (active/inactive)
+   - Use <input type="checkbox"> with custom styling for accessibility
+   - Send status updates to backend via existing WebSocket connection
+   - Show visual feedback during state transitions
+
+3. **Task Assignment Dropdown:** Create a basic dropdown for quick task assignment:
+   - Populate with pending tasks from the task management system
+   - Group tasks by agent type for easier selection
+   - Include search/filter functionality for long task lists
+   - Submit assignments through existing API endpoints
+
+4. **Mobile-First Responsive Design:** Implement responsive layout using CSS Grid/Flexbox:
+   - Design for minimum 320px width (mobile phones)
+   - Use touch-friendly button sizes (minimum 44x44px)
+   - Stack controls vertically on small screens
+   - Test on common breakpoints: 320px, 768px, 1024px
+   - Ensure all controls are thumb-reachable on mobile
+
+5. **Simplification Strategy:**
+   - Remove any enterprise-level features or complex configurations
+   - Focus on core functionality: start/stop agents, assign tasks
+   - Use system fonts and minimal CSS for fast loading
+   - Avoid external dependencies or heavy frameworks
+   - Keep JavaScript minimal and vanilla where possible
+
+6. **Accessibility Considerations:**
+   - Use semantic HTML elements
+   - Add proper ARIA labels for screen readers
+   - Ensure keyboard navigation works for all controls
+   - Maintain sufficient color contrast (WCAG AA compliance)
+   - Test with browser zoom up to 200%
+
+# Test Strategy:
+1. **Mobile Device Testing:** Test on actual devices including iPhone SE (small), standard Android phone, iPad, and laptop. Verify all controls are easily tappable and text is readable without zooming.
+
+2. **Functionality Testing:**
+   - Toggle each agent on/off and verify state persistence
+   - Assign tasks via dropdown and confirm successful assignment
+   - Test with 0, 1, 10, and 50+ tasks in the dropdown
+   - Verify real-time updates when agents change state externally
+
+3. **Responsive Design Validation:**
+   - Use browser dev tools to test at 320px, 375px, 768px, 1024px, 1440px
+   - Verify no horizontal scrolling at any viewport size
+   - Confirm all controls remain accessible and functional
+   - Test landscape orientation on mobile devices
+
+4. **Performance Testing:**
+   - Measure page load time on 3G connection (target < 3 seconds)
+   - Verify smooth interactions with no JavaScript errors
+   - Test with 10+ agents running simultaneously
+   - Monitor WebSocket connection stability
+
+5. **Cross-Browser Testing:**
+   - Test on Chrome, Safari, Firefox on desktop
+   - Test on Chrome and Safari on iOS
+   - Test on Chrome on Android
+   - Verify consistent behavior across all platforms
+
+6. **Accessibility Testing:**
+   - Navigate entire interface using only keyboard
+   - Test with screen reader (NVDA/JAWS on Windows, VoiceOver on Mac/iOS)
+   - Verify all interactive elements have proper focus indicators
+   - Check color contrast with automated tools

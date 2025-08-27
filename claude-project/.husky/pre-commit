@@ -1,0 +1,8 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+# Check documentation before allowing commit
+.husky/check-documentation || exit 1
+
+# Run lint-staged
+npx lint-staged

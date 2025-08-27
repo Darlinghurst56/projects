@@ -1,0 +1,58 @@
+# Task ID: 9
+# Title: Fix Puppeteer Browser Launch Configuration in MCP Server
+# Status: done
+# Dependencies: 6, 7, 8
+# Priority: medium
+# Description: Resolve the 'Dangerous browser arguments detected: --no-sandbox' error in the MCP Puppeteer server by implementing proper browser launch configuration that works with the security restrictions, specifically addressing ARM64 architecture requirements, while enabling UI testing capabilities.
+
+PROJECT: House AI - Family Home Page | SUBPROJECT: Dashboard UI System
+# Details:
+1. **Investigate Current Configuration:** Examine the MCP Puppeteer server implementation to understand the current browser launch parameters and security restrictions causing the '--no-sandbox' error, paying close attention to ARM64-specific configurations.
+
+2. **Research Previous Puppeteer Solutions:** Search through existing tasks and codebase for any previous Puppeteer configurations or workarounds that successfully handled similar security restrictions, with a focus on ARM64 architecture and '--no-sandbox' issues.
+
+3. **Implement Safe Browser Launch Configuration:** Create a configuration that avoids dangerous arguments while maintaining functionality:
+   - Remove '--no-sandbox' from default arguments
+   - Use alternative arguments like '--disable-setuid-sandbox' if needed
+   - Implement proper headless mode configuration
+   - Set up appropriate viewport and user agent settings
+   - Ensure compatibility with ARM64 architecture, potentially requiring specific Chrome/Chromium binaries.
+
+4. **Handle allowDangerous Parameter:** Fix the implementation of the allowDangerous parameter to properly bypass security checks when explicitly set to true:
+   - Validate the parameter is being passed correctly through the MCP protocol
+   - Ensure the security check logic properly evaluates this flag
+   - Add appropriate warnings when dangerous mode is enabled
+
+5. **Create Fallback Configuration:** Implement a fallback browser configuration for restricted environments:
+   - Detect when running in Docker, WSL, or ARM64 environments
+   - Provide environment-specific launch arguments, including ARM64-specific arguments if necessary.
+   - Document requirements for different execution contexts
+
+6. **Update Error Handling:** Improve error messages to provide clearer guidance:
+   - Include specific instructions for different environments, including ARM64.
+   - Suggest appropriate launch configurations based on the error
+   - Add troubleshooting documentation
+
+7. **Test Integration with Dashboard:** Ensure the fixed Puppeteer configuration works with existing dashboard testing workflows:
+   - Verify navigation to dashboard URLs works correctly
+   - Test screenshot functionality
+   - Validate element interaction capabilities
+
+# Test Strategy:
+1. **Basic Launch Test:** Verify that the Puppeteer browser can launch successfully without the '--no-sandbox' error in the default configuration, specifically on ARM64 architecture.
+
+2. **AllowDangerous Parameter Test:** Test that setting allowDangerous: true properly bypasses security restrictions and allows browser launch with dangerous arguments when needed.
+
+3. **Dashboard Navigation Test:** Use mcp__puppeteer__puppeteer_navigate to navigate to http://localhost:8000/dashboard.html and verify successful page load.
+
+4. **Screenshot Functionality Test:** Test mcp__puppeteer__puppeteer_screenshot to capture dashboard screenshots and verify image generation.
+
+5. **Element Interaction Test:** Test click, fill, and evaluate functions on dashboard widgets to ensure full UI testing capabilities.
+
+6. **Environment Compatibility Test:** Verify the configuration works in different environments (local development, Docker, WSL, ARM64).
+
+7. **Error Handling Test:** Intentionally trigger various error conditions to verify improved error messages and guidance.
+
+8. **Security Validation:** Ensure that the default configuration maintains appropriate security boundaries while the allowDangerous flag provides explicit opt-in for less secure configurations when needed.
+
+9. **ARM64 Specific Test:** Verify that the Puppeteer browser launches correctly on ARM64 architecture with the appropriate Chrome/Chromium binaries and launch configurations.

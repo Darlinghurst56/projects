@@ -1,0 +1,42 @@
+{
+  "mcpServers": {
+    "task-master-ai": {
+      "command": "npx",
+      "args": ["-y", "--package=task-master-ai", "task-master-ai"],
+      "env": {
+        "GOOGLE_API_KEY": "${GOOGLE_API_KEY}"
+      }
+    },
+    "filesystem": {
+      "command": "npx",
+      "args": ["@modelcontextprotocol/server-filesystem", "."]
+    },
+    "memory": {
+      "command": "npx",
+      "args": ["@modelcontextprotocol/server-memory"]
+    },
+    "puppeteer": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-puppeteer"]
+    },
+    "playwright": {
+      "command": "npx",
+      "args": ["-y", "@playwright/mcp"]
+    },
+    "accessibility-testing-mcp": {
+      "command": "node",
+      "args": ["/mnt/d/Projects/claude-project/mcp-servers/accessibility-testing-mcp/index.js"],
+      "env": {}
+    },
+    "user-testing-mcp": {
+      "command": "node",
+      "args": ["/mnt/d/Projects/claude-project/mcp-servers/user-testing-mcp/index.js"],
+      "env": {}
+    },
+    "design-system-mcp": {
+      "command": "node",
+      "args": ["/mnt/d/Projects/claude-project/mcp-servers/design-system-mcp/index.js"],
+      "env": {}
+    }
+  }
+}

@@ -1,0 +1,58 @@
+node_modules/
+dist/
+build/
+coverage/
+.next/
+.nuxt/
+.cache/
+.vscode/
+.idea/
+
+# Build outputs
+dashboard/dist/
+mcp-servers/*/dist/
+# removed litellm/ - now in /shared/config/litellm/
+
+# Dependencies and generated files
+package-lock.json
+yarn.lock
+*.min.js
+*.bundle.js
+
+# Environment and config files
+.env
+.env.local
+.env.*.local
+
+# Log files
+*.log
+logs/
+
+# Temporary files
+.tmp/
+temp/
+.temp/
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# TaskMaster generated files
+.taskmaster/tasks/*.txt
+.taskmaster/reports/
+.taskmaster/state.json
+.taskmaster/coordination-state.json
+
+# Specific files to ignore
+workflows/*.json
+*.config.json
+
+# Large directories causing timeouts
+integrations/gmail-telegram-n8n/node_modules/
+.agent-meta/
+.husky/_/

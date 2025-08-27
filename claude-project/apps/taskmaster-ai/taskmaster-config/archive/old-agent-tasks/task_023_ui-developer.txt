@@ -1,0 +1,11 @@
+# Task ID: 23
+# Title: Create Missing JavaScript Widget Files
+# Status: pending
+# Dependencies: None
+# Priority: high
+# Description: Implement agent-registry.js, task-assignment.js, and agent-launcher.js files that are referenced in agent-dashboard.html but missing, causing build failures. These are UI components for agent management. PROJECT: House AI - Family Home Page  < /dev/null |  SUBPROJECT: Dashboard UI System
+# Details:
+
+
+# Test Strategy:
+

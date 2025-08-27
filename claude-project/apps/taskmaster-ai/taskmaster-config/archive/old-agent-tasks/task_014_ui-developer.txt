@@ -1,0 +1,60 @@
+# Task ID: 14
+# Title: Complete TaskMaster Automatic Agent System
+# Status: pending
+# Dependencies: 6, 9, 10, 12, 13
+# Priority: medium
+# Description: Implement the core automation engine for the TaskMaster Automatic Agent System, including the agent runner, Claude Code MCP integration, automatic progress tracking, and process management.
+
+PROJECT: TaskMaster Agent System | SUBPROJECT: Agent Coordination
+# Details:
+1. **Agent Runner Process:** Implement a process that continuously polls the workspace for pending tasks assigned to available agents. This process should efficiently manage agent availability and task assignment.
+2. **Claude Code MCP Integration:** Integrate the Claude Code MCP to enable agents to execute tasks. This involves setting up the necessary API calls, data transformations, and error handling to ensure seamless communication between the agent runner and the Claude Code MCP.
+3. **Automatic Progress Tracking and Task Completion:** Implement a mechanism to automatically track the progress of tasks executed by agents. This should include monitoring task status, logging relevant events, and automatically marking tasks as complete upon successful execution.
+4. **Process Management for Agent Lifecycle:** Implement process management capabilities to handle the lifecycle of agents, including starting, stopping, and restarting agents as needed. This should also include monitoring agent health and automatically recovering from failures.
+5. **Error Handling and Logging:** Implement comprehensive error handling and logging throughout the automation engine to facilitate debugging and troubleshooting.
+6. **Configuration Management:** Implement a configuration management system to allow administrators to configure various aspects of the automation engine, such as polling intervals, agent resource limits, and error handling policies.
+
+# Test Strategy:
+1. **End-to-End Automation Test:** Create a test scenario that involves creating a task, assigning it to an agent, and verifying that the automation engine automatically executes the task and updates its status.
+2. **Claude Code MCP Integration Test:** Verify that the integration with the Claude Code MCP is working correctly by sending test tasks and verifying that the results are as expected.
+3. **Progress Tracking Test:** Verify that the progress tracking mechanism is accurately tracking the progress of tasks and updating the task status accordingly.
+4. **Agent Lifecycle Test:** Test the process management capabilities by starting, stopping, and restarting agents and verifying that the system behaves as expected.
+5. **Error Handling Test:** Simulate various error conditions and verify that the automation engine handles them gracefully and logs the errors appropriately.
+6. **Performance Test:** Measure the performance of the automation engine under various load conditions to ensure that it can handle the expected workload.
+
+# Subtasks:
+## 1. Create Agent Runner Process [pending]
+### Dependencies: None
+### Description: Implement the core agent runner process that polls workspace for pending tasks and executes them automatically. This is the critical missing piece - creates .taskmaster/agents/automatic-agent-runner.js that switches to agent workspace, gets pending tasks, claims them, executes via Claude Code MCP, and updates progress.
+
+PROJECT: TaskMaster Agent System | SUBPROJECT: Agent Coordination
+### Details:
+PRIORITY: CRITICAL - This is the main missing component. Implementation: 1) Create automatic-agent-runner.js, 2) Implement workspace switching (task-master use-tag), 3) Add task polling loop, 4) Implement task claiming logic, 5) Add Claude Code MCP integration, 6) Add progress tracking, 7) Add task completion handling. Current system has all infrastructure ready - this connects it all together.
+<info added on 2025-07-09T09:58:51.679Z>
+CURRENT SYSTEM STATUS: TaskMaster automatic agent system is 66% complete with excellent infrastructure foundation. WORKING COMPONENTS: TaskMaster API server (taskmaster-api-server.js) with WebSocket support, agent coordination system (coordination-workflow.cjs), dashboard interface with real-time monitoring, workspace isolation per agent type, auto-sync watcher, agent registration system, task assignment logic, role-based workspaces. MISSING CRITICAL COMPONENT: The automatic agent runner process that actually executes tasks. This is the final piece needed to make the system 100% functional. All infrastructure is ready - just need the automation engine to connect everything.
+</info added on 2025-07-09T09:58:51.679Z>
+
+## 2. Implement Claude Code MCP Integration [pending]
+### Dependencies: None
+### Description: Create the bridge between TaskMaster and Claude Code MCP for tool execution. This allows agents to use tools like Edit, Bash, Read, etc. when executing tasks automatically.
+
+PROJECT: TaskMaster Agent System | SUBPROJECT: Agent Coordination
+### Details:
+Implementation: 1) Create MCP client wrapper for Claude Code tools, 2) Implement tool allowlist per agent type, 3) Add tool execution error handling, 4) Implement progress reporting back to TaskMaster, 5) Add tool result logging. This uses existing mcp__task-master-ai__* tools plus adds execution layer for Edit, Bash, Read, etc.
+
+## 3. Separate Agent System from Main Project [pending]
+### Dependencies: None
+### Description: Extract the automatic agent system into a separate project structure to avoid confusion with the main TaskMaster Project Planner. Create standalone agent processes.
+
+PROJECT: TaskMaster Agent System | SUBPROJECT: Agent Coordination
+### Details:
+Implementation: 1) Create taskmaster-agents/ directory structure, 2) Move coordination-workflow.cjs and related files, 3) Create per-agent configuration files, 4) Extract agent-specific logic from main project, 5) Create agent process management system, 6) Update documentation to reflect separation. This addresses the current muddle between agent system and main project planner.
+
+## 4. Test End-to-End Agent Automation [pending]
+### Dependencies: None
+### Description: Create comprehensive tests for the complete automatic agent workflow to verify agents can work on tasks automatically from start to finish.
+
+PROJECT: TaskMaster Agent System | SUBPROJECT: Agent Coordination
+### Details:
+Implementation: 1) Create test scenarios for each agent type, 2) Add test tasks to agent workspaces, 3) Start agent processes, 4) Verify automatic task execution, 5) Check progress tracking, 6) Confirm task completion, 7) Test error handling and recovery, 8) Verify dashboard integration. This validates the complete 100% functional automatic agent system.
+

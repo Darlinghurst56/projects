@@ -1,0 +1,42 @@
+[
+  {
+    "ip": "192.168.1.10",
+    "mac": "aa:bb:cc:dd:ee:01",
+    "hostname": "admin-laptop"
+  },
+  {
+    "ip": "192.168.1.11", 
+    "mac": "aa:bb:cc:dd:ee:02",
+    "hostname": "admin-desktop"
+  },
+  {
+    "ip": "192.168.1.20",
+    "mac": "11:22:33:44:55:01",
+    "hostname": "family-tablet"
+  },
+  {
+    "ip": "192.168.1.21",
+    "mac": "11:22:33:44:55:02", 
+    "hostname": "family-phone"
+  },
+  {
+    "ip": "192.168.1.22",
+    "mac": "11:22:33:44:55:03",
+    "hostname": "kids-laptop"
+  },
+  {
+    "ip": "192.168.1.100",
+    "mac": "99:88:77:66:55:01",
+    "hostname": "smart-tv"
+  },
+  {
+    "ip": "192.168.1.101",
+    "mac": "99:88:77:66:55:02",
+    "hostname": "alexa-echo"
+  },
+  {
+    "ip": "192.168.1.102",
+    "mac": "99:88:77:66:55:03",
+    "hostname": "security-camera"
+  }
+]

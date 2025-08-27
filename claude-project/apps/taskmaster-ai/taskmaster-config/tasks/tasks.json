@@ -1,0 +1,233 @@
+{
+  "master": {
+    "tasks": [
+      {
+        "id": 16,
+        "title": "Essential Task View for Home User",
+        "description": "Simple task list showing task name, assigned agent, status, and review buttons.",
+        "status": "done",
+        "dependencies": [],
+        "priority": "medium",
+        "details": "TaskMaster Dashboard UI",
+        "subtasks": []
+      },
+      {
+        "id": 17,
+        "title": "Autonomous Agent Self-Management System",
+        "description": "Implement agents that auto-claim tasks by specialty, execute without human intervention, and auto-reassign stuck tasks.",
+        "status": "in-progress",
+        "dependencies": [],
+        "priority": "medium",
+        "details": "TaskMaster Agent Coordination",
+        "testStrategy": "Test autonomous task claiming, execution, and fail-safe reassignment mechanisms.",
+        "subtasks": []
+      },
+      {
+        "id": 18,
+        "title": "Test Family Dashboard with Integrated UX MCPs",
+        "description": "Run comprehensive testing using Accessibility Testing MCP tools to validate family dashboard features.",
+        "status": "cancelled",
+        "dependencies": [],
+        "priority": "medium",
+        "details": "Family features not in current scope",
+        "subtasks": []
+      },
+      {
+        "id": 19,
+        "title": "Validate Agent-Card and Task-Card Components",
+        "description": "Test TaskMaster dashboard components including agent status cards and task progress cards.",
+        "status": "cancelled",
+        "dependencies": [],
+        "priority": "medium",
+        "details": "Component testing not priority",
+        "subtasks": []
+      },
+      {
+        "id": 20,
+        "title": "Run Accessibility Testing",
+        "description": "Use accessibility testing tools to validate dashboard features for screen readers and keyboard navigation.",
+        "status": "cancelled",
+        "dependencies": [],
+        "priority": "medium",
+        "details": "Accessibility testing not priority",
+        "subtasks": []
+      },
+      {
+        "id": 21,
+        "title": "Validate Design Consistency Across Dashboard",
+        "description": "Run design validation tools to ensure consistent spacing, typography, colors.",
+        "status": "cancelled",
+        "dependencies": [],
+        "priority": "medium",
+        "details": "Design consistency not priority",
+        "subtasks": []
+      },
+      {
+        "id": 22,
+        "title": "Generate Component Library Documentation",
+        "description": "Create documentation for dashboard components.",
+        "status": "cancelled",
+        "dependencies": [],
+        "priority": "medium",
+        "details": "Documentation not priority",
+        "subtasks": []
+      },
+      {
+        "id": 23,
+        "title": "QA Testing: Granular PIN Authentication (PRD v2.3)",
+        "description": "Perform QA testing on updated PIN authentication system with granular security for dashboard access and DNS filtering. Focus on backend-agent interactions for authentication.",
+        "status": "in-progress",
+        "dependencies": [],
+        "priority": "high",
+        "details": "Family Authentication System",
+        "testStrategy": "",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Dashboard PIN Testing",
+            "description": "Execute test cases for dashboard access with different PIN configurations.",
+            "status": "in_progress",
+            "dependencies": [],
+            "details": "",
+            "testStrategy": ""
+          },
+          {
+            "id": 2,
+            "title": "Unauthorized Access Testing",
+            "description": "Verify that unauthorized access is denied based on PIN settings.",
+            "status": "pending",
+            "dependencies": [],
+            "details": "",
+            "testStrategy": ""
+          },
+          {
+            "id": 3,
+            "title": "PIN Recovery Testing",
+            "description": "Test the PIN reset/recovery process.",
+            "status": "pending",
+            "dependencies": [],
+            "details": "",
+            "testStrategy": ""
+          },
+          {
+            "id": 4,
+            "title": "Backend-Agent Authentication Testing",
+            "description": "Specifically test the interaction between the dashboard and the backend-agent during PIN authentication processes.",
+            "status": "pending",
+            "dependencies": [],
+            "details": "",
+            "testStrategy": ""
+          }
+        ]
+      },
+      {
+        "id": 24,
+        "title": "Test 5-Agent System Integration",
+        "description": "Test integration of 5-Agent System (Frontend, Backend, DevOps, QA, Orchestrator) with end-to-end workflow simulation.",
+        "status": "in-progress",
+        "dependencies": [
+          17
+        ],
+        "priority": "high",
+        "details": "TaskMaster Agent Coordination",
+        "testStrategy": "Simulate orchestrator agent assigning and managing tasks across all agent types.",
+        "subtasks": []
+      },
+      {
+        "id": 26,
+        "title": "System Test: Batch Agent Management (10-20 Agents)",
+        "description": "Conduct system tests for batch agent management focusing on task distribution, resource allocation, and error handling.",
+        "status": "done",
+        "dependencies": [
+          24
+        ],
+        "priority": "high",
+        "details": "TaskMaster Agent Coordination",
+        "testStrategy": "Test system stability and performance under load with 10-20 agents.",
+        "subtasks": []
+      },
+      {
+        "id": 28,
+        "title": "Implement Login Form Component for Family Dashboard",
+        "description": "Create simple login form component using suitable UI framework and integrate into family dashboard.",
+        "status": "in-progress",
+        "dependencies": [],
+        "priority": "medium",
+        "details": "Family Dashboard UI",
+        "subtasks": []
+      },
+      {
+        "id": 30,
+        "title": "Implement and Test Telemetry for Agent System",
+        "description": "Implement telemetry testing to monitor system performance and identify potential issues. This includes setting up telemetry collection, configuring dashboards, and defining alerts.",
+        "details": "Set up telemetry collection, dashboards, and alerts for agent system monitoring.",
+        "status": "done",
+        "dependencies": [
+          24,
+          26
+        ],
+        "priority": "low",
+        "subtasks": []
+      },
+      {
+        "id": 31,
+        "title": "Telemetry Tracking System Testing",
+        "description": "Perform comprehensive testing of the telemetry tracking system to ensure accurate data collection, dashboard functionality, and alert triggering. This includes validating the end-to-end telemetry pipeline and identifying any potential issues or performance bottlenecks.",
+        "details": "Test telemetry pipeline end-to-end: data collection, dashboard display, and alert triggering.",
+        "status": "pending",
+        "dependencies": [
+          30,
+          26
+        ],
+        "priority": "low",
+        "subtasks": []
+      },
+      {
+        "id": 32,
+        "title": "Test Task Creation After JSON Cleanup",
+        "description": "Create test cases and execute tests to validate the functionality of task creation after the JSON cleanup process, ensuring data integrity and proper system behavior.",
+        "details": "1. Review the updated task creation process post-JSON cleanup.\n2. Design test cases covering various scenarios: successful task creation, error handling for invalid JSON, boundary conditions, and edge cases.\n3. Implement test scripts using appropriate testing frameworks.\n4. Execute test cases and record results.\n5. Analyze test results and identify any defects or areas for improvement.\n6. Document the testing process and results.",
+        "testStrategy": "1. Create a new task with valid JSON data and verify successful creation and data persistence.\n2. Attempt to create a task with invalid JSON data and verify that the system handles the error gracefully and provides informative error messages.\n3. Create tasks with different data types and sizes to test boundary conditions.\n4. Create multiple tasks concurrently to test system performance and concurrency handling.\n5. Verify that the created tasks are correctly displayed in the user interface and accessible through the API.",
+        "status": "done",
+        "dependencies": [
+          23
+        ],
+        "priority": "low",
+        "subtasks": []
+      },
+      {
+        "id": 33,
+        "title": "Test the configured AI models",
+        "description": "Validate the functionality and performance of all configured AI models in the TaskMaster system to ensure proper integration and response quality.",
+        "details": "1. Identify all configured AI models in the system (main, fallback, research models from TaskMaster configuration)\n2. Create test scenarios for each model type:\n   - Basic task generation and processing\n   - Research-backed operations\n   - Fallback model activation when primary fails\n   - Model switching and configuration validation\n3. Implement automated test scripts to:\n   - Verify API connectivity and authentication for each model\n   - Test response quality and consistency\n   - Measure response times and performance metrics\n   - Validate error handling when models are unavailable\n4. Test model-specific features:\n   - Task expansion capabilities\n   - Research integration (if configured)\n   - Context handling and memory retention\n5. Document model performance characteristics and recommendations\n6. Verify model configuration persistence across system restarts",
+        "testStrategy": "1. Execute connectivity tests for each configured model endpoint\n2. Run standardized prompts across all models and compare response quality\n3. Simulate model failures to test fallback mechanisms\n4. Measure and document response times under normal and load conditions\n5. Verify that model switching works correctly in the TaskMaster interface\n6. Test model-specific capabilities (research, expansion, etc.) if configured\n7. Validate that model configurations are properly saved and loaded\n8. Create test reports documenting model performance and any issues found",
+        "status": "done",
+        "dependencies": [],
+        "priority": "high",
+        "subtasks": []
+      },
+      {
+        "id": 34,
+        "title": "Create comprehensive AI model testing and fallback validation system for TaskMaster",
+        "description": "Develop a robust testing framework to validate AI model performance, implement fallback mechanisms for model failures, and ensure reliable TaskMaster agent operations across different AI providers.",
+        "details": "1. Create AI model testing framework:\n   - Design test suites for different model capabilities (task generation, code analysis, documentation)\n   - Implement performance benchmarks for response time, accuracy, and consistency\n   - Create test data sets for various TaskMaster operations\n   - Build automated testing pipeline for continuous model validation\n\n2. Implement fallback system:\n   - Create model priority hierarchy (primary, secondary, fallback models)\n   - Implement automatic failover logic when primary model is unavailable\n   - Design graceful degradation for reduced functionality scenarios\n   - Add circuit breaker pattern to prevent cascading failures\n\n3. Model configuration management:\n   - Create centralized model configuration system\n   - Implement dynamic model switching based on task type\n   - Add model health monitoring and alerting\n   - Create admin interface for model management\n\n4. Integration with existing agent system:\n   - Update agent coordinator to use fallback system\n   - Modify task assignment logic to consider model availability\n   - Add model performance metrics to agent reporting\n   - Ensure compatibility with existing MCP tool integrations",
+        "testStrategy": "1. Unit tests for model testing framework components and fallback logic\n2. Integration tests simulating model failures and verifying automatic failover\n3. Performance tests measuring response times across different models\n4. End-to-end tests validating TaskMaster operations with various model configurations\n5. Load testing with multiple agents using different models simultaneously\n6. Manual testing of admin interface for model management\n7. Chaos engineering tests by intentionally failing primary models\n8. Validate that existing agent workflows continue functioning with new fallback system",
+        "status": "pending",
+        "dependencies": [
+          26
+        ],
+        "priority": "high",
+        "subtasks": []
+      }
+    ],
+    "metadata": {
+      "created": "2025-07-18T00:00:00.000Z",
+      "updated": "2025-07-23T11:26:05.160Z",
+      "description": "Cleaned TaskMaster tasks focusing on Family Home Page and HouseAI projects",
+      "cleanupDate": "2025-07-18T00:00:00.000Z",
+      "originalTaskCount": 28,
+      "cleanedTaskCount": 14,
+      "removedTasks": "Completed QA testing tasks, old DNS Analytics Widget testing, PIN Authentication testing logs, TaskMaster HTTP API server tasks"
+    }
+  }
+}

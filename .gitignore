@@ -1,0 +1,46 @@
+# Embedded git repositories (handle separately)
+crewai/
+crewai-studio/CrewAI-Studio/
+infrastructure/Claude-Code-Usage-Monitor/
+miniprojects/ctrld-sync/
+media/epg/
+media/jellyfin/jellyfin-channel-mapper/
+
+# Node modules
+node_modules/
+**/node_modules/
+
+# Environment files
+.env
+**/.env
+
+# Logs
+logs/
+*.log
+
+# Cache directories
+.cache/
+**/.cache/
+
+# IDE files
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+.venv/
+
+# Build outputs
+dist/
+build/
+*.build/

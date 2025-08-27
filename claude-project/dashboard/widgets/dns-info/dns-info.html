@@ -1,0 +1,159 @@
+<div class="dns-info-widget" id="dns-info-widget">
+  <div class="widget-header">
+    <h3 class="widget-title">DNS Analytics</h3>
+    <div class="widget-controls">
+      <select id="time-range-selector" class="control-select">
+        <option value="24h">Last 24 Hours</option>
+        <option value="7d">Last 7 Days</option>
+        <option value="30d">Last 30 Days</option>
+      </select>
+      <select id="device-filter" class="control-select">
+        <option value="all">All Devices</option>
+      </select>
+    </div>
+  </div>
+  
+  <div class="widget-content">
+    <!-- Summary Statistics Cards -->
+    <div class="stats-grid">
+      <div class="stat-card primary">
+        <div class="stat-icon">📊</div>
+        <div class="stat-content">
+          <div class="stat-value" id="total-requests">0</div>
+          <div class="stat-label">Total Requests</div>
+        </div>
+      </div>
+      
+      <div class="stat-card success">
+        <div class="stat-icon">🛡️</div>
+        <div class="stat-content">
+          <div class="stat-value" id="blocked-queries">0</div>
+          <div class="stat-label">Blocked Queries</div>
+        </div>
+      </div>
+      
+      <div class="stat-card warning">
+        <div class="stat-icon">⚡</div>
+        <div class="stat-content">
+          <div class="stat-value" id="avg-response-time">0ms</div>
+          <div class="stat-label">Avg Response Time</div>
+        </div>
+      </div>
+      
+      <div class="stat-card info">
+        <div class="stat-icon">🔍</div>
+        <div class="stat-content">
+          <div class="stat-value" id="unique-domains">0</div>
+          <div class="stat-label">Unique Domains</div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Chart Placeholder -->
+    <div class="chart-section">
+      <h4 class="section-title">DNS Activity Over Time</h4>
+      <div class="chart-placeholder" id="activity-chart">
+        <div class="chart-mock">
+          <div class="chart-bar" style="height: 20%"></div>
+          <div class="chart-bar" style="height: 45%"></div>
+          <div class="chart-bar" style="height: 30%"></div>
+          <div class="chart-bar" style="height: 65%"></div>
+          <div class="chart-bar" style="height: 80%"></div>
+          <div class="chart-bar" style="height: 55%"></div>
+          <div class="chart-bar" style="height: 40%"></div>
+        </div>
+        <div class="chart-legend">
+          <span class="legend-item">
+            <span class="legend-color primary"></span>
+            Allowed Requests
+          </span>
+          <span class="legend-item">
+            <span class="legend-color danger"></span>
+            Blocked Requests
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Request Types Breakdown -->
+    <div class="breakdown-section">
+      <div class="breakdown-column">
+        <h4 class="section-title">Request Types</h4>
+        <div class="breakdown-list" id="request-types">
+          <div class="breakdown-item">
+            <span class="breakdown-label">A Records</span>
+            <span class="breakdown-value">45%</span>
+            <div class="breakdown-bar">
+              <div class="breakdown-fill primary" style="width: 45%"></div>
+            </div>
+          </div>
+          <div class="breakdown-item">
+            <span class="breakdown-label">AAAA Records</span>
+            <span class="breakdown-value">25%</span>
+            <div class="breakdown-bar">
+              <div class="breakdown-fill success" style="width: 25%"></div>
+            </div>
+          </div>
+          <div class="breakdown-item">
+            <span class="breakdown-label">CNAME Records</span>
+            <span class="breakdown-value">20%</span>
+            <div class="breakdown-bar">
+              <div class="breakdown-fill warning" style="width: 20%"></div>
+            </div>
+          </div>
+          <div class="breakdown-item">
+            <span class="breakdown-label">Other</span>
+            <span class="breakdown-value">10%</span>
+            <div class="breakdown-bar">
+              <div class="breakdown-fill info" style="width: 10%"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="breakdown-column">
+        <h4 class="section-title">Top Companies</h4>
+        <div class="top-companies" id="top-companies">
+          <div class="company-item">
+            <span class="company-rank">1</span>
+            <span class="company-name">Google</span>
+            <span class="company-requests">1,234</span>
+          </div>
+          <div class="company-item">
+            <span class="company-rank">2</span>
+            <span class="company-name">Microsoft</span>
+            <span class="company-requests">856</span>
+          </div>
+          <div class="company-item">
+            <span class="company-rank">3</span>
+            <span class="company-name">Amazon</span>
+            <span class="company-requests">642</span>
+          </div>
+          <div class="company-item">
+            <span class="company-rank">4</span>
+            <span class="company-name">Cloudflare</span>
+            <span class="company-requests">378</span>
+          </div>
+          <div class="company-item">
+            <span class="company-rank">5</span>
+            <span class="company-name">Facebook</span>
+            <span class="company-requests">291</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Loading State -->
+    <div class="loading-overlay" id="dns-info-loading" style="display: none;">
+      <div class="loading-spinner"></div>
+      <div class="loading-text">Loading DNS analytics...</div>
+    </div>
+    
+    <!-- Error State -->
+    <div class="error-state" id="dns-info-error" style="display: none;">
+      <div class="error-icon">⚠️</div>
+      <div class="error-message">Failed to load DNS analytics data</div>
+      <button class="retry-button" onclick="dnsInfoWidget.refreshData()">Retry</button>
+    </div>
+  </div>
+</div>

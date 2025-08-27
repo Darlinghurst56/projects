@@ -1,0 +1,293 @@
+{
+  "timestamp": "2025-08-09T11:43:42.488Z",
+  "system": {
+    "platform": "linux",
+    "release": "6.6.87.2-microsoft-standard-WSL2",
+    "arch": "x64",
+    "cpus": 4,
+    "totalMemory": 8209547264,
+    "nodeVersion": "v22.18.0"
+  },
+  "validation": {
+    "totalChecks": 50,
+    "successful": 26,
+    "warnings": 4,
+    "errors": 0,
+    "successRate": 52
+  },
+  "results": [
+    {
+      "timestamp": "2025-08-09T11:43:42.190Z",
+      "message": "🔍 Starting Intel N100 Setup Validation\\n",
+      "type": "info"
+    },
+    {
+      "timestamp": "2025-08-09T11:43:42.203Z",
+      "message": "=== System Specifications ===",
+      "type": "info"
+    },
+    {
+      "timestamp": "2025-08-09T11:43:42.204Z",
+      "message": "CPU: Intel(R) N100",
+      "type": "info"
+    },
+    {
+      "timestamp": "2025-08-09T11:43:42.204Z",
+      "message": "Cores: 4",
+      "type": "info"
+    },
+    {
+      "timestamp": "2025-08-09T11:43:42.204Z",
+      "message": "Total Memory: 8GB",
+      "type": "info"
+    },
+    {
+      "timestamp": "2025-08-09T11:43:42.204Z",
+      "message": "Intel N100 processor detected",
+      "type": "success"
+    },
+    {
+      "timestamp": "2025-08-09T11:43:42.204Z",
+      "message": "4-core configuration confirmed",
+      "type": "success"
+    },
+    {
+      "timestamp": "2025-08-09T11:43:42.205Z",
+      "message": "8GB memory sufficient for Intel N100 development",
+      "type": "success"
+    },
+    {
+      "timestamp": "2025-08-09T11:43:42.205Z",
+      "message": "\\n=== Node.js Configuration ===",
+      "type": "info"
+    },
+    {
+      "timestamp": "2025-08-09T11:43:42.206Z",
+      "message": "Node.js version: v22.18.0",
+      "type": "info"
+    },
+    {
+      "timestamp": "2025-08-09T11:43:42.213Z",
+      "message": "V8 heap limit: 2096MB",
+      "type": "info"
+    },
+    {
+      "timestamp": "2025-08-09T11:43:42.213Z",
+      "message": "Node.js memory limit optimized for Intel N100",
+      "type": "success"
+    },
+    {
+      "timestamp": "2025-08-09T11:43:42.213Z",
+      "message": "\\n=== Project Configuration Files ===",
+      "type": "info"
+    },
+    {
+      "timestamp": "2025-08-09T11:43:42.214Z",
+      "message": "package.json exists",
+      "type": "success"
+    },
+    {
+      "timestamp": "2025-08-09T11:43:42.219Z",
+      "message": "Package.json contains Intel N100 optimized scripts",
+      "type": "success"
+    },
+    {
+      "timestamp": "2025-08-09T11:43:42.219Z",
+      "message": "vite.config.js exists",
+      "type": "success"
+    },
+    {
+      "timestamp": "2025-08-09T11:43:42.220Z",
+      "message": "Vite config contains Intel N100 optimizations",
+      "type": "success"
+    },
+    {
+      "timestamp": "2025-08-09T11:43:42.220Z",
+      "message": "nodemon.json exists",
+      "type": "success"
+    },
+    {
+      "timestamp": "2025-08-09T11:43:42.221Z",
+      "message": ".intel-n100.env exists",
+      "type": "success"
+    },
+    {
+      "timestamp": "2025-08-09T11:43:42.221Z",
+      "message": "scripts/performance-monitor.js exists",
+      "type": "success"
+    },
+    {
+      "timestamp": "2025-08-09T11:43:42.221Z",
+      "message": "scripts/start-intel-n100-dev.sh exists",
+      "type": "success"
+    },
+    {
+      "timestamp": "2025-08-09T11:43:42.221Z",
+      "message": "Start script contains Intel N100 optimizations",
+      "type": "success"
+    },
+    {
+      "timestamp": "2025-08-09T11:43:42.222Z",
+      "message": "Start script is executable",
+      "type": "success"
+    },
+    {
+      "timestamp": "2025-08-09T11:43:42.222Z",
+      "message": "concurrently.config.js exists",
+      "type": "success"
+    },
+    {
+      "timestamp": "2025-08-09T11:43:42.222Z",
+      "message": "\\n=== Port Availability ===",
+      "type": "info"
+    },
+    {
+      "timestamp": "2025-08-09T11:43:42.315Z",
+      "message": "Port 3000 is in use",
+      "type": "warning"
+    },
+    {
+      "timestamp": "2025-08-09T11:43:42.318Z",
+      "message": "   LISTEN 0      511                 *:3000             *:*    users:((\"node\",pid=5034,fd=23))",
+      "type": "info"
+    },
+    {
+      "timestamp": "2025-08-09T11:43:42.412Z",
+      "message": "Port 3003 is in use",
+      "type": "warning"
+    },
+    {
+      "timestamp": "2025-08-09T11:43:42.412Z",
+      "message": "   LISTEN 0      511           0.0.0.0:3003       0.0.0.0:*    users:((\"node\",pid=19662,fd=35))",
+      "type": "info"
+    },
+    {
+      "timestamp": "2025-08-09T11:43:42.477Z",
+      "message": "Port 9222 is available",
+      "type": "success"
+    },
+    {
+      "timestamp": "2025-08-09T11:43:42.480Z",
+      "message": "\\n=== Dependencies ===",
+      "type": "info"
+    },
+    {
+      "timestamp": "2025-08-09T11:43:42.482Z",
+      "message": "node_modules directory exists",
+      "type": "success"
+    },
+    {
+      "timestamp": "2025-08-09T11:43:42.483Z",
+      "message": "concurrently installed",
+      "type": "success"
+    },
+    {
+      "timestamp": "2025-08-09T11:43:42.484Z",
+      "message": "vite installed",
+      "type": "success"
+    },
+    {
+      "timestamp": "2025-08-09T11:43:42.484Z",
+      "message": "nodemon installed",
+      "type": "success"
+    },
+    {
+      "timestamp": "2025-08-09T11:43:42.484Z",
+      "message": "\\n=== Environment Variables ===",
+      "type": "info"
+    },
+    {
+      "timestamp": "2025-08-09T11:43:42.487Z",
+      "message": "Found 34 environment variables in .intel-n100.env",
+      "type": "success"
+    },
+    {
+      "timestamp": "2025-08-09T11:43:42.487Z",
+      "message": "NODE_OPTIONS configured",
+      "type": "success"
+    },
+    {
+      "timestamp": "2025-08-09T11:43:42.487Z",
+      "message": "UV_THREADPOOL_SIZE configured",
+      "type": "success"
+    },
+    {
+      "timestamp": "2025-08-09T11:43:42.487Z",
+      "message": "CHOKIDAR_USEPOLLING configured",
+      "type": "success"
+    },
+    {
+      "timestamp": "2025-08-09T11:43:42.487Z",
+      "message": "\\n============================================================",
+      "type": "info"
+    },
+    {
+      "timestamp": "2025-08-09T11:43:42.487Z",
+      "message": "INTEL N100 VALIDATION SUMMARY",
+      "type": "info"
+    },
+    {
+      "timestamp": "2025-08-09T11:43:42.487Z",
+      "message": "============================================================",
+      "type": "info"
+    },
+    {
+      "timestamp": "2025-08-09T11:43:42.488Z",
+      "message": "Total checks: 43",
+      "type": "info"
+    },
+    {
+      "timestamp": "2025-08-09T11:43:42.488Z",
+      "message": "Successful: 24",
+      "type": "success"
+    },
+    {
+      "timestamp": "2025-08-09T11:43:42.488Z",
+      "message": "Warnings: 2",
+      "type": "warning"
+    },
+    {
+      "timestamp": "2025-08-09T11:43:42.488Z",
+      "message": "Errors: 0",
+      "type": "info"
+    },
+    {
+      "timestamp": "2025-08-09T11:43:42.488Z",
+      "message": "Success rate: 56%",
+      "type": "warning"
+    },
+    {
+      "timestamp": "2025-08-09T11:43:42.488Z",
+      "message": "\\n🎉 Intel N100 optimization setup is ready!",
+      "type": "success"
+    },
+    {
+      "timestamp": "2025-08-09T11:43:42.488Z",
+      "message": "Run: ./scripts/start-intel-n100-dev.sh",
+      "type": "info"
+    }
+  ],
+  "errors": [],
+  "warnings": [
+    {
+      "timestamp": "2025-08-09T11:43:42.315Z",
+      "message": "Port 3000 is in use",
+      "type": "warning"
+    },
+    {
+      "timestamp": "2025-08-09T11:43:42.412Z",
+      "message": "Port 3003 is in use",
+      "type": "warning"
+    },
+    {
+      "timestamp": "2025-08-09T11:43:42.488Z",
+      "message": "Warnings: 2",
+      "type": "warning"
+    },
+    {
+      "timestamp": "2025-08-09T11:43:42.488Z",
+      "message": "Success rate: 56%",
+      "type": "warning"
+    }
+  ]
+}

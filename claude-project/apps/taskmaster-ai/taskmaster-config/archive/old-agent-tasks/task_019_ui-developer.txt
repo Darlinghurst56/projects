@@ -1,0 +1,89 @@
+# Task ID: 19
+# Title: Autonomous Agent Self-Management System
+# Status: in-progress
+# Dependencies: 14, 10, 2
+# Priority: medium
+# Description: Implement an intelligent agent system that automatically claims tasks based on agent specialties, executes tasks without human intervention, marks tasks complete when done, and includes fail-safe mechanisms for auto-reassigning stuck tasks after 30 minutes while optimizing LLM token usage through deterministic routing and capability caching.
+# Details:
+1. **Agent Specialty Mapping:** Create a deterministic routing system that maps task types to agent specialties using pattern matching and keyword analysis. Define specialty profiles for each agent role (Frontend Architect, UI Developer, Backend Agent, QA Specialist, DevOps Agent) with capability matrices stored in `.taskmaster/agents/capabilities.json`.
+
+2. **Auto-Claim Engine:** Implement a polling service that monitors pending tasks and automatically assigns them to available agents based on:
+   - Task description/title keyword matching against agent capabilities
+   - Current agent workload and availability status
+   - Task priority and dependencies readiness
+   - Historical success rates for similar tasks
+
+3. **Autonomous Execution Framework:** Build an execution engine that:
+   - Spawns isolated agent processes using Node.js child_process or worker threads
+   - Integrates with Claude Code MCP for task execution
+   - Implements sandboxed environments with tool restrictions per agent role
+   - Maintains execution logs and progress tracking
+
+4. **Task Completion Detection:** Develop intelligent completion detection through:
+   - Monitoring agent output for completion signals
+   - Validating deliverables against task requirements
+   - Running automated post-work validation scripts
+   - Checking for common completion patterns (e.g., 'task complete', 'done', test results)
+
+5. **Fail-Safe Mechanisms:** Implement robust failure handling:
+   - Heartbeat monitoring every 5 minutes for active agents
+   - Automatic task reassignment after 30 minutes of inactivity
+   - Escalation to human intervention after 3 failed attempts
+   - Graceful agent shutdown and resource cleanup
+
+6. **Token Usage Optimization:** Reduce LLM token consumption through:
+   - Capability caching: Store agent capabilities and refresh weekly
+   - Deterministic routing: Use rule-based matching before LLM calls
+   - Context pruning: Remove irrelevant task history from prompts
+   - Response caching: Store common operation results
+   - Batch processing: Group similar tasks for single LLM calls
+
+7. **Implementation Architecture:**
+   ```javascript
+   // Core components structure
+   .taskmaster/agents/
+   ├── self-management/
+   │   ├── auto-claim-engine.js
+   │   ├── execution-framework.js
+   │   ├── completion-detector.js
+   │   ├── fail-safe-monitor.js
+   │   └── token-optimizer.js
+   ├── capabilities.json
+   └── routing-rules.json
+   ```
+
+8. **Agent Lifecycle Management:** Implement state machine for agents:
+   - IDLE → CLAIMING → EXECUTING → VALIDATING → COMPLETE/FAILED
+   - Persist agent state in `.taskmaster/agents/state.json`
+   - Implement graceful recovery from system crashes
+
+# Test Strategy:
+1. **Auto-Claim Testing:** Create 10 test tasks with varying specialties and verify correct agent assignment within 30 seconds. Test edge cases like multiple suitable agents and no matching specialists.
+
+2. **Autonomous Execution Validation:** Deploy 5 simple tasks (file creation, code modification, test execution) and verify agents complete them without human intervention. Monitor execution logs for errors.
+
+3. **Fail-Safe Testing:** 
+   - Start agent on long-running task and kill process after 15 minutes
+   - Verify task reassignment occurs at 30-minute mark
+   - Test recovery from network failures and API timeouts
+   - Validate escalation to human after repeated failures
+
+4. **Token Usage Metrics:** 
+   - Baseline: Execute 20 tasks without optimization
+   - With optimization: Execute same 20 tasks and compare token usage
+   - Target: 40% reduction in token consumption
+   - Monitor cache hit rates (target >70%)
+
+5. **Load Testing:** Run 50 concurrent tasks across all agent types to verify:
+   - No task assignment conflicts
+   - Proper resource management
+   - Consistent execution times
+   - Memory usage stays under 2GB
+
+6. **Integration Testing:** Verify seamless integration with existing systems:
+   - TaskMaster task updates reflect in real-time
+   - Agent dashboard shows live status updates
+   - WebSocket connections remain stable
+   - Validation scripts execute correctly
+
+7. **Capability Routing Accuracy:** Test deterministic routing with 100 task samples, verify >90% accuracy in agent selection without LLM calls

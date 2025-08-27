@@ -1,0 +1,71 @@
+{
+  "agents": {
+    "family-dashboard-qa": {
+      "id": "family-dashboard-qa-001",
+      "role": "qa-specialist",
+      "capabilities": ["testing", "validation", "family-dashboard"],
+      "taskKeywords": ["test", "qa", "validate", "family", "dashboard", "house ai", "pin", "auth", "authentication"],
+      "intervals": {
+        "heartbeat": 30000,
+        "taskCheck": 45000
+      },
+      "logLevel": "info"
+    },
+    "background-ux": {
+      "id": "background-ux-001",
+      "role": "ui-developer",
+      "capabilities": ["ux", "ui", "design", "css", "html"],
+      "taskKeywords": ["ux", "ui", "design", "style", "css", "layout", "responsive", "puppeteer", "configuration", "cleanup", "refactor"],
+      "intervals": {
+        "heartbeat": 30000,
+        "taskCheck": 45000
+      },
+      "logLevel": "info"
+    },
+    "background-integration": {
+      "id": "background-integration-001",
+      "role": "integration-specialist",
+      "capabilities": ["api", "integration", "data-flow"],
+      "taskKeywords": ["integrate", "api", "connect", "sync", "data", "service"],
+      "intervals": {
+        "heartbeat": 30000,
+        "taskCheck": 45000
+      },
+      "logLevel": "info"
+    },
+    "background-qa": {
+      "id": "background-qa-001",
+      "role": "qa-specialist",
+      "capabilities": ["testing", "validation", "quality"],
+      "taskKeywords": ["test", "qa", "quality", "validate", "verify", "check"],
+      "intervals": {
+        "heartbeat": 30000,
+        "taskCheck": 45000
+      },
+      "logLevel": "info"
+    }
+  },
+  "testDefinitions": {
+    "pin-auth": {
+      "name": "PIN Authentication",
+      "checks": ["setup", "login", "security", "session"],
+      "expectedResult": "All authentication flows working correctly"
+    },
+    "family-profiles": {
+      "name": "Family Profile Management",
+      "checks": ["create", "update", "delete", "permissions"],
+      "expectedResult": "Profile operations functioning as expected"
+    },
+    "widget-layout": {
+      "name": "Widget Layout System",
+      "checks": ["render", "resize", "drag-drop", "responsive"],
+      "expectedResult": "Layout system responsive and functional"
+    },
+    "api-integration": {
+      "name": "API Integration",
+      "checks": ["connect", "auth", "data-sync", "error-handling"],
+      "expectedResult": "APIs properly integrated with error handling"
+    }
+  },
+  "apiUrl": "http://localhost:3001"
+}

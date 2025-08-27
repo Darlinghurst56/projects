@@ -1,0 +1,25 @@
+# Task ID: 21
+# Title: Create Responsive Device Status Header Component
+# Status: in-progress
+# Dependencies: 6, 17, 20
+# Priority: high
+# Description: Create a responsive device status header component for the House AI Family Home Page, displaying real-time Control D device status with colored lozenges and tooltips.
+# Details:
+1. **Component Structure:** Create a new React component named `DeviceStatusHeader` within the `src/components` directory. This component will serve as the main container for the device status information.
+2. **Responsive Layout:** Implement a responsive layout using CSS Grid or Flexbox to ensure the header adapts to different screen sizes. Define breakpoints for mobile, tablet, and desktop views.
+3. **Device Status Lozenge:** Create a `StatusLozenge` sub-component that displays the status of each device. The lozenge should be styled with a background color based on the device status (Green for online, Amber for warning, Red for offline). Use CSS variables for consistent color theming.
+4. **Tooltip Implementation:** Integrate a tooltip system (e.g., using a library like `react-tooltip` or a custom implementation) to display device details on hover. The tooltip should show the device name, profile, and last seen timestamp.
+5. **Data Integration:** Fetch device status data from the existing data source (TaskMaster or similar) using established API endpoints or WebSocket connections. Implement data caching to minimize API calls and improve performance.
+6. **Status Transitions:** Add CSS animations for smooth transitions between device status changes. Use `transition` property in CSS to animate background color changes.
+7. **Accessibility:** Ensure the header is accessible by providing appropriate ARIA attributes and keyboard navigation support.
+8. **Integration with Existing Widget System:** Integrate the `DeviceStatusHeader` component into the existing widget system architecture, ensuring it can be easily added to the Home Page layout.
+9. **Error Handling:** Implement error handling to gracefully handle cases where device status data is unavailable or invalid. Display informative error messages to the user.
+
+# Test Strategy:
+1. **Responsive Testing:** Test the header on various devices and screen sizes (mobile, tablet, desktop) to ensure it adapts correctly. Use browser developer tools to simulate different screen resolutions and orientations.
+2. **Status Color Verification:** Verify that the status lozenges display the correct colors for different device statuses (Green, Amber, Red). Test edge cases such as null or invalid status values.
+3. **Tooltip Content Validation:** Hover over each status lozenge and verify that the tooltip displays the correct device name, profile, and last seen timestamp. Test with different device profiles and last seen values.
+4. **Transition Testing:** Verify that the status transitions are smooth and visually appealing. Test with rapid status changes to ensure the animations do not cause performance issues.
+5. **Accessibility Testing:** Use accessibility testing tools (e.g., WAVE, Axe) to identify and fix any accessibility issues. Verify that the header is navigable using keyboard and screen reader.
+6. **Integration Testing:** Test the integration of the `DeviceStatusHeader` component with the existing widget system. Verify that it can be added to the Home Page layout without any conflicts or errors.
+7. **Performance Testing:** Measure the performance of the header component using browser developer tools. Ensure that it does not introduce any significant performance bottlenecks.

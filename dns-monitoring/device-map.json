@@ -1,0 +1,693 @@
+{
+  "metadata": {
+    "last_updated": "2025-08-11",
+    "network_range": "192.168.1.0/24",
+    "total_devices": 47,
+    "source": "Control D DNS log analysis"
+  },
+  "devices": {
+    "192.168.1.15": {
+      "name": "Primary Workstation",
+      "type": "Computer",
+      "category": "Workstation",
+      "activity_level": "high",
+      "common_domains": [
+        "fmipalservice.icloud.com",
+        "bag.itunes.apple.com",
+        "apple.com",
+        "time.euro.apple.com",
+        "calendar.google.com"
+      ],
+      "query_count": 220,
+      "description": "Most active device - likely main computer"
+    },
+    "192.168.1.73": {
+      "name": "Secondary Device",
+      "type": "Computer/Mobile",
+      "category": "Unknown",
+      "activity_level": "high",
+      "query_count": 210,
+      "description": "High activity device - computer or active mobile device",
+      "common_domains": [
+        "acsechocaptiveportal.com",
+        "todo-ta-g7g.amazon.com",
+        "0.north-america.pool.ntp.org",
+        "api.amazonalexa.com",
+        "ap-gew1.spotify.com"
+      ]
+    },
+    "192.168.1.47": {
+      "name": "Media Device",
+      "type": "Streaming/Media",
+      "category": "Entertainment",
+      "activity_level": "medium-high",
+      "common_domains": [
+        "mask.icloud.com",
+        "lb._dns-sd._udp.0.1.168.192.in-addr.arpa",
+        "mask.apple-dns.net",
+        "_dns.resolver.arpa",
+        "1ee9g7o5xyg.dns.controld.com"
+      ],
+      "query_count": 176,
+      "description": "Spotify streaming activity detected"
+    },
+    "192.168.1.69": {
+      "name": "Smart Device Hub",
+      "type": "IoT",
+      "category": "Smart Home",
+      "activity_level": "medium-high",
+      "query_count": 165,
+      "description": "Consistent activity - possibly smart home hub or always-on device",
+      "common_domains": [
+        "todo-ta-g7g.amazon.com",
+        "0.north-america.pool.ntp.org",
+        "prod.sip-edge.amc.amazon.dev",
+        "1.north-america.pool.ntp.org",
+        "ap-gue1.spotify.com"
+      ]
+    },
+    "192.168.1.80": {
+      "name": "Smart Speaker/Assistant",
+      "type": "Voice Assistant",
+      "category": "Smart Home",
+      "activity_level": "medium",
+      "common_domains": [
+        "rr3---sn-aigl6nzs.gvt1.com",
+        "android.googleapis.com",
+        "play-fe.googleapis.com",
+        "rr1---sn-aigl6ney.gvt1.com",
+        "connectivitycheck.gstatic.com"
+      ],
+      "query_count": 154,
+      "description": "Amazon Alexa device based on API queries"
+    },
+    "192.168.1.32": {
+      "name": "Network Device",
+      "type": "Network/IoT",
+      "category": "Infrastructure",
+      "activity_level": "medium",
+      "common_domains": [
+        "mask.icloud.com",
+        "lb._dns-sd._udp.0.1.168.192.in-addr.arpa",
+        "mask.apple-dns.net",
+        "local",
+        "fonts.googleapis.com"
+      ],
+      "query_count": 152,
+      "description": "Network infrastructure or communication device"
+    },
+    "192.168.1.34": {
+      "name": "IoT Device",
+      "type": "IoT",
+      "category": "Smart Home",
+      "activity_level": "medium",
+      "query_count": 137,
+      "description": "IoT device with moderate activity",
+      "common_domains": [
+        "mmechocaptiveportal.com",
+        "ap-gew1.spotify.com",
+        "ntp-g7g.amazon.com",
+        "unagi-na.amazon.com",
+        "d1y2lucq187ejj.cloudfront.net"
+      ]
+    },
+    "192.168.1.6": {
+      "name": "Mobile Device",
+      "type": "Mobile",
+      "category": "Personal",
+      "activity_level": "medium",
+      "query_count": 104,
+      "description": "Mobile device usage pattern",
+      "common_domains": [
+        "pool.ntp.org",
+        "aqm3wd1qlc3dy-ats.iot.us-east-1.amazonaws.com",
+        "ntp.aliyun.com",
+        "time.google.com"
+      ]
+    },
+    "192.168.1.40": {
+      "name": "Discovery Device",
+      "type": "Network",
+      "category": "Infrastructure",
+      "activity_level": "medium",
+      "common_domains": [
+        "40.1.168.192.in-addr.arpa",
+        "local",
+        "apple.com",
+        "db._dns-sd._udp.0.1.168.192.in-addr.arpa",
+        "doh-dns-apple-com.v.aaplimg.com"
+      ],
+      "query_count": 98,
+      "description": "Performs network discovery and DNS-SD queries"
+    },
+    "192.168.1.82": {
+      "name": "Monitoring Device",
+      "type": "IoT/Security",
+      "category": "Monitoring",
+      "activity_level": "medium",
+      "common_domains": [
+        "weather.4store.com",
+        "spectrum.s3.amazonaws.com",
+        "mobile-collector.newrelic.com",
+        "mobile.launchdarkly.com",
+        "clientsdk.launchdarkly.com"
+      ],
+      "query_count": 90,
+      "description": "Device with monitoring/telemetry activity"
+    },
+    "192.168.1.77": {
+      "name": "Philips Hue Hub",
+      "type": "Smart Lighting",
+      "category": "Smart Home",
+      "activity_level": "low",
+      "common_domains": [
+        "diag.meethue.com",
+        "data.meethue.com",
+        "mqtt-eu-01.iot.meethue.com"
+      ],
+      "query_count": 14,
+      "description": "Philips Hue smart lighting system",
+      "confirmed": true
+    },
+    "192.168.1.59": {
+      "name": "Security/Monitoring",
+      "type": "Security",
+      "category": "Security",
+      "activity_level": "low",
+      "common_domains": [
+        "info.cspserver.net"
+      ],
+      "query_count": 15,
+      "description": "Security or monitoring related device"
+    },
+    "192.168.1.31": {
+      "name": "Communication Device",
+      "type": "Mobile/Communication",
+      "category": "Personal",
+      "activity_level": "low",
+      "common_domains": [
+        "instantmessaging-pa.googleapis.com",
+        "play.googleapis.com",
+        "www.gstatic.com",
+        "clients3.google.com",
+        "ipv4only.arpa"
+      ],
+      "query_count": 12,
+      "description": "Google messaging services usage"
+    },
+    "192.168.1.41": {
+      "name": "Auto-detected-41",
+      "type": "Unknown",
+      "category": "Unknown",
+      "description": "Auto-detected from DNS logs with 49 queries",
+      "added": "2025-08-11 10:51:52",
+      "query_count": 49,
+      "common_domains": [
+        "log.samsunghrm.com",
+        "info.cspserver.net",
+        "gpm.samsungqbe.com"
+      ]
+    },
+    "192.168.1.21": {
+      "name": "Auto-detected-21",
+      "type": "Unknown",
+      "category": "Unknown",
+      "description": "Auto-detected from DNS logs with 35 queries",
+      "added": "2025-08-11 10:51:52",
+      "query_count": 35,
+      "common_domains": [
+        "_sips._tcp.fp-gb-o2.rcs.telephony.goog",
+        "fp-gb-o2.rcs.telephony.goog",
+        "_dns.resolver.arpa",
+        "1ee9g7o5xyg.dns.controld.com",
+        "epdg.epc.mnc010.mcc234.pub.3gppnetwork.org"
+      ]
+    },
+    "192.168.1.39": {
+      "name": "Auto-detected-39",
+      "type": "Unknown",
+      "category": "Unknown",
+      "description": "Auto-detected from DNS logs with 20 queries",
+      "added": "2025-08-11 10:51:52",
+      "query_count": 20,
+      "common_domains": [
+        "arcus-uswest.amazon.com",
+        "msh.amazon.com",
+        "ap.spotify.com",
+        "web.diagnostic.networking.aws.dev",
+        "api.amazonalexa.com"
+      ]
+    },
+    "192.168.1.81": {
+      "name": "Auto-detected-81",
+      "type": "Unknown",
+      "category": "Unknown",
+      "description": "Auto-detected from DNS logs with 18 queries",
+      "added": "2025-08-11 10:51:52",
+      "query_count": 18,
+      "common_domains": [
+        "acsechocaptiveportal.com",
+        "avs-alexa-14-eu.amazon.com",
+        "web.diagnostic.networking.aws.dev",
+        "api.amazonalexa.com",
+        "api.amazon.com"
+      ]
+    },
+    "192.168.1.22": {
+      "name": "Auto-detected-22",
+      "type": "Unknown",
+      "category": "Unknown",
+      "description": "Auto-detected from DNS logs with 10 queries",
+      "added": "2025-08-11 10:51:52",
+      "query_count": 10,
+      "common_domains": [
+        "api.eu.amazonalexa.com",
+        "d3p8zr0ffa9t17.cloudfront.net"
+      ]
+    },
+    "192.168.1.38": {
+      "name": "Auto-detected-38",
+      "type": "Unknown",
+      "category": "Unknown",
+      "description": "Auto-detected from DNS logs with 70 queries",
+      "added": "2025-08-11 10:51:52",
+      "query_count": 70,
+      "common_domains": [
+        "logs.netflix.com",
+        "secure.netflix.com",
+        "nrdp-ipv6.prod.ftl.netflix.com",
+        "cdn-0.nflximg.com",
+        "customerevents.netflix.com"
+      ]
+    },
+    "192.168.1.10": {
+      "name": "Auto-detected-10",
+      "type": "Unknown",
+      "category": "Unknown",
+      "description": "Auto-detected from DNS logs with 14 queries",
+      "added": "2025-08-11 10:51:52",
+      "query_count": 14,
+      "common_domains": [
+        "lb._dns-sd._udp.0.1.168.192.in-addr.arpa",
+        "detectportal.firefox.com",
+        "10.1.168.192.in-addr.arpa",
+        "captive.g.aaplimg.com",
+        "captive.apple.com"
+      ]
+    },
+    "192.168.1.61": {
+      "name": "Auto-detected-61",
+      "type": "Unknown",
+      "category": "Unknown",
+      "description": "Auto-detected from DNS logs with 47 queries",
+      "added": "2025-08-11 10:51:52",
+      "query_count": 47,
+      "common_domains": [
+        "local",
+        "_dns.resolver.arpa",
+        "a1366.dscapi6.akamai.net",
+        "gspe1-ssl.ls.apple.com",
+        "1ee9g7o5xyg.dns.controld.com"
+      ]
+    },
+    "192.168.1.76": {
+      "name": "Auto-detected-76",
+      "type": "Unknown",
+      "category": "Unknown",
+      "description": "Auto-detected from DNS logs with 38 queries",
+      "added": "2025-08-11 10:51:52",
+      "query_count": 38,
+      "common_domains": [
+        "xbroker-z1-i6.arloxcld.com",
+        "arlo.com",
+        "advisor.arloxcld.com",
+        "registration.arloxcld.com",
+        "deviceapi.messaging.arlo.com"
+      ]
+    },
+    "192.168.1.85": {
+      "name": "Auto-detected-85",
+      "type": "Unknown",
+      "category": "Unknown",
+      "description": "Auto-detected from DNS logs with 54 queries",
+      "added": "2025-08-11 10:51:52",
+      "query_count": 54,
+      "common_domains": [
+        "1ee9g7o5xyg.dns.controld.com",
+        "_dns.resolver.arpa",
+        "epdg.epc.mnc020.mcc234.pub.3gppnetwork.org",
+        "dns.controld.com"
+      ]
+    },
+    "192.168.1.42": {
+      "name": "Auto-detected-42",
+      "type": "Unknown",
+      "category": "Unknown",
+      "description": "Auto-detected from DNS logs with 60 queries",
+      "added": "2025-08-11 10:51:52",
+      "query_count": 60,
+      "common_domains": [
+        "3.openwrt.pool.ntp.org",
+        "1.openwrt.pool.ntp.org",
+        "2.openwrt.pool.ntp.org",
+        "rest-hw-e007.immedia-semi.com",
+        "cs-e007.immedia-semi.com"
+      ]
+    },
+    "192.168.1.24": {
+      "name": "Auto-detected-24",
+      "type": "Unknown",
+      "category": "Unknown",
+      "description": "Auto-detected from DNS logs with 50 queries",
+      "added": "2025-08-11 10:51:52",
+      "query_count": 50,
+      "common_domains": [
+        "ucarecdn.com",
+        "lb._dns-sd._udp.0.1.168.192.in-addr.arpa",
+        "doh.dns.apple.com",
+        "apple.com",
+        "local"
+      ]
+    },
+    "192.168.1.43": {
+      "name": "Auto-detected-43",
+      "type": "Unknown",
+      "category": "Unknown",
+      "description": "Auto-detected from DNS logs with 40 queries",
+      "added": "2025-08-11 10:51:52",
+      "query_count": 40,
+      "common_domains": [
+        "ntp.wiz.world",
+        "eu.mqtt.wiz.world"
+      ]
+    },
+    "192.168.1.13": {
+      "name": "Auto-detected-13",
+      "type": "Unknown",
+      "category": "Unknown",
+      "description": "Auto-detected from DNS logs with 87 queries",
+      "added": "2025-08-11 10:51:52",
+      "query_count": 87,
+      "common_domains": [
+        "fr-resolver-msg-global-xiaomi-n-916220403.eu-central-1.elb.amazonaws.com",
+        "encrypted-tbn2.gstatic.com",
+        "fr.resolver.msg.global.xiaomi.net",
+        "t7.a.market.xiaomi.com",
+        "cdn.optimizely.com"
+      ]
+    },
+    "192.168.1.72": {
+      "name": "Auto-detected-72",
+      "type": "Unknown",
+      "category": "Unknown",
+      "description": "Auto-detected from DNS logs with 5 queries",
+      "added": "2025-08-11 10:51:52",
+      "query_count": 5,
+      "common_domains": [
+        "0.north-america.pool.ntp.org",
+        "mqtt-eu-4.meross.com"
+      ]
+    },
+    "192.168.1.37": {
+      "name": "Auto-detected-37",
+      "type": "Unknown",
+      "category": "Unknown",
+      "description": "Auto-detected from DNS logs with 34 queries",
+      "added": "2025-08-11 10:51:52",
+      "query_count": 34,
+      "common_domains": [
+        "eu.mqtt.wiz.world",
+        "ntp.wiz.world"
+      ]
+    },
+    "192.168.1.66": {
+      "name": "Auto-detected-66",
+      "type": "Unknown",
+      "category": "Unknown",
+      "description": "Auto-detected from DNS logs with 22 queries",
+      "added": "2025-08-11 10:51:52",
+      "query_count": 22,
+      "common_domains": [
+        "clientstream.launchdarkly.com",
+        "mobile.launchdarkly.com",
+        "insights-collector.newrelic.com"
+      ]
+    },
+    "192.168.1.51": {
+      "name": "Auto-detected-51",
+      "type": "Unknown",
+      "category": "Unknown",
+      "description": "Auto-detected from DNS logs with 11 queries",
+      "added": "2025-08-11 10:51:52",
+      "query_count": 11,
+      "common_domains": [
+        "a2x5shi1accb1g-ats.iot.eu-west-1.amazonaws.com",
+        "api.amazon.com",
+        "aezme1x38kdra.us-east-1.prod.service.minerva.devices.a2z.com"
+      ]
+    },
+    "192.168.1.19": {
+      "name": "Auto-detected-19",
+      "type": "Unknown",
+      "category": "Unknown",
+      "description": "Auto-detected from DNS logs with 46 queries",
+      "added": "2025-08-11 10:51:52",
+      "query_count": 46,
+      "common_domains": [
+        "latinum-eu.amazon.com",
+        "device-metrics-us.amazon.com",
+        "ntp-g7g.amazon.com",
+        "msh.amazon.com",
+        "msh.amazon.co.uk"
+      ]
+    },
+    "192.168.1.90": {
+      "name": "Auto-detected-90",
+      "type": "Unknown",
+      "category": "Unknown",
+      "description": "Auto-detected from DNS logs with 10 queries",
+      "added": "2025-08-11 10:51:52",
+      "query_count": 10,
+      "common_domains": [
+        "mmechocaptiveportal.com",
+        "ntp-g7g.amazon.com",
+        "bob-dispatch-prod-eu.amazon.com",
+        "ap.spotify.com",
+        "fireoscaptiveportal.com"
+      ]
+    },
+    "192.168.1.18": {
+      "name": "Auto-detected-18",
+      "type": "Unknown",
+      "category": "Unknown",
+      "description": "Auto-detected from DNS logs with 4 queries",
+      "added": "2025-08-11 10:51:52",
+      "query_count": 4,
+      "common_domains": [
+        "n.connections.brother.com"
+      ]
+    },
+    "192.168.1.87": {
+      "name": "Auto-detected-87",
+      "type": "Unknown",
+      "category": "Unknown",
+      "description": "Auto-detected from DNS logs with 17 queries",
+      "added": "2025-08-11 10:51:52",
+      "query_count": 17,
+      "common_domains": [
+        "us.mqtt.bambulab.com",
+        "www.microsoft.com",
+        "api.bambulab.com",
+        "time.google.com"
+      ]
+    },
+    "192.168.1.46": {
+      "name": "Auto-detected-46",
+      "type": "Unknown",
+      "category": "Unknown",
+      "description": "Auto-detected from DNS logs with 34 queries",
+      "added": "2025-08-11 10:51:52",
+      "query_count": 34,
+      "common_domains": [
+        "xbroker-z1-i13.arloxcld.com",
+        "arlo.com",
+        "advisor.arloxcld.com",
+        "registration.arloxcld.com",
+        "deviceapi.messaging.arlo.com"
+      ]
+    },
+    "192.168.1.27": {
+      "name": "Auto-detected-27",
+      "type": "Unknown",
+      "category": "Unknown",
+      "description": "Auto-detected from DNS logs with 2 queries",
+      "added": "2025-08-11 10:51:52",
+      "query_count": 2,
+      "common_domains": [
+        "mqtt-eu-4.meross.com"
+      ]
+    },
+    "192.168.1.7": {
+      "name": "Auto-detected-7",
+      "type": "Unknown",
+      "category": "Unknown",
+      "description": "Auto-detected from DNS logs with 20 queries",
+      "added": "2025-08-11 10:51:52",
+      "query_count": 20,
+      "common_domains": [
+        "mask-canary.icloud.com",
+        "epdg.epc.mnc015.mcc234.pub.3gppnetwork.org",
+        "local",
+        "_dns.resolver.arpa",
+        "canary.mask.apple-dns.net"
+      ]
+    },
+    "192.168.1.62": {
+      "name": "Auto-detected-62",
+      "type": "Unknown",
+      "category": "Unknown",
+      "description": "Auto-detected from DNS logs with 25 queries",
+      "added": "2025-08-11 10:51:52",
+      "query_count": 25,
+      "common_domains": [
+        "a7wxqph584yp.us-east-1.prod.service.minerva.devices.a2z.com",
+        "ap.spotify.com",
+        "fireoscaptiveportal.com",
+        "api.eu.amazonalexa.com",
+        "api.amazon.com"
+      ]
+    },
+    "192.168.1.5": {
+      "name": "Auto-detected-5",
+      "type": "Unknown",
+      "category": "Unknown",
+      "description": "Auto-detected from DNS logs with 4 queries",
+      "added": "2025-08-11 10:51:52",
+      "query_count": 4,
+      "common_domains": [
+        "api.eu.amazonalexa.com",
+        "prod.sip-edge.amc.amazon.dev"
+      ]
+    },
+    "192.168.1.68": {
+      "name": "Auto-detected-68",
+      "type": "Unknown",
+      "category": "Unknown",
+      "description": "Auto-detected from DNS logs with 2 queries",
+      "added": "2025-08-11 10:51:52",
+      "query_count": 2,
+      "common_domains": [
+        "update2.control4.com"
+      ]
+    },
+    "192.168.1.36": {
+      "name": "Auto-detected-36",
+      "type": "Unknown",
+      "category": "Unknown",
+      "description": "Auto-detected from DNS logs with 81 queries",
+      "added": "2025-08-11 10:51:52",
+      "query_count": 81,
+      "common_domains": [
+        "pool.ntp.org",
+        "aqm3wd1qlc3dy-ats.iot.us-east-1.amazonaws.com",
+        "ntp.aliyun.com",
+        "time.google.com"
+      ]
+    },
+    "192.168.1.151": {
+      "name": "Auto-detected-151",
+      "type": "Unknown",
+      "category": "Unknown",
+      "description": "Auto-detected from DNS logs with 6 queries",
+      "added": "2025-08-11 10:51:52",
+      "query_count": 6,
+      "common_domains": [
+        "io-extender-000fff1ab0ba"
+      ]
+    },
+    "192.168.1.35": {
+      "name": "Auto-detected-35",
+      "type": "Unknown",
+      "category": "Unknown",
+      "description": "Auto-detected from DNS logs with 17 queries",
+      "added": "2025-08-11 10:51:52",
+      "query_count": 17,
+      "common_domains": [
+        "gateway.fe2.apple-dns.net",
+        "24-courier.push.apple.com",
+        "_dns.resolver.arpa",
+        "gateway.icloud.com",
+        "42-courier.push.apple.com"
+      ]
+    },
+    "192.168.1.165": {
+      "name": "Auto-detected-165",
+      "type": "Unknown",
+      "category": "Unknown",
+      "description": "Auto-detected from DNS logs with 3 queries",
+      "added": "2025-08-11 10:51:52",
+      "query_count": 3,
+      "common_domains": [
+        "io-extender-000fff1a6c25"
+      ]
+    },
+    "192.168.1.60": {
+      "name": "Auto-detected-60",
+      "type": "Unknown",
+      "category": "Unknown",
+      "description": "Auto-detected from DNS logs with 12 queries",
+      "added": "2025-08-11 10:51:52",
+      "query_count": 12,
+      "common_domains": [
+        "captive.apple.com"
+      ]
+    },
+    "192.168.1.84": {
+      "name": "Auto-detected-84",
+      "type": "Unknown",
+      "category": "Unknown",
+      "description": "Auto-detected from DNS logs with 1 queries",
+      "added": "2025-08-11 10:51:52",
+      "query_count": 1,
+      "common_domains": [
+        "pool.ntp.org"
+      ]
+    }
+  },
+  "network_insights": {
+    "device_types": {
+      "Smart Home/IoT": 5,
+      "Computers/Workstations": 3,
+      "Mobile/Personal": 2,
+      "Network/Infrastructure": 2,
+      "Entertainment/Media": 1,
+      "Security/Monitoring": 1
+    },
+    "top_services": {
+      "dns.controld.com": "DNS service queries",
+      "api.amazonalexa.com": "Amazon Alexa devices",
+      "ap.spotify.com": "Spotify streaming",
+      "data.meethue.com": "Philips Hue lighting",
+      "mobile-collector.newrelic.com": "Application monitoring"
+    },
+    "activity_patterns": {
+      "high_activity": [
+        "192.168.1.15",
+        "192.168.1.73"
+      ],
+      "smart_home_cluster": [
+        "192.168.1.77",
+        "192.168.1.80",
+        "192.168.1.69",
+        "192.168.1.34"
+      ],
+      "entertainment_devices": [
+        "192.168.1.47"
+      ],
+      "infrastructure": [
+        "192.168.1.32",
+        "192.168.1.40"
+      ]
+    }
+  }
+}

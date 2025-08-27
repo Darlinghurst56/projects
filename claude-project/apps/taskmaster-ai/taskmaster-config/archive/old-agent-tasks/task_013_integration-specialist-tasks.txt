@@ -1,0 +1,66 @@
+# Task ID: 13
+# Title: Fix all non-functional buttons in dashboard
+# Status: pending
+# Dependencies: 6, 7, 8, 9, 10, 11, 12
+# Priority: medium
+# Description: Implement proper event handlers for all placeholder buttons in the dashboard including refresh buttons, settings buttons, and widget controls to restore full user interaction functionality.
+# Details:
+This task addresses a critical customer feedback issue where multiple buttons throughout the dashboard are non-functional placeholders. Implementation steps:
+
+1. **Top Navigation Buttons**
+   - Implement 'Refresh All' button handler to trigger data refresh for all widgets
+   - Implement 'Settings' button handler to open global settings modal/panel
+   - Add loading states and user feedback during operations
+
+2. **Individual Widget Controls**
+   - Add refresh button handlers for each widget type (DNS, SSL, Domain Info, etc.)
+   - Implement widget-specific settings buttons to open configuration dialogs
+   - Ensure each widget refresh only updates its own data without affecting others
+
+3. **Event Handler Architecture**
+   - Create a centralized event management system for button actions
+   - Implement proper error handling and user notifications
+   - Add visual feedback (loading spinners, disabled states, success indicators)
+
+4. **User Feedback Implementation**
+   - Show loading indicators during data refresh operations
+   - Display success/error messages using toast notifications or inline alerts
+   - Implement button disabled states during operations to prevent multiple clicks
+
+5. **Integration Points**
+   - Connect refresh buttons to existing data fetching logic
+   - Wire settings buttons to configuration management system
+   - Ensure proper state management for UI updates
+
+6. **Accessibility Considerations**
+   - Add proper ARIA labels and states for screen readers
+   - Implement keyboard navigation support
+   - Ensure focus management after button interactions
+
+# Test Strategy:
+1. **Functional Testing**
+   - Click 'Refresh All' button and verify all widgets show loading states and update their data
+   - Click individual widget refresh buttons and confirm only that widget updates
+   - Click 'Settings' button and verify settings panel/modal opens correctly
+   - Click individual widget settings and verify widget-specific configuration opens
+
+2. **User Feedback Testing**
+   - Verify loading indicators appear during refresh operations
+   - Confirm success messages display after successful operations
+   - Test error handling by simulating failed API calls
+   - Ensure buttons are disabled during operations to prevent double-clicks
+
+3. **Integration Testing**
+   - Verify refresh operations connect to actual data sources
+   - Confirm settings changes persist and apply correctly
+   - Test that multiple simultaneous button clicks are handled properly
+
+4. **Accessibility Testing**
+   - Use keyboard navigation to activate all buttons
+   - Test with screen reader to ensure proper announcements
+   - Verify focus management after button interactions
+
+5. **Performance Testing**
+   - Ensure button responses are immediate (< 100ms feedback)
+   - Verify no memory leaks from event handlers
+   - Test with rapid successive clicks to ensure stability

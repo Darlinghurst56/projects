@@ -1,0 +1,315 @@
+{
+  "name": "Gmail Archive Emails via Telegram",
+  "nodes": [
+    {
+      "parameters": {
+        "authentication": "botToken",
+        "resource": "message",
+        "operation": "get",
+        "additionalFields": {}
+      },
+      "name": "Telegram Trigger",
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1,
+      "position": [240, 300],
+      "webhookId": "telegram-archive-emails",
+      "credentials": {
+        "telegramApi": {
+          "id": "telegram-bot-credentials",
+          "name": "Gmail Telegram Bot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$node['Telegram Trigger'].json['message']['text']}}",
+              "operation": "startsWith",
+              "value2": "/archive_email"
+            }
+          ]
+        }
+      },
+      "name": "Check Archive Command",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [460, 300]
+    },
+    {
+      "parameters": {
+        "functionCode": "// Parse the telegram message to extract email ID\nconst message = items[0].json.message.text;\nconst chatId = items[0].json.message.chat.id;\n\n// Expected format: /archive_email id:email_id\nconst idMatch = message.match(/\\/archive_email\\s+id:([^\\s]+)/);\n\nif (!idMatch) {\n  return [{\n    json: {\n      error: true,\n      chatId: chatId,\n      message: \"Invalid format. Use: /archive_email id:email_id\\n\\nTo get email IDs, use /read_emails or /search_email first.\"\n    }\n  }];\n}\n\nconst emailId = idMatch[1].trim();\n\n// Basic validation - Gmail message IDs are typically long alphanumeric strings\nif (emailId.length < 10) {\n  return [{\n    json: {\n      error: true,\n      chatId: chatId,\n      message: \"Invalid email ID format. Please use a valid Gmail message ID.\"\n    }\n  }];\n}\n\nreturn [{\n  json: {\n    chatId: chatId,\n    emailId: emailId,\n    error: false\n  }\n}];"
+      },
+      "name": "Parse Archive Command",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [680, 200]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{$node['Parse Archive Command'].json['error']}}",
+              "value2": false
+            }
+          ]
+        }
+      },
+      "name": "Check Valid ID",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [900, 200]
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "operation": "get",
+        "messageId": "={{$node['Parse Archive Command'].json['emailId']}}",
+        "simple": false
+      },
+      "name": "Get Email Details",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 1,
+      "position": [1120, 120],
+      "credentials": {
+        "googleOAuth2Api": {
+          "id": "gmail-oauth-credentials",
+          "name": "Gmail OAuth2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "operation": "addLabels",
+        "messageId": "={{$node['Parse Archive Command'].json['emailId']}}",
+        "labelIds": []
+      },
+      "name": "Remove Inbox Label",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 1,
+      "position": [1340, 120],
+      "credentials": {
+        "googleOAuth2Api": {
+          "id": "gmail-oauth-credentials",
+          "name": "Gmail OAuth2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "// Prepare success response with email details\nconst emailDetails = $node['Get Email Details'].json;\nconst chatId = $node['Parse Archive Command'].json.chatId;\nconst emailId = $node['Parse Archive Command'].json.emailId;\n\nconst subject = emailDetails.payload.headers.find(h => h.name === 'Subject')?.value || 'No Subject';\nconst from = emailDetails.payload.headers.find(h => h.name === 'From')?.value || 'Unknown Sender';\n\nconst responseText = `✅ **Email Archived Successfully**\\n\\n` +\n                   `📧 Subject: ${subject}\\n` +\n                   `👤 From: ${from}\\n` +\n                   `🆔 ID: ${emailId}\\n\\n` +\n                   `The email has been removed from your inbox and moved to the archive.`;\n\nreturn [{\n  json: {\n    chatId: chatId,\n    text: responseText\n  }\n}];"
+      },
+      "name": "Format Success Response",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [1560, 120]
+    },
+    {
+      "parameters": {
+        "chatId": "={{$node['Format Success Response'].json['chatId']}}",
+        "text": "={{$node['Format Success Response'].json['text']}}",
+        "additionalFields": {
+          "parse_mode": "Markdown"
+        }
+      },
+      "name": "Send Success Response",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [1780, 120],
+      "credentials": {
+        "telegramApi": {
+          "id": "telegram-bot-credentials",
+          "name": "Gmail Telegram Bot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{$node['Parse Archive Command'].json['chatId']}}",
+        "text": "❌ {{$node['Parse Archive Command'].json['message']}}"
+      },
+      "name": "Error Response",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [1120, 280],
+      "credentials": {
+        "telegramApi": {
+          "id": "telegram-bot-credentials",
+          "name": "Gmail Telegram Bot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "// Handle Gmail API errors\nconst error = $node['Get Email Details'].json.error || $node['Remove Inbox Label'].json.error;\nconst chatId = $node['Parse Archive Command'].json.chatId;\nconst emailId = $node['Parse Archive Command'].json.emailId;\n\nlet errorMessage = \"❌ **Failed to Archive Email**\\n\\n\";\n\nif (error && error.message) {\n  if (error.message.includes('not found')) {\n    errorMessage += `Email with ID ${emailId} was not found.\\n\\n`;\n    errorMessage += \"Please check the email ID and try again. Use /read_emails or /search_email to get valid email IDs.\";\n  } else if (error.message.includes('permission')) {\n    errorMessage += \"Permission denied. Please check Gmail API permissions.\";\n  } else {\n    errorMessage += `Error: ${error.message}`;\n  }\n} else {\n  errorMessage += \"An unknown error occurred while archiving the email.\";\n}\n\nreturn [{\n  json: {\n    chatId: chatId,\n    text: errorMessage\n  }\n}];"
+      },
+      "name": "Handle Gmail Error",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [1340, 280]
+    },
+    {
+      "parameters": {
+        "chatId": "={{$node['Handle Gmail Error'].json['chatId']}}",
+        "text": "={{$node['Handle Gmail Error'].json['text']}}",
+        "additionalFields": {
+          "parse_mode": "Markdown"
+        }
+      },
+      "name": "Send Error Response",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [1560, 280],
+      "credentials": {
+        "telegramApi": {
+          "id": "telegram-bot-credentials",
+          "name": "Gmail Telegram Bot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{$node['Telegram Trigger'].json['message']['chat']['id']}}",
+        "text": "❓ Unknown command. Use /archive_email id:email_id to archive emails.\\n\\nTo get email IDs, use /read_emails or /search_email first."
+      },
+      "name": "Unknown Command",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [680, 400],
+      "credentials": {
+        "telegramApi": {
+          "id": "telegram-bot-credentials",
+          "name": "Gmail Telegram Bot"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "Check Archive Command",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Archive Command": {
+      "main": [
+        [
+          {
+            "node": "Parse Archive Command",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Unknown Command",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Archive Command": {
+      "main": [
+        [
+          {
+            "node": "Check Valid ID",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Valid ID": {
+      "main": [
+        [
+          {
+            "node": "Get Email Details",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Error Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Email Details": {
+      "main": [
+        [
+          {
+            "node": "Remove Inbox Label",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Handle Gmail Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Remove Inbox Label": {
+      "main": [
+        [
+          {
+            "node": "Format Success Response",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Handle Gmail Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format Success Response": {
+      "main": [
+        [
+          {
+            "node": "Send Success Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Handle Gmail Error": {
+      "main": [
+        [
+          {
+            "node": "Send Error Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {},
+  "id": "gmail-archive-emails-workflow",
+  "meta": {
+    "instanceId": "n8n-gmail-telegram-integration"
+  },
+  "tags": ["gmail", "telegram", "email", "archive"]
+}

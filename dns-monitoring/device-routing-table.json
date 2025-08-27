@@ -1,0 +1,597 @@
+{
+  "generated": "2025-08-11T10:56:26.689600",
+  "total_devices": 47,
+  "network_range": "192.168.1.0/24",
+  "routing_table": [
+    {
+      "ip": "192.168.1.10",
+      "name": "Auto-detected-10",
+      "type": "Unknown",
+      "category": "Unknown",
+      "activity": 14,
+      "top_domains": [
+        "lb._dns-sd._udp.0.1.168.192.in-addr.arpa",
+        "detectportal.firefox.com",
+        "10.1.168.192.in-addr.arpa"
+      ],
+      "last_seen": "2025-08-11 10:51:52"
+    },
+    {
+      "ip": "192.168.1.13",
+      "name": "Auto-detected-13",
+      "type": "Unknown",
+      "category": "Unknown",
+      "activity": 87,
+      "top_domains": [
+        "fr-resolver-msg-global-xiaomi-n-916220403.eu-central-1.elb.amazonaws.com",
+        "encrypted-tbn2.gstatic.com",
+        "fr.resolver.msg.global.xiaomi.net"
+      ],
+      "last_seen": "2025-08-11 10:51:52"
+    },
+    {
+      "ip": "192.168.1.15",
+      "name": "Primary Workstation",
+      "type": "Computer",
+      "category": "Workstation",
+      "activity": 220,
+      "top_domains": [
+        "fmipalservice.icloud.com",
+        "bag.itunes.apple.com",
+        "apple.com"
+      ],
+      "last_seen": "Unknown"
+    },
+    {
+      "ip": "192.168.1.151",
+      "name": "Auto-detected-151",
+      "type": "Unknown",
+      "category": "Unknown",
+      "activity": 6,
+      "top_domains": [
+        "io-extender-000fff1ab0ba"
+      ],
+      "last_seen": "2025-08-11 10:51:52"
+    },
+    {
+      "ip": "192.168.1.165",
+      "name": "Auto-detected-165",
+      "type": "Unknown",
+      "category": "Unknown",
+      "activity": 3,
+      "top_domains": [
+        "io-extender-000fff1a6c25"
+      ],
+      "last_seen": "2025-08-11 10:51:52"
+    },
+    {
+      "ip": "192.168.1.18",
+      "name": "Auto-detected-18",
+      "type": "Unknown",
+      "category": "Unknown",
+      "activity": 4,
+      "top_domains": [
+        "n.connections.brother.com"
+      ],
+      "last_seen": "2025-08-11 10:51:52"
+    },
+    {
+      "ip": "192.168.1.19",
+      "name": "Auto-detected-19",
+      "type": "Unknown",
+      "category": "Unknown",
+      "activity": 46,
+      "top_domains": [
+        "latinum-eu.amazon.com",
+        "device-metrics-us.amazon.com",
+        "ntp-g7g.amazon.com"
+      ],
+      "last_seen": "2025-08-11 10:51:52"
+    },
+    {
+      "ip": "192.168.1.21",
+      "name": "Auto-detected-21",
+      "type": "Unknown",
+      "category": "Unknown",
+      "activity": 35,
+      "top_domains": [
+        "_sips._tcp.fp-gb-o2.rcs.telephony.goog",
+        "fp-gb-o2.rcs.telephony.goog",
+        "_dns.resolver.arpa"
+      ],
+      "last_seen": "2025-08-11 10:51:52"
+    },
+    {
+      "ip": "192.168.1.22",
+      "name": "Auto-detected-22",
+      "type": "Unknown",
+      "category": "Unknown",
+      "activity": 10,
+      "top_domains": [
+        "api.eu.amazonalexa.com",
+        "d3p8zr0ffa9t17.cloudfront.net"
+      ],
+      "last_seen": "2025-08-11 10:51:52"
+    },
+    {
+      "ip": "192.168.1.24",
+      "name": "Auto-detected-24",
+      "type": "Unknown",
+      "category": "Unknown",
+      "activity": 50,
+      "top_domains": [
+        "ucarecdn.com",
+        "lb._dns-sd._udp.0.1.168.192.in-addr.arpa",
+        "doh.dns.apple.com"
+      ],
+      "last_seen": "2025-08-11 10:51:52"
+    },
+    {
+      "ip": "192.168.1.27",
+      "name": "Auto-detected-27",
+      "type": "Unknown",
+      "category": "Unknown",
+      "activity": 2,
+      "top_domains": [
+        "mqtt-eu-4.meross.com"
+      ],
+      "last_seen": "2025-08-11 10:51:52"
+    },
+    {
+      "ip": "192.168.1.31",
+      "name": "Communication Device",
+      "type": "Mobile/Communication",
+      "category": "Personal",
+      "activity": 12,
+      "top_domains": [
+        "instantmessaging-pa.googleapis.com",
+        "play.googleapis.com",
+        "www.gstatic.com"
+      ],
+      "last_seen": "Unknown"
+    },
+    {
+      "ip": "192.168.1.32",
+      "name": "Network Device",
+      "type": "Network/IoT",
+      "category": "Infrastructure",
+      "activity": 152,
+      "top_domains": [
+        "mask.icloud.com",
+        "lb._dns-sd._udp.0.1.168.192.in-addr.arpa",
+        "mask.apple-dns.net"
+      ],
+      "last_seen": "Unknown"
+    },
+    {
+      "ip": "192.168.1.34",
+      "name": "IoT Device",
+      "type": "IoT",
+      "category": "Smart Home",
+      "activity": 137,
+      "top_domains": [
+        "mmechocaptiveportal.com",
+        "ap-gew1.spotify.com",
+        "ntp-g7g.amazon.com"
+      ],
+      "last_seen": "Unknown"
+    },
+    {
+      "ip": "192.168.1.35",
+      "name": "Auto-detected-35",
+      "type": "Unknown",
+      "category": "Unknown",
+      "activity": 17,
+      "top_domains": [
+        "gateway.fe2.apple-dns.net",
+        "24-courier.push.apple.com",
+        "_dns.resolver.arpa"
+      ],
+      "last_seen": "2025-08-11 10:51:52"
+    },
+    {
+      "ip": "192.168.1.36",
+      "name": "Auto-detected-36",
+      "type": "Unknown",
+      "category": "Unknown",
+      "activity": 81,
+      "top_domains": [
+        "pool.ntp.org",
+        "aqm3wd1qlc3dy-ats.iot.us-east-1.amazonaws.com",
+        "ntp.aliyun.com"
+      ],
+      "last_seen": "2025-08-11 10:51:52"
+    },
+    {
+      "ip": "192.168.1.37",
+      "name": "Auto-detected-37",
+      "type": "Unknown",
+      "category": "Unknown",
+      "activity": 34,
+      "top_domains": [
+        "eu.mqtt.wiz.world",
+        "ntp.wiz.world"
+      ],
+      "last_seen": "2025-08-11 10:51:52"
+    },
+    {
+      "ip": "192.168.1.38",
+      "name": "Auto-detected-38",
+      "type": "Unknown",
+      "category": "Unknown",
+      "activity": 70,
+      "top_domains": [
+        "logs.netflix.com",
+        "secure.netflix.com",
+        "nrdp-ipv6.prod.ftl.netflix.com"
+      ],
+      "last_seen": "2025-08-11 10:51:52"
+    },
+    {
+      "ip": "192.168.1.39",
+      "name": "Auto-detected-39",
+      "type": "Unknown",
+      "category": "Unknown",
+      "activity": 20,
+      "top_domains": [
+        "arcus-uswest.amazon.com",
+        "msh.amazon.com",
+        "ap.spotify.com"
+      ],
+      "last_seen": "2025-08-11 10:51:52"
+    },
+    {
+      "ip": "192.168.1.40",
+      "name": "Discovery Device",
+      "type": "Network",
+      "category": "Infrastructure",
+      "activity": 98,
+      "top_domains": [
+        "40.1.168.192.in-addr.arpa",
+        "local",
+        "apple.com"
+      ],
+      "last_seen": "Unknown"
+    },
+    {
+      "ip": "192.168.1.41",
+      "name": "Auto-detected-41",
+      "type": "Unknown",
+      "category": "Unknown",
+      "activity": 49,
+      "top_domains": [
+        "log.samsunghrm.com",
+        "info.cspserver.net",
+        "gpm.samsungqbe.com"
+      ],
+      "last_seen": "2025-08-11 10:51:52"
+    },
+    {
+      "ip": "192.168.1.42",
+      "name": "Auto-detected-42",
+      "type": "Unknown",
+      "category": "Unknown",
+      "activity": 60,
+      "top_domains": [
+        "3.openwrt.pool.ntp.org",
+        "1.openwrt.pool.ntp.org",
+        "2.openwrt.pool.ntp.org"
+      ],
+      "last_seen": "2025-08-11 10:51:52"
+    },
+    {
+      "ip": "192.168.1.43",
+      "name": "Auto-detected-43",
+      "type": "Unknown",
+      "category": "Unknown",
+      "activity": 40,
+      "top_domains": [
+        "ntp.wiz.world",
+        "eu.mqtt.wiz.world"
+      ],
+      "last_seen": "2025-08-11 10:51:52"
+    },
+    {
+      "ip": "192.168.1.46",
+      "name": "Auto-detected-46",
+      "type": "Unknown",
+      "category": "Unknown",
+      "activity": 34,
+      "top_domains": [
+        "xbroker-z1-i13.arloxcld.com",
+        "arlo.com",
+        "advisor.arloxcld.com"
+      ],
+      "last_seen": "2025-08-11 10:51:52"
+    },
+    {
+      "ip": "192.168.1.47",
+      "name": "Media Device",
+      "type": "Streaming/Media",
+      "category": "Entertainment",
+      "activity": 176,
+      "top_domains": [
+        "mask.icloud.com",
+        "lb._dns-sd._udp.0.1.168.192.in-addr.arpa",
+        "mask.apple-dns.net"
+      ],
+      "last_seen": "Unknown"
+    },
+    {
+      "ip": "192.168.1.5",
+      "name": "Auto-detected-5",
+      "type": "Unknown",
+      "category": "Unknown",
+      "activity": 4,
+      "top_domains": [
+        "api.eu.amazonalexa.com",
+        "prod.sip-edge.amc.amazon.dev"
+      ],
+      "last_seen": "2025-08-11 10:51:52"
+    },
+    {
+      "ip": "192.168.1.51",
+      "name": "Auto-detected-51",
+      "type": "Unknown",
+      "category": "Unknown",
+      "activity": 11,
+      "top_domains": [
+        "a2x5shi1accb1g-ats.iot.eu-west-1.amazonaws.com",
+        "api.amazon.com",
+        "aezme1x38kdra.us-east-1.prod.service.minerva.devices.a2z.com"
+      ],
+      "last_seen": "2025-08-11 10:51:52"
+    },
+    {
+      "ip": "192.168.1.59",
+      "name": "Security/Monitoring",
+      "type": "Security",
+      "category": "Security",
+      "activity": 15,
+      "top_domains": [
+        "info.cspserver.net"
+      ],
+      "last_seen": "Unknown"
+    },
+    {
+      "ip": "192.168.1.6",
+      "name": "Mobile Device",
+      "type": "Mobile",
+      "category": "Personal",
+      "activity": 104,
+      "top_domains": [
+        "pool.ntp.org",
+        "aqm3wd1qlc3dy-ats.iot.us-east-1.amazonaws.com",
+        "ntp.aliyun.com"
+      ],
+      "last_seen": "Unknown"
+    },
+    {
+      "ip": "192.168.1.60",
+      "name": "Auto-detected-60",
+      "type": "Unknown",
+      "category": "Unknown",
+      "activity": 12,
+      "top_domains": [
+        "captive.apple.com"
+      ],
+      "last_seen": "2025-08-11 10:51:52"
+    },
+    {
+      "ip": "192.168.1.61",
+      "name": "Auto-detected-61",
+      "type": "Unknown",
+      "category": "Unknown",
+      "activity": 47,
+      "top_domains": [
+        "local",
+        "_dns.resolver.arpa",
+        "a1366.dscapi6.akamai.net"
+      ],
+      "last_seen": "2025-08-11 10:51:52"
+    },
+    {
+      "ip": "192.168.1.62",
+      "name": "Auto-detected-62",
+      "type": "Unknown",
+      "category": "Unknown",
+      "activity": 25,
+      "top_domains": [
+        "a7wxqph584yp.us-east-1.prod.service.minerva.devices.a2z.com",
+        "ap.spotify.com",
+        "fireoscaptiveportal.com"
+      ],
+      "last_seen": "2025-08-11 10:51:52"
+    },
+    {
+      "ip": "192.168.1.66",
+      "name": "Auto-detected-66",
+      "type": "Unknown",
+      "category": "Unknown",
+      "activity": 22,
+      "top_domains": [
+        "clientstream.launchdarkly.com",
+        "mobile.launchdarkly.com",
+        "insights-collector.newrelic.com"
+      ],
+      "last_seen": "2025-08-11 10:51:52"
+    },
+    {
+      "ip": "192.168.1.68",
+      "name": "Auto-detected-68",
+      "type": "Unknown",
+      "category": "Unknown",
+      "activity": 2,
+      "top_domains": [
+        "update2.control4.com"
+      ],
+      "last_seen": "2025-08-11 10:51:52"
+    },
+    {
+      "ip": "192.168.1.69",
+      "name": "Smart Device Hub",
+      "type": "IoT",
+      "category": "Smart Home",
+      "activity": 165,
+      "top_domains": [
+        "todo-ta-g7g.amazon.com",
+        "0.north-america.pool.ntp.org",
+        "prod.sip-edge.amc.amazon.dev"
+      ],
+      "last_seen": "Unknown"
+    },
+    {
+      "ip": "192.168.1.7",
+      "name": "Auto-detected-7",
+      "type": "Unknown",
+      "category": "Unknown",
+      "activity": 20,
+      "top_domains": [
+        "mask-canary.icloud.com",
+        "epdg.epc.mnc015.mcc234.pub.3gppnetwork.org",
+        "local"
+      ],
+      "last_seen": "2025-08-11 10:51:52"
+    },
+    {
+      "ip": "192.168.1.72",
+      "name": "Auto-detected-72",
+      "type": "Unknown",
+      "category": "Unknown",
+      "activity": 5,
+      "top_domains": [
+        "0.north-america.pool.ntp.org",
+        "mqtt-eu-4.meross.com"
+      ],
+      "last_seen": "2025-08-11 10:51:52"
+    },
+    {
+      "ip": "192.168.1.73",
+      "name": "Secondary Device",
+      "type": "Computer/Mobile",
+      "category": "Unknown",
+      "activity": 210,
+      "top_domains": [
+        "acsechocaptiveportal.com",
+        "todo-ta-g7g.amazon.com",
+        "0.north-america.pool.ntp.org"
+      ],
+      "last_seen": "Unknown"
+    },
+    {
+      "ip": "192.168.1.76",
+      "name": "Auto-detected-76",
+      "type": "Unknown",
+      "category": "Unknown",
+      "activity": 38,
+      "top_domains": [
+        "xbroker-z1-i6.arloxcld.com",
+        "arlo.com",
+        "advisor.arloxcld.com"
+      ],
+      "last_seen": "2025-08-11 10:51:52"
+    },
+    {
+      "ip": "192.168.1.77",
+      "name": "Philips Hue Hub",
+      "type": "Smart Lighting",
+      "category": "Smart Home",
+      "activity": 14,
+      "top_domains": [
+        "diag.meethue.com",
+        "data.meethue.com",
+        "mqtt-eu-01.iot.meethue.com"
+      ],
+      "last_seen": "Unknown"
+    },
+    {
+      "ip": "192.168.1.80",
+      "name": "Smart Speaker/Assistant",
+      "type": "Voice Assistant",
+      "category": "Smart Home",
+      "activity": 154,
+      "top_domains": [
+        "rr3---sn-aigl6nzs.gvt1.com",
+        "android.googleapis.com",
+        "play-fe.googleapis.com"
+      ],
+      "last_seen": "Unknown"
+    },
+    {
+      "ip": "192.168.1.81",
+      "name": "Auto-detected-81",
+      "type": "Unknown",
+      "category": "Unknown",
+      "activity": 18,
+      "top_domains": [
+        "acsechocaptiveportal.com",
+        "avs-alexa-14-eu.amazon.com",
+        "web.diagnostic.networking.aws.dev"
+      ],
+      "last_seen": "2025-08-11 10:51:52"
+    },
+    {
+      "ip": "192.168.1.82",
+      "name": "Monitoring Device",
+      "type": "IoT/Security",
+      "category": "Monitoring",
+      "activity": 90,
+      "top_domains": [
+        "weather.4store.com",
+        "spectrum.s3.amazonaws.com",
+        "mobile-collector.newrelic.com"
+      ],
+      "last_seen": "Unknown"
+    },
+    {
+      "ip": "192.168.1.84",
+      "name": "Auto-detected-84",
+      "type": "Unknown",
+      "category": "Unknown",
+      "activity": 1,
+      "top_domains": [
+        "pool.ntp.org"
+      ],
+      "last_seen": "2025-08-11 10:51:52"
+    },
+    {
+      "ip": "192.168.1.85",
+      "name": "Auto-detected-85",
+      "type": "Unknown",
+      "category": "Unknown",
+      "activity": 54,
+      "top_domains": [
+        "1ee9g7o5xyg.dns.controld.com",
+        "_dns.resolver.arpa",
+        "epdg.epc.mnc020.mcc234.pub.3gppnetwork.org"
+      ],
+      "last_seen": "2025-08-11 10:51:52"
+    },
+    {
+      "ip": "192.168.1.87",
+      "name": "Auto-detected-87",
+      "type": "Unknown",
+      "category": "Unknown",
+      "activity": 17,
+      "top_domains": [
+        "us.mqtt.bambulab.com",
+        "www.microsoft.com",
+        "api.bambulab.com"
+      ],
+      "last_seen": "2025-08-11 10:51:52"
+    },
+    {
+      "ip": "192.168.1.90",
+      "name": "Auto-detected-90",
+      "type": "Unknown",
+      "category": "Unknown",
+      "activity": 10,
+      "top_domains": [
+        "mmechocaptiveportal.com",
+        "ntp-g7g.amazon.com",
+        "bob-dispatch-prod-eu.amazon.com"
+      ],
+      "last_seen": "2025-08-11 10:51:52"
+    }
+  ]
+}

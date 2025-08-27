@@ -1,0 +1,19 @@
+# Task ID: 32
+# Title: Start Development Server for Dashboard Application
+# Status: pending
+# Dependencies: 5
+# Priority: high
+# Description: Start the development server for the dashboard application to enable real-time testing and development of the user interface.
+# Details:
+1.  Ensure the Vite MCP server is running and properly configured.
+2.  Execute the `mcp__vite__start_dev_server` command to initiate the development server.
+3.  Verify the server starts without errors and is accessible via the specified URL (typically localhost:3000 or similar).
+4.  Monitor the console output for any warnings or errors during startup.
+5.  Document the steps for starting the development server in the project's README or developer documentation.
+
+# Test Strategy:
+1.  Verify the development server starts successfully using the `mcp__vite__start_dev_server` command.
+2.  Access the dashboard application in a web browser using the provided URL.
+3.  Make a small code change in one of the dashboard components.
+4.  Confirm that hot module replacement (HMR) is working by observing the changes reflected in the browser without a full page reload.
+5.  Check the console for any errors or warnings during the HMR process.

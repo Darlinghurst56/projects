@@ -1,0 +1,116 @@
+{
+  "name": "taskmaster-dashboard",
+  "version": "1.0.0",
+  "description": "TaskMaster Dashboard with Agent Coordination",
+  "type": "module",
+  "main": "taskmaster-api-server.js",
+  "scripts": {
+    "start": "node taskmaster-api-server.js",
+    "dev": "node taskmaster-api-server.js",
+    "test": "vitest",
+    "test:unit": "vitest run --project unit",
+    "test:integration": "vitest run --project integration",
+    "test:e2e": "vitest run --project e2e",
+    "test:dashboard": "vitest run --project dashboard",
+    "test:watch": "vitest --watch",
+    "test:coverage": "vitest run --coverage",
+    "test:ui": "vitest --ui",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "security:audit": "npm audit --json | npm-audit-html -o security-report.html",
+    "security:scan": "npm run security:audit",
+    "build": "cd dashboard && npm run build",
+    "build:dashboard": "cd dashboard && npm run build",
+    "prepare": "husky"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "puppeteer": "^24.11.2",
+    "ws": "^8.14.2"
+  },
+  "devDependencies": {
+    "@tailwindcss/cli": "^4.1.11",
+    "@tailwindcss/postcss": "^4.1.11",
+    "tailwindcss": "^4.1.11",
+    "vitest": "^1.6.0",
+    "@vitest/ui": "^1.6.0",
+    "jsdom": "^24.1.0",
+    "puppeteer": "^24.11.2",
+    "msw": "^2.3.0",
+    "eslint": "^8.57.0",
+    "eslint-plugin-security": "^3.0.1",
+    "eslint-plugin-promise": "^6.2.0",
+    "prettier": "^3.3.0",
+    "husky": "^9.0.11",
+    "lint-staged": "^15.2.7",
+    "@commitlint/cli": "^19.3.0",
+    "@commitlint/config-conventional": "^19.2.2",
+    "npm-audit-html": "^1.5.0"
+  },
+  "keywords": [
+    "taskmaster",
+    "dashboard",
+    "agents",
+    "ai",
+    "coordination",
+    "mcp"
+  ],
+  "author": "Claude Code",
+  "license": "MIT",
+  "engines": {
+    "node": ">=16.0.0",
+    "npm": ">=8.0.0"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged",
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+    }
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": [
+      "eslint --fix",
+      "prettier --write",
+      "vitest related --run"
+    ],
+    "*.{css,md,json}": [
+      "prettier --write"
+    ]
+  },
+  "commitlint": {
+    "extends": [
+      "@commitlint/config-conventional"
+    ],
+    "rules": {
+      "type-enum": [
+        2,
+        "always",
+        [
+          "feat",
+          "fix",
+          "docs",
+          "style",
+          "refactor",
+          "test",
+          "chore",
+          "perf",
+          "ci",
+          "build"
+        ]
+      ],
+      "subject-max-length": [
+        2,
+        "always",
+        100
+      ],
+      "body-max-line-length": [
+        2,
+        "always",
+        200
+      ]
+    }
+  }
+}

@@ -1,0 +1,49 @@
+# Task ID: 11
+# Title: Clean up and refactor ARM64 Puppeteer configuration
+# Status: pending
+# Dependencies: 9
+# Priority: medium
+# Description: Remove temporary fixes, workarounds, and complex configuration snippets for ARM64 Puppeteer. Implement a simple, permanent solution that works reliably without manual interventions.
+
+PROJECT: House AI - Family Home Page | SUBPROJECT: Quality Assurance System
+# Details:
+1. **Remove Symbolic Link Workaround:** Delete the temporary symbolic link workaround in /root/.cache/puppeteer/chrome/ that was created as a quick fix for ARM64 compatibility issues.
+
+2. **Simplify .puppeteerrc.js Configuration:** Replace the complex 95-line .puppeteerrc.js file with a minimal configuration. Remove ARM64 detection logic and conditional configuration branches. Create a clean configuration that uses standard Puppeteer settings with the allowDangerous parameter properly documented.
+
+3. **Clean Up Environment Variables:** Review and remove unnecessary environment variables in .mcp.json related to Puppeteer configuration. Keep only essential variables required for basic operation.
+
+4. **Implement Standard ARM64 Solution:** Create a standardized approach for ARM64 systems:
+   - Use built-in Puppeteer ARM64 support if available
+   - Document the proper use of allowDangerous: true parameter for ARM64 systems
+   - Remove manual cache management code
+   - Ensure the solution works with the latest Puppeteer version
+
+5. **Update MCP Configuration:** Modify the MCP Puppeteer server configuration to use the simplified setup. Ensure the configuration is maintainable and doesn't require platform-specific workarounds.
+
+6. **Create Documentation:** Write clear documentation explaining:
+   - The standard usage of allowDangerous parameter for ARM64 systems
+   - Why certain security flags are necessary on ARM64
+   - How to troubleshoot common ARM64 Puppeteer issues
+   - Migration guide from the old complex configuration to the new simplified approach
+
+7. **Remove Legacy Code:** Clean up any remaining workaround code, temporary fixes, or commented-out solutions that are no longer needed with the new approach.
+
+# Test Strategy:
+1. **Clean Installation Test:** Remove all Puppeteer cache and configuration files, then test a fresh installation with the new simplified configuration on ARM64 architecture.
+
+2. **Configuration Validation:** Verify that the new .puppeteerrc.js file is minimal and contains no complex ARM64 detection logic. Ensure it works across different architectures without modification.
+
+3. **MCP Integration Test:** Test the Puppeteer MCP server with the new configuration:
+   - Launch browser without errors
+   - Navigate to test pages
+   - Take screenshots
+   - Perform click and fill operations
+
+4. **Environment Variable Test:** Confirm that removed environment variables don't cause any functionality loss and that remaining variables are properly documented.
+
+5. **Cross-Platform Compatibility:** Test the simplified configuration on both ARM64 and x86_64 architectures to ensure it works without platform-specific modifications.
+
+6. **Performance Verification:** Compare browser launch times and memory usage between the old complex configuration and the new simplified approach.
+
+7. **Documentation Review:** Have another developer follow the documentation to set up Puppeteer on an ARM64 system without prior knowledge of the workarounds.

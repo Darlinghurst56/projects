@@ -1,0 +1,60 @@
+version: '3.8'
+
+services:
+  litellm-proxy:
+    build: .
+    container_name: litellm-proxy
+    ports:
+      - "4000:4000"
+    environment:
+      # LiteLLM Configuration
+      - LITELLM_CONFIG_PATH=/app/config/litellm-config.yaml
+      - LITELLM_LOG_LEVEL=INFO
+      - LITELLM_PORT=4000
+      
+      # API Keys (will be loaded from .env file)
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      - GOOGLE_API_KEY=${GOOGLE_API_KEY}
+      
+      # TaskMaster Integration
+      - TASKMASTER_API_URL=http://host.docker.internal:3001
+      - TASKMASTER_INTEGRATION_ENABLED=true
+      
+    volumes:
+      - ./config:/app/config
+      - ./logs:/app/logs
+      - ./.env:/app/.env
+    
+    restart: unless-stopped
+    
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:4000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    
+    networks:
+      - litellm-network
+
+  # Optional: Redis for caching (can be enabled later)
+  redis:
+    image: redis:7-alpine
+    container_name: litellm-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    restart: unless-stopped
+    networks:
+      - litellm-network
+    profiles:
+      - caching
+
+networks:
+  litellm-network:
+    driver: bridge
+
+volumes:
+  redis-data:

@@ -1,0 +1,103 @@
+# LiteLLM Configuration File
+# ⚠️ CURRENTLY COMMENTED OUT - Ready for activation when API keys are added
+# Supports multiple providers with cost optimization and fallback routing
+
+model_list:
+  # OpenAI Models (COMMENTED OUT - requires API key)
+  # - model_name: gpt-4o
+  #   litellm_params:
+  #     model: openai/gpt-4o
+  #     api_key: os.environ/OPENAI_API_KEY
+  #   model_info:
+  #     cost_per_input_token: 0.0025
+  #     cost_per_output_token: 0.01
+  #     priority: 2
+
+  # - model_name: gpt-4o-mini
+  #   litellm_params:
+  #     model: openai/gpt-4o-mini
+  #     api_key: os.environ/OPENAI_API_KEY
+  #   model_info:
+  #     cost_per_input_token: 0.00015
+  #     cost_per_output_token: 0.0006
+  #     priority: 1  # Highest priority (lowest cost)
+
+  # Anthropic Models (COMMENTED OUT - requires API key)
+  # - model_name: claude-3-5-sonnet
+  #   litellm_params:
+  #     model: anthropic/claude-3-5-sonnet-20241022
+  #     api_key: os.environ/ANTHROPIC_API_KEY
+  #   model_info:
+  #     cost_per_input_token: 0.003
+  #     cost_per_output_token: 0.015
+  #     priority: 3
+
+  # - model_name: claude-3-haiku
+  #   litellm_params:
+  #     model: anthropic/claude-3-haiku-20240307
+  #     api_key: os.environ/ANTHROPIC_API_KEY
+  #   model_info:
+  #     cost_per_input_token: 0.00025
+  #     cost_per_output_token: 0.00125
+  #     priority: 1  # Very cost-effective
+
+  # Google Models (ACTIVE - using existing API key from docs)
+  - model_name: gemini-2.0-flash
+    litellm_params:
+      model: google/gemini-2.0-flash-exp
+      api_key: os.environ/GOOGLE_API_KEY
+    model_info:
+      cost_per_input_token: 0.00015
+      cost_per_output_token: 0.0006
+      priority: 1  # Free tier available
+
+  # Local Ollama (ACTIVE - using existing host from docs)
+  - model_name: ollama-llama3
+    litellm_params:
+      model: ollama/llama3.2
+      api_base: http://192.168.1.74:11434
+    model_info:
+      cost_per_input_token: 0.0  # Free local model
+      cost_per_output_token: 0.0
+      priority: 1  # Highest priority for cost optimization
+
+# Router Configuration
+router_settings:
+  routing_strategy: "cost-based"  # Route based on cost optimization
+  fallback_models: ["gpt-4o-mini", "claude-3-haiku", "gemini-2.0-flash"]
+  
+  # Retry configuration
+  num_retries: 3
+  timeout: 30
+  
+  # Cost thresholds
+  cost_threshold: 0.001  # Switch to cheaper models for simple tasks
+  
+  # Load balancing
+  redis_host: "redis"  # Enable if using Redis caching
+  redis_port: 6379
+
+# General Settings
+general_settings:
+  # Logging
+  set_verbose: true
+  json_logs: true
+  
+  # Performance
+  master_key: "taskmaster-litellm-key"  # For API authentication
+  database_url: "sqlite:///app/logs/litellm.db"  # Local SQLite for logging
+  
+  # TaskMaster Integration
+  success_callback: ["taskmaster_callback"]
+  failure_callback: ["taskmaster_callback"]
+
+# Custom Callbacks for TaskMaster Integration
+litellm_settings:
+  success_callback: ["taskmaster_callback"]
+  failure_callback: ["taskmaster_callback"]
+  
+# Environment Variables Required:
+# OPENAI_API_KEY - OpenAI API key
+# ANTHROPIC_API_KEY - Anthropic API key  
+# GOOGLE_API_KEY - Google API key
+# TASKMASTER_API_URL - TaskMaster API endpoint (default: http://host.docker.internal:3001)

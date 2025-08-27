@@ -1,0 +1,403 @@
+{
+  "name": "Google Docs API Node Configuration",
+  "nodes": [
+    {
+      "id": "telegram-trigger",
+      "name": "Telegram Bot",
+      "type": "@n8n/n8n-nodes-base.telegramTrigger",
+      "position": [200, 300],
+      "parameters": {
+        "contentType": "automatic",
+        "replyToMessage": false,
+        "download": false
+      },
+      "credentials": {
+        "telegramApi": {
+          "id": "telegram-bot-credentials",
+          "name": "Telegram Bot Credentials"
+        }
+      }
+    },
+    {
+      "id": "docs-command-parser",
+      "name": "Parse Docs Command",
+      "type": "@n8n/n8n-nodes-base.function",
+      "position": [400, 300],
+      "parameters": {
+        "functionCode": "// Parse Google Docs commands\nconst text = $input.first().json.message?.text || '';\nconst userId = $input.first().json.message?.from?.id;\n\n// Security validation - authorized users only\nconst authorizedUsers = [123456789]; // Replace with actual user IDs\nif (!authorizedUsers.includes(userId)) {\n  return [{\n    json: {\n      error: 'Unauthorized user',\n      userId: userId,\n      authorized: false\n    }\n  }];\n}\n\n// Parse /create_doc command format: /create_doc title:Document Title content:Document content here\nif (text.startsWith('/create_doc')) {\n  const createRegex = /\\/create_doc\\s+title:([^\\n]+?)\\s+content:([\\s\\S]+)/;\n  const match = text.match(createRegex);\n  \n  if (!match) {\n    return [{\n      json: {\n        error: 'Invalid create document format',\n        expectedFormat: '/create_doc title:Document Title content:Document content here',\n        authorized: true\n      }\n    }];\n  }\n  \n  return [{\n    json: {\n      operation: 'create',\n      title: match[1].trim(),\n      content: match[2].trim(),\n      fromUserId: userId,\n      authorized: true,\n      timestamp: new Date().toISOString()\n    }\n  }];\n}\n\n// Parse /read_doc command format: /read_doc id:document_id\nif (text.startsWith('/read_doc')) {\n  const readRegex = /\\/read_doc\\s+id:([a-zA-Z0-9_-]+)/;\n  const match = text.match(readRegex);\n  \n  if (!match) {\n    return [{\n      json: {\n        error: 'Invalid read document format',\n        expectedFormat: '/read_doc id:document_id',\n        authorized: true\n      }\n    }];\n  }\n  \n  return [{\n    json: {\n      operation: 'read',\n      documentId: match[1].trim(),\n      fromUserId: userId,\n      authorized: true,\n      timestamp: new Date().toISOString()\n    }\n  }];\n}\n\n// Parse /update_doc command format: /update_doc id:document_id content:New content to append\nif (text.startsWith('/update_doc')) {\n  const updateRegex = /\\/update_doc\\s+id:([a-zA-Z0-9_-]+)\\s+content:([\\s\\S]+)/;\n  const match = text.match(updateRegex);\n  \n  if (!match) {\n    return [{\n      json: {\n        error: 'Invalid update document format',\n        expectedFormat: '/update_doc id:document_id content:New content to append',\n        authorized: true\n      }\n    }];\n  }\n  \n  return [{\n    json: {\n      operation: 'update',\n      documentId: match[1].trim(),\n      content: match[2].trim(),\n      fromUserId: userId,\n      authorized: true,\n      timestamp: new Date().toISOString()\n    }\n  }];\n}\n\n// Not a Google Docs command\nreturn [{\n  json: {\n    error: 'Not a Google Docs command',\n    availableCommands: [\n      '/create_doc title:Title content:Content',\n      '/read_doc id:document_id',\n      '/update_doc id:document_id content:New content'\n    ],\n    authorized: true\n  }\n}];"
+      }
+    },
+    {
+      "id": "docs-create",
+      "name": "Google Docs Create",
+      "type": "@n8n/n8n-nodes-base.googleDocs",
+      "position": [600, 200],
+      "parameters": {
+        "operation": "create",
+        "title": "={{ $json.title }}",
+        "options": {\n          "body": "={{ $json.content }}"\n        }
+      },
+      "credentials": {
+        "googleDocsOAuth2": {
+          "id": "google-docs-oauth2-credentials",
+          "name": "Google Docs OAuth2 Credentials"
+        }
+      }
+    },
+    {
+      "id": "docs-get",
+      "name": "Google Docs Get",
+      "type": "@n8n/n8n-nodes-base.googleDocs",
+      "position": [600, 300],
+      "parameters": {
+        "operation": "get",
+        "documentId": "={{ $json.documentId }}"
+      },
+      "credentials": {
+        "googleDocsOAuth2": {
+          "id": "google-docs-oauth2-credentials",
+          "name": "Google Docs OAuth2 Credentials"
+        }
+      }
+    },
+    {
+      "id": "docs-update",
+      "name": "Google Docs Update",
+      "type": "@n8n/n8n-nodes-base.googleDocs",
+      "position": [600, 400],
+      "parameters": {
+        "operation": "appendText",
+        "documentId": "={{ $json.documentId }}",
+        "text": "\\n\\n{{ $json.content }}\\n\\nUpdated via Telegram Bot on {{ new Date().toLocaleString() }}"
+      },
+      "credentials": {
+        "googleDocsOAuth2": {
+          "id": "google-docs-oauth2-credentials",
+          "name": "Google Docs OAuth2 Credentials"
+        }
+      }
+    },
+    {
+      "id": "docs-create-success",
+      "name": "Create Success Reply",
+      "type": "@n8n/n8n-nodes-base.telegram",
+      "position": [800, 200],
+      "parameters": {
+        "operation": "sendMessage",
+        "chatId": "={{ $('Telegram Bot').first().json.message.chat.id }}",
+        "text": "📄 Google Doc created successfully!\n\n📝 Title: {{ $('Parse Docs Command').first().json.title }}\n🆔 Document ID: {{ $json.documentId }}\n🔗 View Link: https://docs.google.com/document/d/{{ $json.documentId }}/edit\n📊 Content Length: {{ $('Parse Docs Command').first().json.content.length }} characters\n\n✅ Document is ready for editing!"
+      },
+      "credentials": {
+        "telegramApi": {
+          "id": "telegram-bot-credentials",
+          "name": "Telegram Bot Credentials"
+        }
+      }
+    },
+    {
+      "id": "docs-read-success",
+      "name": "Read Success Reply",
+      "type": "@n8n/n8n-nodes-base.telegram",
+      "position": [800, 300],
+      "parameters": {
+        "operation": "sendMessage",
+        "chatId": "={{ $('Telegram Bot').first().json.message.chat.id }}",
+        "text": "📄 Document Content:\n\n📝 Title: {{ $json.title }}\n🆔 Document ID: {{ $('Parse Docs Command').first().json.documentId }}\n\n📖 Content Preview:\n{{ $json.body ? $json.body.substring(0, 500) + ($json.body.length > 500 ? '...' : '') : 'No content found' }}\n\n🔗 Full Document: https://docs.google.com/document/d/{{ $('Parse Docs Command').first().json.documentId }}/edit"
+      },
+      "credentials": {
+        "telegramApi": {
+          "id": "telegram-bot-credentials",
+          "name": "Telegram Bot Credentials"
+        }
+      }
+    },
+    {
+      "id": "docs-update-success",
+      "name": "Update Success Reply",
+      "type": "@n8n/n8n-nodes-base.telegram",
+      "position": [800, 400],
+      "parameters": {
+        "operation": "sendMessage",
+        "chatId": "={{ $('Telegram Bot').first().json.message.chat.id }}",
+        "text": "📄 Document updated successfully!\n\n🆔 Document ID: {{ $('Parse Docs Command').first().json.documentId }}\n✏️ Content Added: {{ $('Parse Docs Command').first().json.content.length }} characters\n🔗 View Changes: https://docs.google.com/document/d/{{ $('Parse Docs Command').first().json.documentId }}/edit\n\n✅ Your content has been appended to the document!"
+      },
+      "credentials": {
+        "telegramApi": {
+          "id": "telegram-bot-credentials",
+          "name": "Telegram Bot Credentials"
+        }
+      }
+    },
+    {
+      "id": "docs-error-reply",
+      "name": "Docs Error Reply",
+      "type": "@n8n/n8n-nodes-base.telegram",
+      "position": [800, 500],
+      "parameters": {
+        "operation": "sendMessage",
+        "chatId": "={{ $('Telegram Bot').first().json.message.chat.id }}",
+        "text": "❌ Google Docs operation failed!\n\nError: {{ $json.error || 'Unknown error occurred' }}\n\nAvailable commands:\n/create_doc title:Title content:Content\n/read_doc id:document_id\n/update_doc id:document_id content:New content"
+      },
+      "credentials": {
+        "telegramApi": {
+          "id": "telegram-bot-credentials",
+          "name": "Telegram Bot Credentials"
+        }
+      }
+    },
+    {
+      "id": "docs-validation-error",
+      "name": "Docs Validation Error",
+      "type": "@n8n/n8n-nodes-base.telegram",
+      "position": [600, 600],
+      "parameters": {
+        "operation": "sendMessage",
+        "chatId": "={{ $('Telegram Bot').first().json.message.chat.id }}",
+        "text": "⚠️ Google Docs Command Error:\n\n{{ $('Parse Docs Command').first().json.error }}\n\n{{ $('Parse Docs Command').first().json.expectedFormat ? 'Format: ' + $('Parse Docs Command').first().json.expectedFormat : '' }}\n\n{{ $('Parse Docs Command').first().json.availableCommands ? 'Available commands:\\n' + $('Parse Docs Command').first().json.availableCommands.join('\\n') : '' }}"
+      },
+      "credentials": {
+        "telegramApi": {
+          "id": "telegram-bot-credentials",
+          "name": "Telegram Bot Credentials"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Telegram Bot": {
+      "main": [
+        [
+          {
+            "node": "Parse Docs Command",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Docs Command": {
+      "main": [
+        [
+          {
+            "node": "Google Docs Create",
+            "type": "main",
+            "index": 0,
+            "conditions": {
+              "type": "filter",
+              "conditions": {
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.authorized }}",
+                    "rightValue": true,
+                    "operator": {
+                      "type": "boolean",
+                      "operation": "equals"
+                    }
+                  },
+                  {
+                    "leftValue": "={{ $json.operation }}",
+                    "rightValue": "create",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  },
+                  {
+                    "leftValue": "={{ $json.error }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "node": "Google Docs Get",
+            "type": "main",
+            "index": 0,
+            "conditions": {
+              "type": "filter",
+              "conditions": {
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.authorized }}",
+                    "rightValue": true,
+                    "operator": {
+                      "type": "boolean",
+                      "operation": "equals"
+                    }
+                  },
+                  {
+                    "leftValue": "={{ $json.operation }}",
+                    "rightValue": "read",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  },
+                  {
+                    "leftValue": "={{ $json.error }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "node": "Google Docs Update",
+            "type": "main",
+            "index": 0,
+            "conditions": {
+              "type": "filter",
+              "conditions": {
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.authorized }}",
+                    "rightValue": true,
+                    "operator": {
+                      "type": "boolean",
+                      "operation": "equals"
+                    }
+                  },
+                  {
+                    "leftValue": "={{ $json.operation }}",
+                    "rightValue": "update",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  },
+                  {
+                    "leftValue": "={{ $json.error }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "node": "Docs Validation Error",
+            "type": "main",
+            "index": 0,
+            "conditions": {
+              "type": "filter",
+              "conditions": {
+                "combinator": "or",
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.authorized }}",
+                    "rightValue": false,
+                    "operator": {
+                      "type": "boolean",
+                      "operation": "equals"
+                    }
+                  },
+                  {
+                    "leftValue": "={{ $json.error }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "string",
+                      "operation": "notEquals"
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      ]
+    },
+    "Google Docs Create": {
+      "main": [
+        [
+          {
+            "node": "Create Success Reply",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ],
+      "error": [
+        [
+          {
+            "node": "Docs Error Reply",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Docs Get": {
+      "main": [
+        [
+          {
+            "node": "Read Success Reply",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ],
+      "error": [
+        [
+          {
+            "node": "Docs Error Reply",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Docs Update": {
+      "main": [
+        [
+          {
+            "node": "Update Success Reply",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ],
+      "error": [
+        [
+          {
+            "node": "Docs Error Reply",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": {},
+  "tags": [
+    {
+      "createdAt": "2025-07-07T07:38:00.000Z",
+      "updatedAt": "2025-07-07T07:38:00.000Z",
+      "id": "docs-config",
+      "name": "docs-config"
+    }
+  ],
+  "triggerCount": 1,
+  "meta": {
+    "templateCredsSetupCompleted": false
+  },
+  "id": "docs-node-config",
+  "versionId": "1"
+}

@@ -1,0 +1,259 @@
+{
+  "name": "Telegram to Create Calendar Event - Home User",
+  "active": true,
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ]
+      },
+      "id": "g1h2i3j4-k5l6-m7n8-o9p0-q1r2s3t4u5v8",
+      "name": "Telegram Trigger",
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ],
+      "webhookId": "auto-generated",
+      "credentials": {
+        "telegramApi": {
+          "id": "1",
+          "name": "Gmail Telegram Bot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$json.message.text}}",
+              "operation": "startsWith",
+              "value2": "/create_event"
+            }
+          ]
+        }
+      },
+      "id": "h1i2j3k4-l5m6-n7o8-p9q0-r1s2t3u4v5w8",
+      "name": "Check Create Event Command",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        460,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Parse Telegram command: /create_event [title] | [date] [time] | [duration] | [location] | [description]\n// Supports multiple formats:\n// /create_event Meeting | 2024-01-15 14:30 | 60 | Conference Room | Team standup\n// /create_event Meeting | tomorrow 2pm | 1 hour\n// /create_event Quick call | today 3pm | 30 minutes\n\nconst text = $input.first().json.message.text;\nconst userId = $input.first().json.message.from.id;\n\n// Security: Only allow specific Telegram user ID (replace with your ID)\nconst ALLOWED_USER_ID = 123456789; // Replace with your Telegram user ID\nif (userId !== ALLOWED_USER_ID) {\n  throw new Error('Unauthorized user');\n}\n\n// Remove command prefix and split by pipes\nconst commandText = text.replace('/create_event ', '').trim();\nconst parts = commandText.split('|').map(p => p.trim());\n\nif (parts.length < 2) {\n  throw new Error('Invalid format. Use: /create_event Title | Date Time | Duration | Location | Description');\n}\n\nconst title = parts[0] || 'Untitled Event';\nconst dateTimeStr = parts[1] || '';\nconst durationStr = parts[2] || '60'; // Default 60 minutes\nconst location = parts[3] || '';\nconst description = parts[4] || '';\n\n// Parse date and time\nlet startDateTime;\ntry {\n  // Handle natural language dates\n  if (dateTimeStr.toLowerCase().includes('today')) {\n    const today = new Date();\n    const timeMatch = dateTimeStr.match(/(\\d{1,2})(am|pm)/i);\n    if (timeMatch) {\n      let hour = parseInt(timeMatch[1]);\n      if (timeMatch[2].toLowerCase() === 'pm' && hour !== 12) hour += 12;\n      if (timeMatch[2].toLowerCase() === 'am' && hour === 12) hour = 0;\n      today.setHours(hour, 0, 0, 0);\n      startDateTime = today;\n    } else {\n      throw new Error('Could not parse time from: ' + dateTimeStr);\n    }\n  } else if (dateTimeStr.toLowerCase().includes('tomorrow')) {\n    const tomorrow = new Date();\n    tomorrow.setDate(tomorrow.getDate() + 1);\n    const timeMatch = dateTimeStr.match(/(\\d{1,2})(am|pm)/i);\n    if (timeMatch) {\n      let hour = parseInt(timeMatch[1]);\n      if (timeMatch[2].toLowerCase() === 'pm' && hour !== 12) hour += 12;\n      if (timeMatch[2].toLowerCase() === 'am' && hour === 12) hour = 0;\n      tomorrow.setHours(hour, 0, 0, 0);\n      startDateTime = tomorrow;\n    } else {\n      throw new Error('Could not parse time from: ' + dateTimeStr);\n    }\n  } else {\n    // Try to parse as ISO date or standard format\n    // Support formats: YYYY-MM-DD HH:MM, YYYY-MM-DD HH:MM:SS\n    startDateTime = new Date(dateTimeStr);\n    if (isNaN(startDateTime.getTime())) {\n      throw new Error('Invalid date format. Use: YYYY-MM-DD HH:MM or \"today 2pm\" or \"tomorrow 3pm\"');\n    }\n  }\n} catch (error) {\n  throw new Error('Date parsing failed: ' + error.message);\n}\n\n// Parse duration\nlet durationMinutes = 60; // Default\ntry {\n  if (durationStr.toLowerCase().includes('hour')) {\n    const hourMatch = durationStr.match(/(\\d+)\\s*hour/i);\n    if (hourMatch) {\n      durationMinutes = parseInt(hourMatch[1]) * 60;\n    }\n  } else if (durationStr.toLowerCase().includes('minute')) {\n    const minuteMatch = durationStr.match(/(\\d+)\\s*minute/i);\n    if (minuteMatch) {\n      durationMinutes = parseInt(minuteMatch[1]);\n    }\n  } else {\n    // Assume it's just a number in minutes\n    durationMinutes = parseInt(durationStr) || 60;\n  }\n} catch (error) {\n  durationMinutes = 60; // Default fallback\n}\n\n// Calculate end time\nconst endDateTime = new Date(startDateTime.getTime() + (durationMinutes * 60 * 1000));\n\n// Validate that the event is not in the past\nif (startDateTime < new Date()) {\n  throw new Error('Cannot create events in the past. Please check your date and time.');\n}\n\nreturn {\n  json: {\n    title: title,\n    start: {\n      dateTime: startDateTime.toISOString(),\n      timeZone: 'America/New_York'\n    },\n    end: {\n      dateTime: endDateTime.toISOString(),\n      timeZone: 'America/New_York'\n    },\n    location: location,\n    description: description,\n    originalCommand: text,\n    userId: userId,\n    duration: durationMinutes,\n    parsedDateTime: {\n      start: startDateTime.toLocaleString(),\n      end: endDateTime.toLocaleString(),\n      duration: durationMinutes + ' minutes'\n    }\n  }\n};"
+      },
+      "id": "i1j2k3l4-m5n6-o7p8-q9r0-s1t2u3v4w5x8",
+      "name": "Parse Create Event Command",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        680,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "calendarId": "primary",
+        "title": "={{$json.title}}",
+        "start": "={{$json.start}}",
+        "end": "={{$json.end}}",
+        "options": {
+          "location": "={{$json.location}}",
+          "description": "={{$json.description}}"
+        }
+      },
+      "id": "j1k2l3m4-n5o6-p7q8-r9s0-t1u2v3w4x5y8",
+      "name": "Create Calendar Event",
+      "type": "n8n-nodes-base.googleCalendar",
+      "typeVersion": 1,
+      "position": [
+        900,
+        300
+      ],
+      "credentials": {
+        "googleOAuth2Api": {
+          "id": "2",
+          "name": "Gmail OAuth2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Format successful event creation response for Telegram\nconst input = $input.all();\nconst commandData = input[0].json;\nconst eventData = input[1].json;\n\n// Extract event details\nconst eventId = eventData.id;\nconst eventLink = eventData.htmlLink;\nconst title = commandData.title;\nconst startTime = new Date(commandData.start.dateTime);\nconst endTime = new Date(commandData.end.dateTime);\nconst location = commandData.location;\nconst description = commandData.description;\nconst duration = commandData.duration;\n\n// Format response message\nlet message = `✅ **Calendar Event Created Successfully!**\\n\\n`;\nmessage += `📅 **${title}**\\n\\n`;\nmessage += `🗓️ **Date:** ${startTime.toLocaleDateString()}\\n`;\nmessage += `🕐 **Time:** ${startTime.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})} - ${endTime.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}\\n`;\nmessage += `⏱️ **Duration:** ${duration} minutes\\n`;\n\nif (location) {\n  message += `📍 **Location:** ${location}\\n`;\n}\n\nif (description) {\n  const desc = description.length > 100 ? \n    description.substring(0, 100) + '...' : description;\n  message += `📝 **Description:** ${desc}\\n`;\n}\n\nmessage += `\\n🔗 **[View in Google Calendar](${eventLink})**\\n\\n`;\n\n// Add quick actions footer\nmessage += `💡 **Quick Actions:**\\n`;\nmessage += `• /calendar_today - View today's events\\n`;\nmessage += `• /create_event - Create another event\\n`;\nmessage += `• /calendar_week - View this week's events\\n\\n`;\n\n// Add event creation tips\nmessage += `📋 **Event Creation Tips:**\\n`;\nmessage += `• Use format: Title | Date Time | Duration | Location | Description\\n`;\nmessage += `• Natural dates: \"today 2pm\", \"tomorrow 3pm\"\\n`;\nmessage += `• Duration: \"1 hour\", \"30 minutes\", or just \"60\"\\n`;\nmessage += `• All fields except title and date/time are optional\\n`;\n\nreturn {\n  json: {\n    message: message,\n    eventCreated: true,\n    eventId: eventId,\n    eventLink: eventLink,\n    eventDetails: {\n      title: title,\n      start: startTime.toISOString(),\n      end: endTime.toISOString(),\n      location: location,\n      description: description,\n      duration: duration\n    }\n  }\n};"
+      },
+      "id": "k1l2m3n4-o5p6-q7r8-s9t0-u1v2w3x4y5z8",
+      "name": "Format Success Response",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1120,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "sendMessage",
+        "chatId": "={{$('Telegram Trigger').item.json.message.chat.id}}",
+        "text": "={{$json.message}}",
+        "additionalFields": {
+          "parse_mode": "Markdown",
+          "disable_web_page_preview": true
+        }
+      },
+      "id": "l1m2n3o4-p5q6-r7s8-t9u0-v1w2x3y4z5a8",
+      "name": "Reply Success",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [
+        1340,
+        300
+      ],
+      "credentials": {
+        "telegramApi": {
+          "id": "1",
+          "name": "Gmail Telegram Bot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "sendMessage",
+        "chatId": "={{$('Telegram Trigger').item.json.message.chat.id}}",
+        "text": "❌ **Failed to Create Calendar Event!**\\n\\n🚨 **Error:** {{$('Parse Create Event Command').item.json.error || $('Create Calendar Event').item.json.error || 'Unknown error occurred'}}\\n\\n📋 **Correct Format:**\\n`/create_event Title | Date Time | Duration | Location | Description`\\n\\n🗓️ **Date/Time Examples:**\\n• `2024-01-15 14:30` (YYYY-MM-DD HH:MM)\\n• `today 2pm` (natural language)\\n• `tomorrow 3pm` (natural language)\\n\\n⏱️ **Duration Examples:**\\n• `60` (minutes)\\n• `1 hour`\\n• `30 minutes`\\n\\n📍 **Full Example:**\\n`/create_event Team Meeting | today 2pm | 1 hour | Conference Room A | Weekly standup discussion`\\n\\n💡 **Tips:**\\n• Only Title and Date/Time are required\\n• Use pipes (|) to separate fields\\n• Events cannot be created in the past\\n• All times use America/New_York timezone\\n\\n🔒 **Security:** Only authorized users can create events\\n🔧 **Support:** Check Google Calendar API permissions if issues persist",
+        "additionalFields": {
+          "parse_mode": "Markdown"
+        }
+      },
+      "id": "m1n2o3p4-q5r6-s7t8-u9v0-w1x2y3z4a5b8",
+      "name": "Reply Error",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [
+        900,
+        480
+      ],
+      "credentials": {
+        "telegramApi": {
+          "id": "1",
+          "name": "Gmail Telegram Bot"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "Check Create Event Command",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Create Event Command": {
+      "main": [
+        [
+          {
+            "node": "Parse Create Event Command",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Create Event Command": {
+      "main": [
+        [
+          {
+            "node": "Create Calendar Event",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ],
+      "error": [
+        [
+          {
+            "node": "Reply Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Calendar Event": {
+      "main": [
+        [
+          {
+            "node": "Format Success Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ],
+      "error": [
+        [
+          {
+            "node": "Reply Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format Success Response": {
+      "main": [
+        [
+          {
+            "node": "Reply Success",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "errorWorkflow": {
+      "value": ""
+    },
+    "timezone": "America/New_York",
+    "saveManualExecutions": true
+  },
+  "staticData": null,
+  "tags": [
+    {
+      "id": "home-automation",
+      "name": "Home Automation"
+    },
+    {
+      "id": "google-api",
+      "name": "Google API"
+    },
+    {
+      "id": "telegram-bot",
+      "name": "Telegram Bot"
+    },
+    {
+      "id": "google-calendar",
+      "name": "Google Calendar"
+    },
+    {
+      "id": "event-creation",
+      "name": "Event Creation"
+    }
+  ],
+  "triggerCount": 1,
+  "updatedAt": "2025-01-06T14:30:00.000Z",
+  "versionId": "1"
+}

@@ -1,0 +1,22 @@
+# LiteLLM Proxy Server Dependencies
+
+# Core LiteLLM
+litellm>=1.40.0
+
+# Web framework
+fastapi>=0.104.0
+uvicorn[standard]>=0.24.0
+
+# HTTP client
+httpx>=0.25.0
+
+# Data validation
+pydantic>=2.0.0
+
+# Optional: for enhanced functionality
+redis>=5.0.0
+python-dotenv>=1.0.0
+
+# Development dependencies
+pytest>=7.4.0
+pytest-asyncio>=0.21.0

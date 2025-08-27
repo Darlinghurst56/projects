@@ -1,0 +1,54 @@
+{
+  "version": "1.0",
+  "lastUpdate": "2025-07-11T10:00:00Z",
+  "tokenOptimization": {
+    "target": "home-users",
+    "maxTokensPerContext": 200,
+    "currentReduction": "90%"
+  },
+  "docs": {
+    "agent-contexts/qa-agent-context.md": {
+      "requiredSections": ["Agent Role", "Key Commands", "API Endpoints", "Error Patterns"],
+      "maxLines": 50,
+      "tokenCount": 180,
+      "lastModified": "2025-07-11T10:00:00Z"
+    },
+    "agent-contexts/ux-agent-context.md": {
+      "requiredSections": ["Agent Role", "Key Commands", "API Endpoints", "UX Improvements"],
+      "maxLines": 50,
+      "tokenCount": 175,
+      "lastModified": "2025-07-11T10:00:00Z"
+    },
+    "agent-contexts/integration-agent-context.md": {
+      "requiredSections": ["Agent Role", "Key Commands", "API Endpoints", "Integration Tasks"],
+      "maxLines": 50,
+      "tokenCount": 170,
+      "lastModified": "2025-07-11T10:00:00Z"
+    },
+    "HOME-USER-GUIDE.md": {
+      "requiredSections": ["Quick Start", "What Each Agent Does", "Common Tasks"],
+      "maxLines": 200,
+      "tokenCount": 400,
+      "lastModified": "2025-07-11T10:00:00Z"
+    }
+  },
+  "codeFiles": {
+    "family-dashboard-qa-agent.js": {
+      "relatedDocs": ["agent-contexts/qa-agent-context.md"],
+      "lastModified": "2025-07-11T09:00:00Z"
+    },
+    "background-ux-agent.js": {
+      "relatedDocs": ["agent-contexts/ux-agent-context.md"],
+      "lastModified": "2025-07-11T09:00:00Z"
+    },
+    "background-integration-agent.js": {
+      "relatedDocs": ["agent-contexts/integration-agent-context.md"],
+      "lastModified": "2025-07-11T09:00:00Z"
+    }
+  },
+  "enforcement": {
+    "preCommitEnabled": true,
+    "coverageThreshold": 0.8,
+    "autoVerification": true
+  }
+}

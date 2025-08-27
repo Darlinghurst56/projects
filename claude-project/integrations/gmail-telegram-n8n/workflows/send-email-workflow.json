@@ -1,0 +1,239 @@
+{
+  "name": "Gmail Send Email via Telegram",
+  "nodes": [
+    {
+      "parameters": {
+        "authentication": "botToken",
+        "resource": "message",
+        "operation": "get",
+        "additionalFields": {}
+      },
+      "name": "Telegram Trigger",
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ],
+      "webhookId": "telegram-send-email",
+      "credentials": {
+        "telegramApi": {
+          "id": "telegram-bot-credentials",
+          "name": "Gmail Telegram Bot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$node['Telegram Trigger'].json['message']['text']}}",
+              "operation": "startsWith",
+              "value2": "/send_email"
+            }
+          ]
+        }
+      },
+      "name": "Check Send Command",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        460,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "// Parse the telegram message to extract email details\nconst message = items[0].json.message.text;\nconst chatId = items[0].json.message.chat.id;\n\n// Expected format: /send_email to:email@example.com subject:Subject body:Message body\nconst emailRegex = /\\/send_email\\s+to:([^\\s]+)\\s+subject:([^\\s]+(?:\\s+[^\\s]+)*)\\s+body:(.+)/;\nconst match = message.match(emailRegex);\n\nif (!match) {\n  return [{\n    json: {\n      error: true,\n      chatId: chatId,\n      message: \"Invalid format. Use: /send_email to:email@example.com subject:Your Subject body:Your message\"\n    }\n  }];\n}\n\nconst [, to, subject, body] = match;\n\nreturn [{\n  json: {\n    chatId: chatId,\n    to: to.trim(),\n    subject: subject.trim(),\n    body: body.trim(),\n    error: false\n  }\n}];"
+      },
+      "name": "Parse Email Command",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        680,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{$node['Parse Email Command'].json['error']}}",
+              "value2": false
+            }
+          ]
+        }
+      },
+      "name": "Check Valid Format",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        900,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "sendTo": "={{$node['Parse Email Command'].json['to']}}",
+        "subject": "={{$node['Parse Email Command'].json['subject']}}",
+        "message": "={{$node['Parse Email Command'].json['body']}}",
+        "options": {}
+      },
+      "name": "Send Gmail",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 1,
+      "position": [
+        1120,
+        120
+      ],
+      "credentials": {
+        "googleOAuth2Api": {
+          "id": "gmail-oauth-credentials",
+          "name": "Gmail OAuth2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{$node['Parse Email Command'].json['chatId']}}",
+        "text": "✅ Email sent successfully to {{$node['Parse Email Command'].json['to']}}\\n📧 Subject: {{$node['Parse Email Command'].json['subject']}}"
+      },
+      "name": "Success Response",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [
+        1340,
+        120
+      ],
+      "credentials": {
+        "telegramApi": {
+          "id": "telegram-bot-credentials",
+          "name": "Gmail Telegram Bot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{$node['Parse Email Command'].json['chatId']}}",
+        "text": "❌ {{$node['Parse Email Command'].json['message']}}"
+      },
+      "name": "Error Response",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [
+        1120,
+        280
+      ],
+      "credentials": {
+        "telegramApi": {
+          "id": "telegram-bot-credentials",
+          "name": "Gmail Telegram Bot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{$node['Telegram Trigger'].json['message']['chat']['id']}}",
+        "text": "❓ Unknown command. Use /send_email to send emails."
+      },
+      "name": "Unknown Command",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [
+        680,
+        400
+      ],
+      "credentials": {
+        "telegramApi": {
+          "id": "telegram-bot-credentials",
+          "name": "Gmail Telegram Bot"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "Check Send Command",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Send Command": {
+      "main": [
+        [
+          {
+            "node": "Parse Email Command",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Unknown Command",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Email Command": {
+      "main": [
+        [
+          {
+            "node": "Check Valid Format",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Valid Format": {
+      "main": [
+        [
+          {
+            "node": "Send Gmail",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Error Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Gmail": {
+      "main": [
+        [
+          {
+            "node": "Success Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {},
+  "id": "gmail-send-email-workflow",
+  "meta": {
+    "instanceId": "n8n-gmail-telegram-integration"
+  },
+  "tags": [
+    "gmail",
+    "telegram",
+    "email",
+    "send"
+  ]
+}

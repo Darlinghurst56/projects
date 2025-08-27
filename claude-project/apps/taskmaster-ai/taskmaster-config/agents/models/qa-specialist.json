@@ -1,0 +1,5 @@
+{
+  "provider": "anthropic",
+  "modelId": "claude-3-5-sonnet-20241022",
+  "temperature": 0.1
+}

@@ -1,0 +1,279 @@
+{
+  "name": "n8n Error Handling Framework - Google API Workflows",
+  "active": true,
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ]
+      },
+      "id": "error-trigger",
+      "name": "Error Trigger",
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ],
+      "credentials": {
+        "telegramApi": {
+          "id": "1",
+          "name": "Home Telegram Bot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$json.message.text}}",
+              "operation": "startsWith",
+              "value2": "/test_error"
+            }
+          ]
+        }
+      },
+      "id": "check-error-test",
+      "name": "Check Error Test",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        460,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Simulate different types of errors for testing\nconst text = $input.first().json.message.text;\nconst errorType = text.split(' ')[1] || 'general';\n\nswitch (errorType) {\n  case 'auth':\n    throw new Error('Google API authentication failed: Invalid credentials or expired token');\n    \n  case 'quota':\n    throw new Error('Google API quota exceeded: Daily limit reached for Gmail API');\n    \n  case 'network':\n    throw new Error('Network error: Unable to connect to Google servers');\n    \n  case 'permission':\n    throw new Error('Permission denied: Insufficient scope for requested Google API operation');\n    \n  case 'rate':\n    throw new Error('Rate limit exceeded: Too many requests to Google API');\n    \n  case 'invalid':\n    throw new Error('Invalid request: Malformed data sent to Google API');\n    \n  default:\n    throw new Error('Simulated general error for testing error handling system');\n}\n\n// This code should never execute due to thrown errors\nreturn [{ json: { success: true, message: 'No error occurred' } }];"
+      },
+      "id": "simulate-error",
+      "name": "Simulate Error",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        680,
+        300
+      ],
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Process error information and create user-friendly message\nconst errorInfo = $input.first().json;\nconst originalError = errorInfo.error?.message || 'Unknown error occurred';\nconst timestamp = new Date().toISOString();\nconst chatId = $('Error Trigger').first().json.message.chat.id;\nconst userId = $('Error Trigger').first().json.message.from.id;\n\n// Categorize error types for better user experience\nlet errorCategory = 'Unknown';\nlet userMessage = '';\nlet actionRequired = '';\nlet severity = 'medium';\n\nif (originalError.includes('authentication') || originalError.includes('credentials')) {\n  errorCategory = 'Authentication';\n  userMessage = '🔐 Authentication Error: Your Google account credentials need to be refreshed.';\n  actionRequired = 'Please re-authenticate in n8n Settings → Credentials → Google OAuth2';\n  severity = 'high';\n} else if (originalError.includes('quota') || originalError.includes('limit')) {\n  errorCategory = 'Quota/Rate Limit';\n  userMessage = '⏱️ API Limit Reached: Too many requests to Google APIs.';\n  actionRequired = 'Please wait a few minutes before trying again';\n  severity = 'medium';\n} else if (originalError.includes('network') || originalError.includes('connect')) {\n  errorCategory = 'Network';\n  userMessage = '🌐 Network Error: Unable to connect to Google services.';\n  actionRequired = 'Check your internet connection and try again';\n  severity = 'medium';\n} else if (originalError.includes('permission') || originalError.includes('scope')) {\n  errorCategory = 'Permissions';\n  userMessage = '🚫 Permission Error: Insufficient access to requested Google API.';\n  actionRequired = 'Update OAuth2 scope in n8n credentials to include required permissions';\n  severity = 'high';\n} else if (originalError.includes('invalid') || originalError.includes('malformed')) {\n  errorCategory = 'Invalid Request';\n  userMessage = '❌ Invalid Request: The data sent to Google API was incorrect.';\n  actionRequired = 'Check command format and try again';\n  severity = 'low';\n} else {\n  errorCategory = 'General';\n  userMessage = '⚠️ Error: Something went wrong with the Google API request.';\n  actionRequired = 'Try again, or contact support if the problem persists';\n  severity = 'medium';\n}\n\n// Create comprehensive error report\nconst errorReport = {\n  timestamp: timestamp,\n  category: errorCategory,\n  severity: severity,\n  originalError: originalError,\n  userMessage: userMessage,\n  actionRequired: actionRequired,\n  userId: userId,\n  chatId: chatId,\n  workflowName: 'Error Handling Framework',\n  nodeId: 'simulate-error'\n};\n\n// Create user-friendly Telegram message\nconst telegramMessage = `🚨 **Error Report**\\n\\n${userMessage}\\n\\n**What to do:**\\n${actionRequired}\\n\\n**Technical Details:**\\n• Category: ${errorCategory}\\n• Time: ${new Date().toLocaleString()}\\n• Severity: ${severity.toUpperCase()}\\n\\n**Error ID:** ${timestamp}\\n\\nType /help for available commands or /status to check system status.`;\n\nreturn [{\n  json: {\n    ...errorReport,\n    telegramMessage: telegramMessage\n  }\n}];"
+      },
+      "id": "process-error",
+      "name": "Process Error",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        900,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "sendMessage",
+        "chatId": "={{$json.chatId}}",
+        "text": "={{$json.telegramMessage}}",
+        "additionalFields": {
+          "parse_mode": "Markdown"
+        }
+      },
+      "id": "send-error-notification",
+      "name": "Send Error Notification",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [
+        1120,
+        400
+      ],
+      "credentials": {
+        "telegramApi": {
+          "id": "1",
+          "name": "Home Telegram Bot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Log error to n8n execution log and optionally to external system\nconst errorData = $input.first().json;\n\n// Create detailed log entry\nconst logEntry = {\n  timestamp: errorData.timestamp,\n  level: 'ERROR',\n  category: errorData.category,\n  severity: errorData.severity,\n  message: errorData.originalError,\n  userId: errorData.userId,\n  workflowName: errorData.workflowName,\n  nodeId: errorData.nodeId,\n  userMessage: errorData.userMessage,\n  actionTaken: 'User notified via Telegram'\n};\n\n// Log to console (appears in n8n execution logs)\nconsole.log('ERROR_LOG:', JSON.stringify(logEntry, null, 2));\n\n// For production, you could send to external logging service here\n// Example: webhook to logging service, database insert, etc.\n\nreturn [{\n  json: {\n    logged: true,\n    logEntry: logEntry,\n    message: 'Error logged successfully'\n  }\n}];"
+      },
+      "id": "log-error",
+      "name": "Log Error",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1120,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$json.severity}}",
+              "operation": "equal",
+              "value2": "high"
+            }
+          ]
+        }
+      },
+      "id": "check-severity",
+      "name": "Check Severity",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        1320,
+        350
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "sendMessage",
+        "chatId": "={{$json.chatId}}",
+        "text": "🚨 **HIGH SEVERITY ALERT**\\n\\nThis error requires immediate attention:\\n\\n• **Category:** {{$json.category}}\\n• **Time:** {{$json.timestamp}}\\n• **Action Required:** {{$json.actionRequired}}\\n\\n**System Administrator Notified**\\n\\nPlease follow the recommended action or contact support if you need assistance.",
+        "additionalFields": {
+          "parse_mode": "Markdown"
+        }
+      },
+      "id": "send-admin-alert",
+      "name": "Send Admin Alert",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [
+        1540,
+        300
+      ],
+      "credentials": {
+        "telegramApi": {
+          "id": "1",
+          "name": "Home Telegram Bot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "sendMessage",
+        "chatId": "={{$json.chatId}}",
+        "text": "✅ **Error Handling Test Complete**\\n\\nThe error was successfully:\\n• Detected and categorized\\n• Logged to system records\\n• User notified with actionable instructions\\n\\n**Error Category:** {{$json.category}}\\n**Severity:** {{$json.severity}}\\n\\nType `/test_error auth` to test authentication errors\\nType `/test_error quota` to test quota limit errors\\nType `/test_error network` to test network errors\\n\\nError handling system is working correctly! 🎉"
+      },
+      "id": "send-success-message",
+      "name": "Send Success Message",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [
+        680,
+        500
+      ],
+      "credentials": {
+        "telegramApi": {
+          "id": "1",
+          "name": "Home Telegram Bot"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Error Trigger": {
+      "main": [
+        [
+          {
+            "node": "Check Error Test",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Error Test": {
+      "main": [
+        [
+          {
+            "node": "Simulate Error",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send Success Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simulate Error": {
+      "main": [
+        []
+      ],
+      "error": [
+        [
+          {
+            "node": "Process Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process Error": {
+      "main": [
+        [
+          {
+            "node": "Send Error Notification",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Log Error",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Check Severity",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Severity": {
+      "main": [
+        [
+          {
+            "node": "Send Admin Alert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "timezone": "America/New_York",
+    "saveManualExecutions": true,
+    "errorWorkflow": {
+      "value": "self"
+    }
+  },
+  "tags": [
+    {
+      "id": "error-handling",
+      "name": "Error Handling"
+    },
+    {
+      "id": "google-api",
+      "name": "Google API"
+    },
+    {
+      "id": "telegram-bot",
+      "name": "Telegram Bot"
+    }
+  ],
+  "triggerCount": 1,
+  "updatedAt": "2025-01-06T14:30:00.000Z",
+  "versionId": "1"
+}

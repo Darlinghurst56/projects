@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TaskMaster AI - Tasks</title>
+    <link rel="stylesheet" href="/app/web/css/common.css">
+    <style>
+        .tasks-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .tasks-title {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .tasks-stats {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .stat-badge {
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+        }
+        
+        .stat-badge:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+        
+        .stat-badge:active {
+            transform: scale(0.98);
+        }
+
+        .stat-done { background: #dcfce7; color: #166534; }
+        .stat-progress { background: #dbeafe; color: #1d4ed8; }
+        .stat-pending { background: #fef3c7; color: #92400e; }
+        .stat-cancelled { background: #fee2e2; color: #991b1b; }
+
+        .filters {
+            background: var(--card-bg);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            box-shadow: var(--card-shadow);
+            border: 1px solid var(--border-color);
+        }
+
+        .filter-row {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .filter-select, .filter-input {
+            padding: 0.5rem 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 0.875rem;
+            background: white;
+        }
+
+        .filter-select:focus, .filter-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.1);
+        }
+
+        .tasks-grid {
+            display: grid;
+            gap: 1.5rem;
+        }
+
+        .task-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: var(--card-shadow);
+            border: 1px solid var(--border-color);
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        .task-card:hover {
+            box-shadow: var(--card-shadow-hover);
+            transform: translateY(-1px);
+        }
+
+        .task-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .task-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+            line-height: 1.4;
+        }
+
+        .task-id {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            background: var(--background-light);
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-family: 'Monaco', 'Menlo', monospace;
+        }
+
+        .task-description {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            line-height: 1.5;
+            margin-bottom: 1rem;
+        }
+
+        .task-meta {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.75rem;
+        }
+
+        .meta-label {
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .meta-value {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        .task-status {
+            padding: 0.25rem 0.75rem;
+            border-radius: 1rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: capitalize;
+        }
+        
+        .status-btn {
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .status-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        .assign-btn {
+            background: #f3f4f6;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            padding: 0.25rem 0.5rem;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .assign-btn:hover {
+            background: #e5e7eb;
+            border-color: #9ca3af;
+        }
+        
+        .task-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .action-btn {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 0.25rem 0.5rem;
+            font-size: 0.675rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .action-btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+        }
+        
+        .action-btn.secondary {
+            background: #6b7280;
+        }
+        
+        .action-btn.danger {
+            background: #dc2626;
+        }
+
+        .status-done { background: #dcfce7; color: #166534; }
+        .status-in-progress { background: #dbeafe; color: #1d4ed8; }
+        .status-pending { background: #fef3c7; color: #92400e; }
+        .status-cancelled { background: #fee2e2; color: #991b1b; }
+
+        .priority-high { color: var(--error-color); }
+        .priority-medium { color: var(--warning-color); }
+        .priority-low { color: var(--text-muted); }
+
+        .task-details {
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-color);
+            display: none;
+        }
+
+        .task-card.expanded .task-details {
+            display: block;
+        }
+
+        .subtasks {
+            margin-top: 1rem;
+        }
+
+        .subtasks-header {
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .subtask-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem;
+            background: var(--background-light);
+            border-radius: 6px;
+            margin-bottom: 0.5rem;
+            font-size: 0.75rem;
+        }
+
+        .subtask-status {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .loading-state {
+            text-align: center;
+            padding: 4rem;
+            color: var(--text-secondary);
+        }
+
+        .error-state {
+            text-align: center;
+            padding: 4rem;
+            color: var(--error-color);
+        }
+
+        .no-tasks {
+            text-align: center;
+            padding: 4rem;
+            color: var(--text-secondary);
+        }
+
+        @media (max-width: 768px) {
+            .tasks-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .task-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .filter-row {
+                flex-direction: column;
+                align-items: stretch;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main class="tm-main">
+        <div class="tm-container">
+            <div class="tasks-header">
+                <h1 class="tasks-title">📋 Task Assignment Dashboard</h1>
+                <div class="tasks-stats">
+                    <button class="stat-badge stat-pending" onclick="filterByStatus('pending')" title="Click to view pending tasks">
+                        <span id="pending-count">0</span> Pending ⚡
+                    </button>
+                    <button class="stat-badge stat-progress" onclick="filterByStatus('in-progress')" title="Click to view in-progress tasks">
+                        <span id="progress-count">0</span> In Progress 🔄
+                    </button>
+                    <button class="stat-badge stat-done" onclick="filterByStatus('done')" title="Click to view completed tasks">
+                        <span id="done-count">0</span> Done ✅
+                    </button>
+                    <button class="stat-badge stat-cancelled" onclick="filterByStatus('cancelled')" title="Click to view cancelled tasks">
+                        <span id="cancelled-count">0</span> Cancelled ❌
+                    </button>
+                </div>
+            </div>
+
+            <div class="filters">
+                <div class="filter-row">
+                    <div class="filter-group">
+                        <label class="meta-label">Status:</label>
+                        <select id="status-filter" class="filter-select">
+                            <option value="">All Statuses</option>
+                            <option value="done">Done</option>
+                            <option value="in-progress">In Progress</option>
+                            <option value="pending">Pending</option>
+                            <option value="cancelled">Cancelled</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label class="meta-label">Priority:</label>
+                        <select id="priority-filter" class="filter-select">
+                            <option value="">All Priorities</option>
+                            <option value="high">High</option>
+                            <option value="medium">Medium</option>
+                            <option value="low">Low</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label class="meta-label">Search:</label>
+                        <input type="text" id="search-filter" class="filter-input" placeholder="Search tasks...">
+                    </div>
+                    <button onclick="clearFilters()" class="tm-btn tm-btn-secondary tm-btn-small">Clear Filters</button>
+                </div>
+            </div>
+
+            <div id="tasks-container">
+                <div class="loading-state">
+                    <div class="tm-spinner"></div>
+                    Loading tasks...
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="/app/web/components/navigation.js"></script>
+    <script>
+        let allTasks = [];
+        let filteredTasks = [];
+
+        // Load tasks from API
+        async function loadTasks() {
+            const container = document.getElementById('tasks-container');
+            
+            try {
+                container.innerHTML = '<div class="loading-state"><div class="tm-spinner"></div>Loading tasks...</div>';
+                
+                const response = await fetch('/api/v2/tasks');
+                const data = await response.json();
+                
+                if (!data.success || !data.tasks) {
+                    throw new Error('Failed to load tasks');
+                }
+                
+                allTasks = data.tasks;
+                updateStats();
+                applyFilters();
+                
+            } catch (error) {
+                console.error('Error loading tasks:', error);
+                container.innerHTML = `
+                    <div class="error-state">
+                        ❌ Error loading tasks<br>
+                        <small>${error.message}</small><br>
+                        <button onclick="loadTasks()" class="tm-btn tm-btn-primary tm-btn-small" style="margin-top: 1rem;">Retry</button>
+                    </div>
+                `;
+            }
+        }
+
+        // Update task statistics
+        function updateStats() {
+            const stats = allTasks.reduce((acc, task) => {
+                acc[task.status] = (acc[task.status] || 0) + 1;
+                return acc;
+            }, {});
+
+            document.getElementById('done-count').textContent = stats.done || 0;
+            document.getElementById('progress-count').textContent = stats['in-progress'] || 0;
+            document.getElementById('pending-count').textContent = stats.pending || 0;
+            document.getElementById('cancelled-count').textContent = stats.cancelled || 0;
+        }
+
+        // Apply filters to tasks
+        function applyFilters() {
+            const statusFilter = document.getElementById('status-filter').value;
+            const priorityFilter = document.getElementById('priority-filter').value;
+            const searchFilter = document.getElementById('search-filter').value.toLowerCase();
+
+            filteredTasks = allTasks.filter(task => {
+                const statusMatch = !statusFilter || task.status === statusFilter;
+                const priorityMatch = !priorityFilter || task.priority === priorityFilter;
+                const searchMatch = !searchFilter || 
+                    task.title.toLowerCase().includes(searchFilter) ||
+                    task.description.toLowerCase().includes(searchFilter) ||
+                    task.details.toLowerCase().includes(searchFilter);
+
+                return statusMatch && priorityMatch && searchMatch;
+            });
+
+            renderTasks();
+        }
+
+        // Render tasks to the page
+        function renderTasks() {
+            const container = document.getElementById('tasks-container');
+
+            if (filteredTasks.length === 0) {
+                container.innerHTML = `
+                    <div class="no-tasks">
+                        📭 No tasks found matching your filters
+                    </div>
+                `;
+                return;
+            }
+
+            const tasksHTML = filteredTasks.map(task => {
+                const statusClass = `status-${task.status.replace(' ', '-')}`;
+                const priorityClass = `priority-${task.priority}`;
+                
+                const subtasksHTML = task.subtasks && task.subtasks.length > 0 ? `
+                    <div class="subtasks">
+                        <div class="subtasks-header">Subtasks (${task.subtasks.length})</div>
+                        ${task.subtasks.map(subtask => `
+                            <div class="subtask-item">
+                                <div class="subtask-status ${getStatusClass(subtask.status)}"></div>
+                                <span>${subtask.title || subtask.description || 'Unnamed subtask'}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                ` : '';
+
+                const dependencies = task.dependencies && task.dependencies.length > 0 
+                    ? task.dependencies.join(', ') 
+                    : 'None';
+
+                return `
+                    <div class="task-card" onclick="toggleTaskDetails(this)">
+                        <div class="task-header">
+                            <div>
+                                <div class="task-title">${task.title}</div>
+                                <div class="task-description">${task.description}</div>
+                            </div>
+                            <div class="task-id">ID: ${task.id}</div>
+                        </div>
+                        
+                        <div class="task-meta">
+                            <div class="meta-item">
+                                <span class="meta-label">Status:</span>
+                                <button class="task-status ${statusClass} status-btn" onclick="changeTaskStatus(${task.id}, '${task.status}')" title="Click to change status">
+                                    ${task.status} ⚡
+                                </button>
+                            </div>
+                            <div class="meta-item">
+                                <span class="meta-label">Priority:</span>
+                                <span class="meta-value ${priorityClass}">${task.priority}</span>
+                            </div>
+                            <div class="meta-item">
+                                <span class="meta-label">Agent:</span>
+                                <button class="assign-btn" onclick="assignTask(${task.id})" title="Click to assign task">
+                                    ${task.agentMetadata?.assignedAgent || 'Unassigned'} 👤
+                                </button>
+                            </div>
+                            <div class="meta-item">
+                                <span class="meta-label">Actions:</span>
+                                <div class="task-actions">
+                                    ${getTaskActions(task)}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="task-details">
+                            <div class="meta-item" style="margin-bottom: 1rem;">
+                                <span class="meta-label">Project Details:</span>
+                            </div>
+                            <div style="background: var(--background-light); padding: 1rem; border-radius: 8px; font-size: 0.875rem; margin-bottom: 1rem;">
+                                ${task.details || 'No additional details'}
+                            </div>
+                            
+                            <div class="meta-item" style="margin-bottom: 1rem;">
+                                <span class="meta-label">Test Strategy:</span>
+                            </div>
+                            <div style="background: var(--background-light); padding: 1rem; border-radius: 8px; font-size: 0.875rem; margin-bottom: 1rem;">
+                                ${task.testStrategy || 'No test strategy defined'}
+                            </div>
+                            
+                            ${subtasksHTML}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            container.innerHTML = `<div class="tasks-grid">${tasksHTML}</div>`;
+        }
+
+        // Toggle task details
+        function toggleTaskDetails(taskCard) {
+            taskCard.classList.toggle('expanded');
+        }
+
+        // Get status class for indicators
+        function getStatusClass(status) {
+            const statusMap = {
+                'done': 'stat-done',
+                'completed': 'stat-done',
+                'in-progress': 'stat-progress',
+                'pending': 'stat-pending',
+                'cancelled': 'stat-cancelled'
+            };
+            return statusMap[status] || 'stat-pending';
+        }
+
+        // Clear all filters
+        function clearFilters() {
+            document.getElementById('status-filter').value = '';
+            document.getElementById('priority-filter').value = '';
+            document.getElementById('search-filter').value = '';
+            applyFilters();
+        }
+
+        // Filter by status (for clickable badges)
+        function filterByStatus(status) {
+            document.getElementById('status-filter').value = status;
+            applyFilters();
+        }
+        
+        // Get task actions based on status
+        function getTaskActions(task) {
+            if (task.status === 'pending') {
+                return `
+                    <button class="action-btn" onclick="startTask(${task.id})" title="Start this task">Start</button>
+                    <button class="action-btn secondary" onclick="viewTask(${task.id})" title="View details">View</button>
+                `;
+            } else if (task.status === 'in-progress') {
+                return `
+                    <button class="action-btn" onclick="completeTask(${task.id})" title="Mark as done">Complete</button>
+                    <button class="action-btn secondary" onclick="viewTask(${task.id})" title="View details">View</button>
+                `;
+            } else if (task.status === 'done') {
+                return `
+                    <button class="action-btn secondary" onclick="viewTask(${task.id})" title="View details">View</button>
+                `;
+            } else {
+                return `
+                    <button class="action-btn secondary" onclick="viewTask(${task.id})" title="View details">View</button>
+                `;
+            }
+        }
+        
+        // Task action functions
+        async function startTask(taskId) {
+            try {
+                const response = await fetch(`/api/v2/tasks/${taskId}/status`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ status: 'in-progress' })
+                });
+                
+                if (response.ok) {
+                    loadTasks(); // Refresh
+                } else {
+                    alert('Failed to start task');
+                }
+            } catch (error) {
+                console.error('Error starting task:', error);
+                alert('Error starting task');
+            }
+        }
+        
+        async function completeTask(taskId) {
+            try {
+                const response = await fetch(`/api/v2/tasks/${taskId}/status`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ status: 'done' })
+                });
+                
+                if (response.ok) {
+                    loadTasks(); // Refresh
+                } else {
+                    alert('Failed to complete task');
+                }
+            } catch (error) {
+                console.error('Error completing task:', error);
+                alert('Error completing task');
+            }
+        }
+        
+        function viewTask(taskId) {
+            // Find and expand the task card
+            const taskCards = document.querySelectorAll('.task-card');
+            taskCards.forEach(card => {
+                const idElement = card.querySelector('.task-id');
+                if (idElement && idElement.textContent.includes(taskId)) {
+                    card.classList.add('expanded');
+                    card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            });
+        }
+        
+        function assignTask(taskId) {
+            // Simple assignment for now - could be expanded with agent selection
+            alert(`Task ${taskId} assignment feature coming soon!`);
+        }
+        
+        function changeTaskStatus(taskId, currentStatus) {
+            const statuses = ['pending', 'in-progress', 'done', 'cancelled'];
+            const currentIndex = statuses.indexOf(currentStatus);
+            const nextStatus = statuses[(currentIndex + 1) % statuses.length];
+            
+            const confirmChange = confirm(`Change task ${taskId} status from "${currentStatus}" to "${nextStatus}"?`);
+            if (confirmChange) {
+                // Call API to change status
+                fetch(`/api/v2/tasks/${taskId}/status`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ status: nextStatus })
+                }).then(response => {
+                    if (response.ok) {
+                        loadTasks();
+                    } else {
+                        alert('Failed to change status');
+                    }
+                }).catch(error => {
+                    console.error('Error changing status:', error);
+                    alert('Error changing status');
+                });
+            }
+        }
+        
+        // Sort tasks by priority for better UX - pending first, then in-progress
+        function sortTasksByPriority(tasks) {
+            const statusOrder = { 'pending': 0, 'in-progress': 1, 'done': 2, 'cancelled': 3 };
+            const priorityOrder = { 'high': 0, 'medium': 1, 'low': 2 };
+            
+            return tasks.sort((a, b) => {
+                // First sort by status (pending tasks first)
+                const statusDiff = statusOrder[a.status] - statusOrder[b.status];
+                if (statusDiff !== 0) return statusDiff;
+                
+                // Then by priority within same status
+                return priorityOrder[a.priority] - priorityOrder[b.priority];
+            });
+        }
+        
+        // Update renderTasks to use sorted tasks
+        function renderTasks() {
+            const container = document.getElementById('tasks-container');
+
+            if (filteredTasks.length === 0) {
+                container.innerHTML = `
+                    <div class="no-tasks">
+                        📭 No tasks found matching your filters
+                    </div>
+                `;
+                return;
+            }
+            
+            // Sort tasks for better UX
+            const sortedTasks = sortTasksByPriority([...filteredTasks]);
+
+            const tasksHTML = sortedTasks.map(task => {
+                const statusClass = `status-${task.status.replace(' ', '-')}`;
+                const priorityClass = `priority-${task.priority}`;
+                
+                const subtasksHTML = task.subtasks && task.subtasks.length > 0 ? `
+                    <div class="subtasks">
+                        <div class="subtasks-header">Subtasks (${task.subtasks.length})</div>
+                        ${task.subtasks.map(subtask => `
+                            <div class="subtask-item">
+                                <div class="subtask-status ${getStatusClass(subtask.status)}"></div>
+                                <span>${subtask.title || subtask.description || 'Unnamed subtask'}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                ` : '';
+
+                const dependencies = task.dependencies && task.dependencies.length > 0 
+                    ? task.dependencies.join(', ') 
+                    : 'None';
+
+                return `
+                    <div class="task-card" onclick="toggleTaskDetails(this)">
+                        <div class="task-header">
+                            <div>
+                                <div class="task-title">${task.title}</div>
+                                <div class="task-description">${task.description}</div>
+                            </div>
+                            <div class="task-id">ID: ${task.id}</div>
+                        </div>
+                        
+                        <div class="task-meta">
+                            <div class="meta-item">
+                                <span class="meta-label">Status:</span>
+                                <button class="task-status ${statusClass} status-btn" onclick="changeTaskStatus(${task.id}, '${task.status}')" title="Click to change status">
+                                    ${task.status} ⚡
+                                </button>
+                            </div>
+                            <div class="meta-item">
+                                <span class="meta-label">Priority:</span>
+                                <span class="meta-value ${priorityClass}">${task.priority}</span>
+                            </div>
+                            <div class="meta-item">
+                                <span class="meta-label">Agent:</span>
+                                <button class="assign-btn" onclick="assignTask(${task.id})" title="Click to assign task">
+                                    ${task.agentMetadata?.assignedAgent || 'Unassigned'} 👤
+                                </button>
+                            </div>
+                            <div class="meta-item">
+                                <span class="meta-label">Actions:</span>
+                                <div class="task-actions">
+                                    ${getTaskActions(task)}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="task-details">
+                            <div class="meta-item" style="margin-bottom: 1rem;">
+                                <span class="meta-label">Project Details:</span>
+                            </div>
+                            <div style="background: var(--background-light); padding: 1rem; border-radius: 8px; font-size: 0.875rem; margin-bottom: 1rem;">
+                                ${task.details || 'No additional details'}
+                            </div>
+                            
+                            <div class="meta-item" style="margin-bottom: 1rem;">
+                                <span class="meta-label">Test Strategy:</span>
+                            </div>
+                            <div style="background: var(--background-light); padding: 1rem; border-radius: 8px; font-size: 0.875rem; margin-bottom: 1rem;">
+                                ${task.testStrategy || 'No test strategy defined'}
+                            </div>
+                            
+                            ${subtasksHTML}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            container.innerHTML = `<div class="tasks-grid">${tasksHTML}</div>`;
+        }
+
+        // Add event listeners for filters
+        document.getElementById('status-filter').addEventListener('change', applyFilters);
+        document.getElementById('priority-filter').addEventListener('change', applyFilters);
+        document.getElementById('search-filter').addEventListener('input', applyFilters);
+
+        // Load tasks on page load
+        loadTasks();
+
+        // Auto-refresh every 30 seconds
+        setInterval(loadTasks, 30000);
+    </script>
+</body>
+</html>

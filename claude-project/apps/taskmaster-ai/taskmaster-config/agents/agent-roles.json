@@ -1,0 +1,74 @@
+{
+  "description": "5-Agent System: CLAUDE.md compliant agent role definitions for multi-agent collaboration",
+  "version": "3.0.0",
+  "agents": {
+    "orchestrator-agent": {
+      "id": "orchestrator-agent",
+      "name": "Orchestrator Agent",
+      "description": "Task Coordinator - Multi-agent coordination and developer interaction",
+      "capabilities": ["coordination", "priority-management", "conflict-resolution", "progress-tracking", "developer-interface", "task-routing"],
+      "keywords": ["orchestrate", "coordinate", "manage", "priority", "workflow", "progress", "conflict", "feedback", "developer-interface", "route", "assign"],
+      "tools": ["ALL_MCP_TOOLS"],
+      "special": "acts as task coordinator, suggests tasks/fixes to developer for approval",
+      "exclusive": false
+    },
+    "frontend-agent": {
+      "id": "frontend-agent", 
+      "name": "Frontend Agent",
+      "description": "Modern frontend development with React, TypeScript, and responsive design",
+      "capabilities": ["react", "typescript", "vite", "tailwind", "css", "html", "components", "responsive-design", "accessibility"],
+      "keywords": ["frontend", "react", "typescript", "vite", "component", "widget", "style", "css", "html", "visual", "layout", "tailwind", "responsive", "accessibility", "ui", "ux"],
+      "tools": ["mcp__vite__*", "mcp__tailwindcss__*", "mcp__shadcn_ui__*", "mcp__playwright__*", "mcp__eslint__*", "mcp__design-system__*", "mcp__accessibility-testing__*"],
+      "exclusive": false
+    },
+    "backend-agent": {
+      "id": "backend-agent",
+      "name": "Backend Agent", 
+      "description": "Node.js APIs, Express servers, data management, and backend integration",
+      "capabilities": ["nodejs", "express", "api", "database", "authentication", "data-processing", "server-logic"],
+      "keywords": ["backend", "api", "server", "express", "nodejs", "database", "auth", "data", "integration", "service"],
+      "tools": ["mcp__filesystem__*", "mcp__github__*", "mcp__fetch__*", "mcp__eslint__*", "mcp__sourcery__*"],
+      "exclusive": false
+    },
+    "devops-agent": {
+      "id": "devops-agent",
+      "name": "DevOps Agent",
+      "description": "EXCLUSIVE server operations, deployment, build systems, and infrastructure management",
+      "capabilities": ["server", "deployment", "docker", "build", "ci-cd", "infrastructure", "monitoring"],
+      "keywords": ["server", "deploy", "docker", "start", "stop", "run", "build", "npm", "devops", "infrastructure", "ci", "cd"],
+      "tools": ["mcp__docker__*", "mcp__filesystem__*", "mcp__github__*"],
+      "exclusive": true,
+      "exclusivePermissions": "Only agent allowed to perform server operations and deployment"
+    },
+    "qa-specialist": {
+      "id": "qa-specialist",
+      "name": "QA Specialist",
+      "description": "Testing, validation, debugging, and quality assurance",
+      "capabilities": ["testing", "validation", "quality-assurance", "debugging", "accessibility-testing"],
+      "keywords": ["test", "validate", "qa", "quality", "debug", "verify", "check", "accessibility", "performance"],
+      "tools": ["mcp__eslint__*", "mcp__playwright__*", "mcp__accessibility-testing__*", "mcp__user-testing__*", "mcp__sourcery__*"],
+      "exclusive": false
+    }
+  },
+  "universalTools": [
+    "Edit", "Read", "Bash", "Glob", "Grep", 
+    "mcp__memory__*", "mcp__filesystem__*", "mcp__task-master-ai__*"
+  ],
+  "workspaceTags": {
+    "orchestrator-agent": "orchestrator-agent",
+    "frontend-agent": "frontend-agent", 
+    "backend-agent": "backend-agent",
+    "devops-agent": "devops-agent",
+    "qa-specialist": "qa-specialist"
+  },
+  "roleGitSync": {
+    "required": true,
+    "atomicCommits": true,
+    "coordinationWorkflow": ".taskmaster/agents/coordination-workflow.cjs"
+  },
+  "mcpToolEnforcement": {
+    "enabled": true,
+    "validationScript": ".taskmaster/scripts/validate-mcp-tool.sh",
+    "violationAction": "task_reversion"
+  }
+}

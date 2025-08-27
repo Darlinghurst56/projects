@@ -1,0 +1,445 @@
+# Task ID: 11
+# Title: Implement AI-powered agent role management system
+# Status: done
+# Dependencies: 1, 5, 7
+# Priority: high
+# Description: Create a comprehensive agent role management system with specialized Frontend, Backend, and Testing agents that can be assigned to tasks, including automated workflow triggers and enhanced task metadata for intelligent routing.
+# Details:
+## Agent Role Definitions
+
+### Frontend Agent
+- **Responsibilities**: React components, Tailwind CSS styling, Shadcn/UI integration, widget development, UI/UX implementation
+- **Capabilities**: Component creation, state management, responsive design, accessibility
+- **Tools**: Vite MCP, Tailwind CSS MCP, Shadcn/UI MCP
+
+### Backend Agent
+- **Responsibilities**: API development, database operations, authentication, third-party integrations
+- **Capabilities**: REST/GraphQL APIs, data modeling, security implementation, performance optimization
+- **Tools**: HTTP/Fetch MCP, authentication libraries, database connectors
+
+### Testing Agent
+- **Responsibilities**: Code quality, linting, testing, validation, QA processes
+- **Capabilities**: Unit testing, integration testing, E2E testing, code analysis
+- **Tools**: ESLint MCP, testing frameworks, validation utilities
+
+## Implementation Steps
+
+### 1. Agent Configuration Schema
+```javascript
+// .taskmaster/agents/config.json
+{
+  "agents": {
+    "frontend": {
+      "id": "frontend-agent",
+      "name": "Frontend Development Agent",
+      "capabilities": ["react", "tailwind", "shadcn", "ui-components"],
+      "tools": ["mcp__vite", "mcp__tailwindcss", "mcp__shadcn_ui"],
+      "assignmentRules": {
+        "keywords": ["component", "ui", "widget", "style", "frontend"],
+        "filePatterns": ["*.jsx", "*.tsx", "*.css", "components/*"]
+      }
+    },
+    "backend": {
+      "id": "backend-agent",
+      "name": "Backend Development Agent",
+      "capabilities": ["api", "database", "auth", "integration"],
+      "tools": ["mcp__http", "database-tools"],
+      "assignmentRules": {
+        "keywords": ["api", "backend", "server", "database", "auth"],
+        "filePatterns": ["api/*", "server/*", "*.sql", "migrations/*"]
+      }
+    },
+    "testing": {
+      "id": "testing-agent",
+      "name": "Testing & QA Agent",
+      "capabilities": ["testing", "linting", "validation", "qa"],
+      "tools": ["mcp__eslint", "testing-frameworks"],
+      "assignmentRules": {
+        "keywords": ["test", "lint", "validate", "qa", "quality"],
+        "filePatterns": ["*.test.js", "*.spec.js", "__tests__/*"]
+      }
+    }
+  }
+}
+```
+
+### 2. Task Assignment Logic
+```javascript
+// src/agents/taskAssignment.js
+class TaskAssignmentEngine {
+  constructor(agentsConfig) {
+    this.agents = agentsConfig.agents;
+  }
+
+  assignAgent(task) {
+    const scores = {};
+    
+    // Score each agent based on task properties
+    for (const [agentId, agent] of Object.entries(this.agents)) {
+      scores[agentId] = this.calculateAgentScore(task, agent);
+    }
+    
+    // Return agent with highest score
+    const assignedAgent = Object.entries(scores)
+      .sort(([,a], [,b]) => b - a)[0][0];
+    
+    return {
+      agentId: assignedAgent,
+      confidence: scores[assignedAgent],
+      reasoning: this.generateAssignmentReasoning(task, assignedAgent)
+    };
+  }
+
+  calculateAgentScore(task, agent) {
+    let score = 0;
+    
+    // Check keywords in task title and description
+    const taskText = `${task.title} ${task.description} ${task.details}`.toLowerCase();
+    agent.assignmentRules.keywords.forEach(keyword => {
+      if (taskText.includes(keyword)) score += 10;
+    });
+    
+    // Check file patterns if task includes file operations
+    if (task.affectedFiles) {
+      task.affectedFiles.forEach(file => {
+        agent.assignmentRules.filePatterns.forEach(pattern => {
+          if (new RegExp(pattern.replace('*', '.*')).test(file)) {
+            score += 15;
+          }
+        });
+      });
+    }
+    
+    // Check required capabilities
+    if (task.requiredCapabilities) {
+      task.requiredCapabilities.forEach(capability => {
+        if (agent.capabilities.includes(capability)) score += 20;
+      });
+    }
+    
+    return score;
+  }
+}
+```
+
+### 3. Enhanced Task Metadata
+```javascript
+// Extend task schema with agent metadata
+const enhancedTaskSchema = {
+  ...existingTaskSchema,
+  agentMetadata: {
+    assignedAgent: String,      // Agent ID
+    assignmentScore: Number,    // Confidence score
+    requiredCapabilities: Array, // Required agent capabilities
+    affectedFiles: Array,       // Files to be modified
+    estimatedComplexity: String, // low, medium, high
+    agentNotes: String,         // Agent-specific implementation notes
+    workflowTriggers: Array     // Automated actions on completion
+  }
+};
+```
+
+### 4. Automated Workflow Triggers
+```javascript
+// src/agents/workflowAutomation.js
+class WorkflowAutomation {
+  constructor(taskManager, agentManager) {
+    this.taskManager = taskManager;
+    this.agentManager = agentManager;
+    this.triggers = new Map();
+  }
+
+  registerTrigger(taskId, trigger) {
+    this.triggers.set(taskId, trigger);
+  }
+
+  async onTaskComplete(taskId) {
+    const task = await this.taskManager.getTask(taskId);
+    const triggers = task.agentMetadata?.workflowTriggers || [];
+    
+    for (const trigger of triggers) {
+      await this.executeTrigger(trigger, task);
+    }
+  }
+
+  async executeTrigger(trigger, completedTask) {
+    switch (trigger.type) {
+      case 'CREATE_FOLLOWUP_TASK':
+        await this.createFollowupTask(trigger, completedTask);
+        break;
+      case 'NOTIFY_AGENT':
+        await this.notifyAgent(trigger, completedTask);
+        break;
+      case 'RUN_VALIDATION':
+        await this.runValidation(trigger, completedTask);
+        break;
+      case 'UPDATE_DEPENDENCIES':
+        await this.updateDependentTasks(trigger, completedTask);
+        break;
+    }
+  }
+
+  async createFollowupTask(trigger, parentTask) {
+    const followupTask = {
+      title: trigger.taskTemplate.title,
+      description: trigger.taskTemplate.description,
+      dependencies: [parentTask.id],
+      agentMetadata: {
+        assignedAgent: trigger.assignToAgent || parentTask.agentMetadata.assignedAgent,
+        workflowTriggers: trigger.childTriggers || []
+      }
+    };
+    
+    await this.taskManager.addTask(followupTask);
+  }
+}
+```
+
+### 5. Agent Communication Protocol
+```javascript
+// src/agents/agentCommunication.js
+class AgentCommunicationHub {
+  constructor() {
+    this.agents = new Map();
+    this.messageQueue = [];
+  }
+
+  registerAgent(agentId, agentInterface) {
+    this.agents.set(agentId, agentInterface);
+  }
+
+  async sendMessage(fromAgent, toAgent, message) {
+    const messageData = {
+      id: generateId(),
+      from: fromAgent,
+      to: toAgent,
+      timestamp: new Date(),
+      type: message.type,
+      payload: message.payload
+    };
+    
+    if (this.agents.has(toAgent)) {
+      await this.agents.get(toAgent).receiveMessage(messageData);
+    } else {
+      this.messageQueue.push(messageData);
+    }
+  }
+
+  // Agent handoff protocol
+  async handoffTask(fromAgent, toAgent, task, context) {
+    await this.sendMessage(fromAgent, toAgent, {
+      type: 'TASK_HANDOFF',
+      payload: {
+        task,
+        context,
+        previousWork: context.completedSteps,
+        nextSteps: context.remainingSteps
+      }
+    });
+  }
+}
+```
+
+### 6. Integration with Task Master
+```javascript
+// Extend task-master CLI commands
+// task-master assign-agent --id=<task-id> --agent=<agent-id>
+// task-master agent-status
+// task-master agent-workload --agent=<agent-id>
+
+// MCP integration for agent commands
+const agentMcpTools = {
+  assign_agent_to_task: async ({ taskId, agentId }) => {
+    const assignment = await assignAgent(taskId, agentId);
+    return { success: true, assignment };
+  },
+  
+  get_agent_workload: async ({ agentId }) => {
+    const tasks = await getTasksByAgent(agentId);
+    return { agentId, taskCount: tasks.length, tasks };
+  },
+  
+  trigger_agent_workflow: async ({ taskId, triggerType }) => {
+    const result = await executeWorkflowTrigger(taskId, triggerType);
+    return { success: true, result };
+  }
+};
+```
+
+# Test Strategy:
+## Testing Strategy for Agent Role Management System
+
+### 1. Unit Tests for Task Assignment Logic
+```javascript
+// __tests__/taskAssignment.test.js
+describe('TaskAssignmentEngine', () => {
+  test('assigns frontend agent to UI tasks', () => {
+    const task = {
+      title: 'Create dashboard widget component',
+      description: 'Build a React component for weather widget',
+      details: 'Using Shadcn/UI Card component...'
+    };
+    
+    const assignment = engine.assignAgent(task);
+    expect(assignment.agentId).toBe('frontend-agent');
+    expect(assignment.confidence).toBeGreaterThan(30);
+  });
+  
+  test('assigns backend agent to API tasks', () => {
+    const task = {
+      title: 'Implement user authentication API',
+      description: 'Create REST endpoints for login/logout',
+      affectedFiles: ['api/auth.js', 'server/routes.js']
+    };
+    
+    const assignment = engine.assignAgent(task);
+    expect(assignment.agentId).toBe('backend-agent');
+  });
+  
+  test('assigns testing agent to QA tasks', () => {
+    const task = {
+      title: 'Add unit tests for weather service',
+      description: 'Write comprehensive tests for weather API integration',
+      affectedFiles: ['__tests__/weather.test.js']
+    };
+    
+    const assignment = engine.assignAgent(task);
+    expect(assignment.agentId).toBe('testing-agent');
+  });
+});
+```
+
+### 2. Integration Tests for Workflow Automation
+```javascript
+// __tests__/workflowAutomation.integration.test.js
+describe('WorkflowAutomation', () => {
+  test('creates followup task on completion', async () => {
+    const parentTask = {
+      id: '1.1',
+      agentMetadata: {
+        workflowTriggers: [{
+          type: 'CREATE_FOLLOWUP_TASK',
+          taskTemplate: {
+            title: 'Test newly created component',
+            description: 'Write tests for the component'
+          },
+          assignToAgent: 'testing-agent'
+        }]
+      }
+    };
+    
+    await automation.onTaskComplete('1.1');
+    
+    const tasks = await taskManager.getTasks();
+    const followupTask = tasks.find(t => t.dependencies.includes('1.1'));
+    expect(followupTask).toBeDefined();
+    expect(followupTask.agentMetadata.assignedAgent).toBe('testing-agent');
+  });
+});
+```
+
+### 3. End-to-End Agent Communication Tests
+```javascript
+// __tests__/agentCommunication.e2e.test.js
+describe('Agent Communication', () => {
+  test('agents can handoff tasks with context', async () => {
+    const mockFrontendAgent = createMockAgent('frontend-agent');
+    const mockTestingAgent = createMockAgent('testing-agent');
+    
+    hub.registerAgent('frontend-agent', mockFrontendAgent);
+    hub.registerAgent('testing-agent', mockTestingAgent);
+    
+    const task = { id: '1.1', title: 'Create user profile component' };
+    const context = {
+      completedSteps: ['Created component structure', 'Added Tailwind styles'],
+      remainingSteps: ['Write unit tests', 'Add integration tests']
+    };
+    
+    await hub.handoffTask('frontend-agent', 'testing-agent', task, context);
+    
+    expect(mockTestingAgent.receiveMessage).toHaveBeenCalledWith(
+      expect.objectContaining({
+        type: 'TASK_HANDOFF',
+        payload: expect.objectContaining({ task, context })
+      })
+    );
+  });
+});
+```
+
+### 4. Manual Testing Checklist
+- [ ] Create a new task and verify correct agent assignment
+- [ ] Test agent assignment for ambiguous tasks (could match multiple agents)
+- [ ] Verify workflow triggers execute correctly on task completion
+- [ ] Test agent handoff between frontend and testing agents
+- [ ] Validate task metadata is properly enhanced with agent information
+- [ ] Test CLI commands for agent management
+- [ ] Verify MCP tools work correctly with Claude Code
+- [ ] Test edge cases: no matching agent, multiple equal scores
+- [ ] Validate agent workload distribution
+- [ ] Test concurrent task assignments to same agent
+
+### 5. Performance Testing
+- Measure task assignment time for 1000+ tasks
+- Test workflow trigger execution under load
+- Validate agent communication latency
+- Memory usage with multiple active agents
+
+# Subtasks:
+## 1. Define Agent Role Taxonomy and Capabilities [done]
+### Dependencies: None
+### Description: Establish a comprehensive taxonomy of agent roles, defining their specific capabilities, responsibilities, and resource requirements. This includes defining the schema for agent configuration.
+### Details:
+Document the different agent roles (e.g., data analyst, code reviewer, task scheduler) and their associated skills and permissions.
+<info added on 2025-07-05T17:09:47.261Z>
+AGENT: integration-specialist - Starting implementation of Agent Role Taxonomy. Creating comprehensive agent role definitions and capabilities documentation.
+</info added on 2025-07-05T17:09:47.261Z>
+<info added on 2025-07-05T17:17:57.522Z>
+COMPLIANCE: Agent roles updated to match CLAUDE.md: frontend-architect, ui-developer, integration-specialist, qa-specialist, server-agent. Generic roles deprecated.
+</info added on 2025-07-05T17:17:57.522Z>
+
+## 2. Design Agent Configuration Schema [done]
+### Dependencies: 11.1
+### Description: Develop a schema for agent configuration, including parameters for role assignment, resource allocation, and communication preferences.
+### Details:
+Create a JSON schema or similar structure to define the configuration options for each agent role.
+
+## 3. Implement AI-Powered Task Assignment Logic [done]
+### Dependencies: 11.1, 11.2
+### Description: Develop an AI-powered algorithm to dynamically assign tasks to agents based on their roles, capabilities, and current workload. Incorporate a scoring mechanism to prioritize task assignments.
+### Details:
+Utilize machine learning techniques to predict agent performance and optimize task allocation.
+<info added on 2025-07-05T17:16:48.248Z>
+integration-specialist: Completed simple MVP agent assignment system. Created agent-roles.json with 3 basic roles (frontend, backend, tester), simple-assignment.cjs for keyword-based assignment, and taskmaster-integration.cjs CLI tool. Tested successfully - can assign agents to tasks, auto-assign all tasks, and view workload.
+</info added on 2025-07-05T17:16:48.248Z>
+
+## 4. Enhance Task Schema with Agent Metadata [done]
+### Dependencies: 11.3
+### Description: Extend the existing task schema to include metadata fields for tracking agent assignments, task progress, and performance metrics.
+### Details:
+Add fields to the task schema to store information about the agent assigned to the task, the start and end times, and any relevant performance data.
+
+## 5. Build Automated Workflow Trigger System [done]
+### Dependencies: 11.3, 11.4
+### Description: Create a system to automatically trigger workflows based on task completion, agent availability, and other predefined events.
+### Details:
+Implement a rule-based engine or event-driven architecture to automate task assignment and workflow execution.
+<info added on 2025-07-05T17:20:23.912Z>
+Workflow triggers must implement CLAUDE.md git synchronization - atomic commits, pull-before-switch, emergency sync recovery. Current design lacks multi-agent git coordination.
+</info added on 2025-07-05T17:20:23.912Z>
+
+## 6. Integrate with Task Master CLI and MCP Tools [done]
+### Dependencies: 11.2, 11.3, 11.4, 11.5
+### Description: Integrate the AI-powered agent role management system with the existing Task Master CLI and MCP tools to provide a unified interface for managing agents and tasks.
+### Details:
+Develop APIs and command-line interfaces to allow users to interact with the agent role management system through the Task Master CLI and MCP tools.
+<info added on 2025-07-05T17:19:05.847Z>
+TOOL ALLOWLIST VIOLATION: Must use only approved tools from CLAUDE.md - mcp__eslint__, mcp__docker__, mcp__puppeteer__, mcp__task-master-ai__*. Remove references to mcp__vite, mcp__tailwindcss, mcp__shadcn_ui, database-tools
+</info added on 2025-07-05T17:19:05.847Z>
+
+## 7. Develop Comprehensive Testing Suite [done]
+### Dependencies: 11.3, 11.5, 11.6
+### Description: Create a comprehensive testing suite to validate the functionality, performance, and scalability of the AI-powered agent role management system.
+### Details:
+Include unit tests, integration tests, and end-to-end tests to ensure the system meets the required quality standards.
+

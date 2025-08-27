@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Widget Debug Page</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .debug-info { background: #f0f0f0; padding: 15px; margin: 10px 0; border-radius: 5px; }
+        .error { background: #ffe6e6; border-left: 4px solid #ff0000; }
+        .success { background: #e6ffe6; border-left: 4px solid #00ff00; }
+        .widget-test { border: 1px solid #ccc; margin: 20px 0; padding: 20px; min-height: 200px; }
+    </style>
+</head>
+<body>
+    <h1>Widget Loading Debug Page</h1>
+    
+    <div id="debug-output"></div>
+    
+    <h2>Widget Test Areas</h2>
+    <div id="dns-status-test" class="widget-test">
+        <h3>DNS Status Widget Test</h3>
+        <div class="widget-content"></div>
+    </div>
+    
+    <div id="dns-profile-test" class="widget-test">
+        <h3>DNS Profile Widget Test</h3>
+        <div class="widget-content"></div>
+    </div>
+
+    <!-- Load widget scripts -->
+    <script type="module" src="widgets/dns-status/dns-status.js"></script>
+    <script type="module" src="widgets/dns-profile/dns-profile.js"></script>
+    
+    <script>
+        const debugOutput = document.getElementById('debug-output');
+        
+        function addDebugInfo(message, type = 'info') {
+            const div = document.createElement('div');
+            div.className = `debug-info ${type}`;
+            div.innerHTML = `<strong>${new Date().toLocaleTimeString()}</strong>: ${message}`;
+            debugOutput.appendChild(div);
+            console.log(message);
+        }
+        
+        addDebugInfo('Starting widget debug test...');
+        
+        // Check if widgets are available on window
+        function checkWidgetAvailability() {
+            addDebugInfo('Checking widget availability...');
+            
+            if (window.DnsStatusWidget) {
+                addDebugInfo('✅ DnsStatusWidget is available on window', 'success');
+            } else {
+                addDebugInfo('❌ DnsStatusWidget is NOT available on window', 'error');
+            }
+            
+            if (window.DnsProfileWidget) {
+                addDebugInfo('✅ DnsProfileWidget is available on window', 'success');
+            } else {
+                addDebugInfo('❌ DnsProfileWidget is NOT available on window', 'error');
+            }
+            
+            if (window.ControlDStatusApiClient) {
+                addDebugInfo('✅ ControlDStatusApiClient is available on window', 'success');
+            } else {
+                addDebugInfo('❌ ControlDStatusApiClient is NOT available on window', 'error');
+            }
+            
+            if (window.ControlDProfileApiClient) {
+                addDebugInfo('✅ ControlDProfileApiClient is available on window', 'success');
+            } else {
+                addDebugInfo('❌ ControlDProfileApiClient is NOT available on window', 'error');
+            }
+        }
+        
+        // Test widget instantiation
+        function testWidgetInstantiation() {
+            addDebugInfo('Testing widget instantiation...');
+            
+            try {
+                const statusContainer = document.querySelector('#dns-status-test .widget-content');
+                if (window.DnsStatusWidget && statusContainer) {
+                    const statusWidget = new window.DnsStatusWidget(statusContainer);
+                    addDebugInfo('✅ DNS Status Widget instantiated successfully', 'success');
+                } else {
+                    addDebugInfo('❌ Failed to instantiate DNS Status Widget', 'error');
+                }
+            } catch (error) {
+                addDebugInfo(`❌ DNS Status Widget error: ${error.message}`, 'error');
+            }
+            
+            try {
+                const profileContainer = document.querySelector('#dns-profile-test .widget-content');
+                if (window.DnsProfileWidget && profileContainer) {
+                    const profileWidget = new window.DnsProfileWidget(profileContainer);
+                    addDebugInfo('✅ DNS Profile Widget instantiated successfully', 'success');
+                } else {
+                    addDebugInfo('❌ Failed to instantiate DNS Profile Widget', 'error');
+                }
+            } catch (error) {
+                addDebugInfo(`❌ DNS Profile Widget error: ${error.message}`, 'error');
+            }
+        }
+        
+        // Run tests with delays to account for module loading
+        setTimeout(() => {
+            checkWidgetAvailability();
+        }, 100);
+        
+        setTimeout(() => {
+            testWidgetInstantiation();
+        }, 500);
+        
+        // Also run on DOMContentLoaded
+        document.addEventListener('DOMContentLoaded', function() {
+            addDebugInfo('DOM Content Loaded');
+            setTimeout(checkWidgetAvailability, 100);
+            setTimeout(testWidgetInstantiation, 200);
+        });
+    </script>
+</body>
+</html>

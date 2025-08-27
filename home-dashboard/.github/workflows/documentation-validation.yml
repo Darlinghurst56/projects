@@ -1,0 +1,322 @@
+name: Documentation Quality Validation
+
+on:
+  push:
+    branches: [ main, master, develop ]
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  documentation-validation:
+    name: "📚 Documentation Quality Check"
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    
+    steps:
+      - name: 🛒 Checkout Repository
+        uses: actions/checkout@v4
+      
+      - name: 🏗️ Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+      
+      - name: 📦 Install Dependencies
+        run: npm ci
+      
+      - name: 📋 Check Required Documentation Files
+        run: |
+          echo "🔍 Checking for required documentation files..."
+          
+          # Check for essential files
+          files_to_check=(
+            "README.md"
+            "CONTRIBUTING.md" 
+            ".env.example"
+            "package.json"
+          )
+          
+          missing_files=()
+          for file in "${files_to_check[@]}"; do
+            if [ ! -f "$file" ]; then
+              missing_files+=("$file")
+            fi
+          done
+          
+          if [ ${#missing_files[@]} -gt 0 ]; then
+            echo "❌ Missing required documentation files:"
+            printf '%s\n' "${missing_files[@]}"
+            exit 1
+          else
+            echo "✅ All required documentation files present"
+          fi
+      
+      - name: 🎯 Validate JSDoc Documentation
+        run: |
+          echo "🔍 Checking JSDoc documentation coverage..."
+          
+          # Check for functions without JSDoc
+          undocumented_functions=$(grep -r "function\|const.*=.*=>" src/ server/ --include="*.js" --include="*.jsx" | \
+            grep -v "/\*\*" | \
+            grep -v "// TODO" | \
+            wc -l)
+          
+          if [ "$undocumented_functions" -gt 0 ]; then
+            echo "⚠️ Found $undocumented_functions potentially undocumented functions"
+            echo "Please ensure all functions have proper JSDoc documentation"
+          else
+            echo "✅ JSDoc documentation check passed"
+          fi
+      
+      - name: 📝 Check API Documentation
+        run: |
+          echo "🔍 Checking API endpoint documentation..."
+          
+          # Look for API routes and check if they're documented
+          api_routes=$(find server/routes -name "*.js" 2>/dev/null | wc -l)
+          
+          if [ "$api_routes" -gt 0 ]; then
+            echo "Found $api_routes API route files"
+            
+            # Check for basic API documentation patterns
+            documented_routes=0
+            for route_file in server/routes/*.js; do
+              if [ -f "$route_file" ]; then
+                if grep -q "@api\|@apiName\|@apiDescription" "$route_file"; then
+                  documented_routes=$((documented_routes + 1))
+                fi
+              fi
+            done
+            
+            echo "📊 $documented_routes out of $api_routes route files have API documentation"
+            
+            if [ "$documented_routes" -lt "$api_routes" ]; then
+              echo "⚠️ Some API routes may lack proper documentation"
+              echo "Please ensure all API endpoints follow the documentation standards in CONTRIBUTING.md"
+            fi
+          fi
+      
+      - name: 🔧 Check Environment Configuration
+        run: |
+          echo "🔍 Validating environment configuration documentation..."
+          
+          if [ -f ".env.example" ]; then
+            # Check if .env.example has proper comments
+            comment_lines=$(grep -c "^#" .env.example || true)
+            total_lines=$(wc -l < .env.example)
+            
+            if [ "$total_lines" -gt 0 ]; then
+              comment_ratio=$((comment_lines * 100 / total_lines))
+              echo "📊 Environment file has $comment_ratio% documentation coverage"
+              
+              if [ "$comment_ratio" -lt 30 ]; then
+                echo "⚠️ .env.example needs more documentation comments"
+                echo "Please add comments explaining each environment variable"
+              else
+                echo "✅ Environment configuration is well documented"
+              fi
+            fi
+          fi
+      
+      - name: 📖 Validate README Content
+        run: |
+          echo "🔍 Checking README.md content quality..."
+          
+          if [ -f "README.md" ]; then
+            # Check for essential README sections
+            required_sections=(
+              "# "
+              "## Installation"
+              "## Usage"
+              "## Configuration"
+            )
+            
+            missing_sections=()
+            for section in "${required_sections[@]}"; do
+              if ! grep -q "$section" README.md; then
+                missing_sections+=("$section")
+              fi
+            done
+            
+            if [ ${#missing_sections[@]} -gt 0 ]; then
+              echo "⚠️ README.md missing recommended sections:"
+              printf '%s\n' "${missing_sections[@]}"
+              echo "Consider adding these sections for better documentation"
+            else
+              echo "✅ README.md has all essential sections"
+            fi
+            
+            # Check README length (should be substantial)
+            readme_lines=$(wc -l < README.md)
+            if [ "$readme_lines" -lt 20 ]; then
+              echo "⚠️ README.md seems too short ($readme_lines lines)"
+              echo "Consider adding more detailed documentation"
+            fi
+          fi
+      
+      - name: 🧹 Check Code Comment Quality
+        run: |
+          echo "🔍 Analyzing code comment quality..."
+          
+          # Find files with very few comments
+          low_comment_files=()
+          
+          for file in $(find src server -name "*.js" -o -name "*.jsx" 2>/dev/null); do
+            if [ -f "$file" ]; then
+              total_lines=$(wc -l < "$file")
+              comment_lines=$(grep -c "^\s*\(//\|\*\)" "$file" || true)
+              
+              if [ "$total_lines" -gt 50 ] && [ "$comment_lines" -lt 5 ]; then
+                low_comment_files+=("$file")
+              fi
+            fi
+          done
+          
+          if [ ${#low_comment_files[@]} -gt 0 ]; then
+            echo "⚠️ Files with potentially insufficient comments:"
+            printf '%s\n' "${low_comment_files[@]}"
+            echo "Consider adding more explanatory comments for complex logic"
+          else
+            echo "✅ Code comment coverage looks adequate"
+          fi
+      
+      - name: 🔐 Check Security Documentation
+        run: |
+          echo "🔍 Checking security documentation..."
+          
+          # Look for security-related files and documentation
+          security_files=0
+          
+          if [ -f "SECURITY.md" ]; then
+            security_files=$((security_files + 1))
+          fi
+          
+          if grep -q -i "security\|authentication\|authorization" README.md CONTRIBUTING.md 2>/dev/null; then
+            security_files=$((security_files + 1))
+          fi
+          
+          if [ "$security_files" -eq 0 ]; then
+            echo "⚠️ No security documentation found"
+            echo "Consider adding security guidelines to CONTRIBUTING.md or creating SECURITY.md"
+          else
+            echo "✅ Security documentation present"
+          fi
+      
+      - name: 📊 Documentation Quality Summary
+        run: |
+          echo ""
+          echo "🎯 =========================="
+          echo "🎯 DOCUMENTATION QUALITY SUMMARY"
+          echo "🎯 =========================="
+          echo ""
+          
+          # Count different types of documentation
+          js_files=$(find src server -name "*.js" -o -name "*.jsx" 2>/dev/null | wc -l)
+          md_files=$(find . -maxdepth 2 -name "*.md" | wc -l)
+          
+          echo "📁 Project Overview:"
+          echo "   • JavaScript/JSX files: $js_files"
+          echo "   • Documentation files: $md_files"
+          
+          if [ -f "CONTRIBUTING.md" ]; then
+            echo "   • Contributing guidelines: ✅ Present"
+          else
+            echo "   • Contributing guidelines: ❌ Missing"
+          fi
+          
+          if [ -f ".env.example" ]; then
+            echo "   • Environment template: ✅ Present"
+          else
+            echo "   • Environment template: ❌ Missing"
+          fi
+          
+          echo ""
+          echo "📋 Next Steps:"
+          echo "   1. Review any warnings above"
+          echo "   2. Follow CONTRIBUTING.md guidelines for documentation"
+          echo "   3. Add JSDoc comments to undocumented functions"
+          echo "   4. Update README.md if sections are missing"
+          echo ""
+          echo "🎉 Documentation validation complete!"
+
+  lint-check:
+    name: "🔍 Code Quality & Linting"
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: 🛒 Checkout Repository
+        uses: actions/checkout@v4
+      
+      - name: 🏗️ Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+      
+      - name: 📦 Install Dependencies
+        run: npm ci
+      
+      - name: 🔍 Run ESLint
+        run: |
+          if [ -f ".eslintrc.js" ] || [ -f ".eslintrc.json" ] || [ -f "eslint.config.js" ]; then
+            echo "🔍 Running ESLint code quality check..."
+            npm run lint
+          else
+            echo "⚠️ No ESLint configuration found"
+            echo "Consider adding ESLint for code quality enforcement"
+          fi
+        continue-on-error: true
+      
+      - name: 🧪 Run Tests (if available)
+        run: |
+          if npm run test --dry-run 2>/dev/null; then
+            echo "🧪 Running test suite..."
+            npm run test
+          else
+            echo "ℹ️ No test script found in package.json"
+          fi
+        continue-on-error: true
+
+  dependency-check:
+    name: "🔒 Security & Dependencies"
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: 🛒 Checkout Repository
+        uses: actions/checkout@v4
+      
+      - name: 🏗️ Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+      
+      - name: 📦 Install Dependencies
+        run: npm ci
+      
+      - name: 🛡️ Security Audit
+        run: |
+          echo "🛡️ Running npm security audit..."
+          npm audit --audit-level=moderate || echo "⚠️ Security vulnerabilities found - please review"
+        continue-on-error: true
+      
+      - name: 📊 Dependency Analysis
+        run: |
+          echo "📊 Analyzing dependencies..."
+          
+          # Check for package.json
+          if [ -f "package.json" ]; then
+            deps=$(node -e "console.log(Object.keys(require('./package.json').dependencies || {}).length)")
+            devDeps=$(node -e "console.log(Object.keys(require('./package.json').devDependencies || {}).length)")
+            
+            echo "Dependencies: $deps production, $devDeps development"
+            
+            # Check for common security packages
+            if grep -q "helmet\|express-rate-limit\|cors" package.json; then
+              echo "✅ Security middleware packages detected"
+            else
+              echo "⚠️ Consider adding security middleware (helmet, express-rate-limit, cors)"
+            fi
+          fi

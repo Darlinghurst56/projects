@@ -1,0 +1,53 @@
+# Task ID: 33
+# Title: Create AI Model Abstraction Layer Stub
+# Status: pending
+# Dependencies: 23, 24, 25
+# Priority: medium
+# Description: Create an AI model abstraction layer stub that allows switching between local Ulana AI and other AI models in the future, focusing on a pluggable architecture for intent recognition and response generation.
+# Details:
+1.  **Define the Abstraction Interface:**
+    *   Create a well-defined interface (e.g., `AIModelInterface`) with methods for:
+        *   `recognizeIntent(text: string): Promise<string>` - Takes text input and returns the recognized intent.
+        *   `generateResponse(intent: string, context: any): Promise<string>` - Takes an intent and context data and returns a generated response.
+        *   `setModelConfig(config: any): void` - Sets the configuration for the underlying AI model.
+    *   This interface should be framework-agnostic and easily adaptable to different AI models.
+2.  **Implement a Stub Implementation:**
+    *   Create a basic stub implementation (`AIModelStub`) of the `AIModelInterface`.
+    *   This stub can return predefined responses or simple intent classifications for testing purposes.
+    *   The stub should be easily configurable to simulate different AI model behaviors.
+3.  **Create a Model Factory:**
+    *   Implement a factory pattern (`AIModelFactory`) to create instances of the `AIModelInterface`.
+    *   The factory should take a model identifier (e.g., "ulana", "other") as input and return the corresponding implementation.
+    *   This allows for easy switching between different AI models at runtime.
+4.  **Integrate with n8n + Telegram Bot System:**
+    *   Modify the existing n8n workflows to use the `AIModelFactory` to obtain an instance of the desired AI model.
+    *   Pass the Telegram Bot input to the `recognizeIntent` method of the AI model.
+    *   Use the returned intent to generate a response using the `generateResponse` method.
+    *   Send the generated response back to the Telegram Bot.
+5.  **Configuration:**
+    *   Implement a configuration mechanism (e.g., environment variables, configuration file) to specify the AI model to use.
+    *   The configuration should also allow for setting model-specific parameters (e.g., API keys, model paths).
+6.  **Error Handling:**
+    *   Implement robust error handling to gracefully handle cases where the AI model is unavailable or returns an error.
+    *   Log errors and provide informative messages to the user.
+
+# Test Strategy:
+1.  **Interface Compliance:**
+    *   Verify that all AI model implementations adhere to the `AIModelInterface`.
+    *   Ensure that all methods are correctly implemented and return the expected data types.
+2.  **Stub Functionality:**
+    *   Test the `AIModelStub` with different inputs and verify that it returns the expected predefined responses.
+    *   Configure the stub to simulate different AI model behaviors and verify that the n8n workflows respond accordingly.
+3.  **Factory Functionality:**
+    *   Test the `AIModelFactory` with different model identifiers and verify that it returns the correct AI model implementation.
+    *   Ensure that the factory throws an error if an invalid model identifier is provided.
+4.  **n8n Integration:**
+    *   Test the integration with the n8n + Telegram Bot system by sending different messages to the bot.
+    *   Verify that the correct AI model is used to recognize the intent and generate a response.
+    *   Ensure that the generated response is sent back to the Telegram Bot.
+5.  **Configuration Testing:**
+    *   Test the configuration mechanism by setting different AI model identifiers and parameters.
+    *   Verify that the correct AI model is used based on the configuration.
+6.  **Error Handling:**
+    *   Simulate errors by making the AI model unavailable or returning an error.
+    *   Verify that the error is handled gracefully and that an informative message is displayed to the user.

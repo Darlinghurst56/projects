@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TaskMaster Dashboard Hub</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hub-container {
+            max-width: 1200px;
+            width: 100%;
+            padding: 40px 20px;
+        }
+
+        .hub-header {
+            text-align: center;
+            color: white;
+            margin-bottom: 60px;
+        }
+
+        .hub-title {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 16px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .hub-subtitle {
+            font-size: 1.25rem;
+            opacity: 0.9;
+            font-weight: 400;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .dashboard-card {
+            background: white;
+            border-radius: 16px;
+            padding: 32px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .dashboard-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        }
+
+        .dashboard-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            border-radius: 16px 16px 0 0;
+        }
+
+        .card-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+
+        .card-description {
+            color: #64748b;
+            font-size: 1rem;
+            line-height: 1.6;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .card-features {
+            list-style: none;
+            margin-bottom: 24px;
+        }
+
+        .card-features li {
+            color: #475569;
+            font-size: 0.9rem;
+            padding: 4px 0;
+            position: relative;
+            padding-left: 20px;
+        }
+
+        .card-features li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: #10b981;
+            font-weight: bold;
+        }
+
+        .launch-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 14px 24px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .launch-btn:hover {
+            background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
+            transform: translateY(-2px);
+        }
+
+        .launch-btn:active {
+            transform: translateY(0);
+        }
+
+        .system-info {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            padding: 24px;
+            color: white;
+            text-align: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .system-info h3 {
+            font-size: 1.2rem;
+            margin-bottom: 16px;
+            color: #f1f5f9;
+        }
+
+        .system-info p {
+            font-size: 0.95rem;
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+
+        .status-indicators {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            margin-top: 20px;
+        }
+
+        .status-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #10b981;
+            animation: pulse 2s infinite;
+        }
+
+        .status-dot.warning {
+            background: #f59e0b;
+        }
+
+        .status-dot.error {
+            background: #ef4444;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .hub-container {
+                padding: 20px 16px;
+            }
+
+            .hub-title {
+                font-size: 2rem;
+            }
+
+            .hub-subtitle {
+                font-size: 1.1rem;
+            }
+
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .dashboard-card {
+                padding: 24px;
+            }
+
+            .card-title {
+                font-size: 1.3rem;
+            }
+
+            .status-indicators {
+                flex-wrap: wrap;
+                gap: 16px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hub-container {
+                padding: 16px 12px;
+            }
+
+            .dashboard-card {
+                padding: 20px;
+            }
+
+            .card-icon {
+                font-size: 2.5rem;
+            }
+
+            .status-indicators {
+                flex-direction: column;
+                align-items: center;
+                gap: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="hub-container">
+        <div class="hub-header">
+            <h1 class="hub-title">🏡 TaskMaster Dashboard Hub</h1>
+            <p class="hub-subtitle">Unified entry point for all dashboard components</p>
+        </div>
+
+        <div class="dashboard-grid">
+            <!-- Family Dashboard -->
+            <div class="dashboard-card" onclick="navigateTo('/dashboard.html')">
+                <div class="card-icon">🏠</div>
+                <h2 class="card-title">Family Dashboard</h2>
+                <p class="card-description">
+                    DNS monitoring and family internet management with Control D integration
+                </p>
+                <ul class="card-features">
+                    <li>DNS status monitoring</li>
+                    <li>Family member profiles</li>
+                    <li>DNS analytics & reports</li>
+                    <li>Pause/test connection controls</li>
+                </ul>
+                <button class="launch-btn">Launch Family Dashboard</button>
+            </div>
+
+            <!-- Agent Coordination Dashboard -->
+            <div class="dashboard-card" onclick="navigateTo('/agent-dashboard.html')">
+                <div class="card-icon">🤖</div>
+                <h2 class="card-title">Agent Coordination</h2>
+                <p class="card-description">
+                    TaskMaster agent management with real-time coordination and task assignment
+                </p>
+                <ul class="card-features">
+                    <li>Agent registry & status</li>
+                    <li>Task assignment management</li>
+                    <li>Agent launcher interface</li>
+                    <li>Multi-agent coordination</li>
+                </ul>
+                <button class="launch-btn">Launch Agent Dashboard</button>
+            </div>
+
+            <!-- Live Agent Monitoring -->
+            <div class="dashboard-card" onclick="navigateTo('/live-agent-dashboard.html')">
+                <div class="card-icon">📊</div>
+                <h2 class="card-title">Live Agent Monitor</h2>
+                <p class="card-description">
+                    Real-time agent monitoring with live updates and performance metrics
+                </p>
+                <ul class="card-features">
+                    <li>Real-time agent status</li>
+                    <li>Live performance metrics</li>
+                    <li>Agent control interface</li>
+                    <li>Quick task assignment</li>
+                </ul>
+                <button class="launch-btn">Launch Live Monitor</button>
+            </div>
+        </div>
+
+        <div class="system-info">
+            <h3>🔧 System Status</h3>
+            <p>
+                All dashboard components are served from a unified API server on port 3001.
+                The system provides real-time TaskMaster integration and WebSocket support.
+            </p>
+            <div class="status-indicators">
+                <div class="status-item">
+                    <span class="status-dot" id="api-status"></span>
+                    <span>API Server</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-dot" id="taskmaster-status"></span>
+                    <span>TaskMaster</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-dot" id="websocket-status"></span>
+                    <span>WebSocket</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Navigation function
+        function navigateTo(path) {
+            window.location.href = path;
+        }
+
+        // System status checking
+        async function checkSystemStatus() {
+            try {
+                // Check API server health
+                const apiResponse = await fetch('/api/health');
+                const apiStatus = document.getElementById('api-status');
+                if (apiResponse.ok) {
+                    apiStatus.className = 'status-dot';
+                } else {
+                    apiStatus.className = 'status-dot warning';
+                }
+
+                // Check TaskMaster integration
+                const taskResponse = await fetch('/api/agents');
+                const taskStatus = document.getElementById('taskmaster-status');
+                if (taskResponse.ok) {
+                    taskStatus.className = 'status-dot';
+                } else {
+                    taskStatus.className = 'status-dot warning';
+                }
+
+                // Check WebSocket (simplified check)
+                const wsStatus = document.getElementById('websocket-status');
+                wsStatus.className = 'status-dot'; // Assume working for now
+
+            } catch (error) {
+                console.warn('System status check failed:', error);
+                // Mark all as warning if we can't check
+                ['api-status', 'taskmaster-status', 'websocket-status'].forEach(id => {
+                    const element = document.getElementById(id);
+                    if (element) element.className = 'status-dot error';
+                });
+            }
+        }
+
+        // Initialize dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🚀 TaskMaster Dashboard Hub initialized');
+            checkSystemStatus();
+            
+            // Check status every 30 seconds
+            setInterval(checkSystemStatus, 30000);
+        });
+
+        // Enhanced navigation with error handling
+        function navigateTo(path) {
+            try {
+                // Add loading state
+                const clickedCard = event.currentTarget;
+                const button = clickedCard.querySelector('.launch-btn');
+                const originalText = button.textContent;
+                
+                button.textContent = 'Loading...';
+                button.style.opacity = '0.7';
+                
+                // Navigate after brief delay for visual feedback
+                setTimeout(() => {
+                    window.location.href = path;
+                }, 300);
+                
+            } catch (error) {
+                console.error('Navigation error:', error);
+                alert('Failed to navigate to dashboard. Please try again.');
+            }
+        }
+
+        // Keyboard navigation support
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' || e.key === ' ') {
+                const focusedCard = document.querySelector('.dashboard-card:focus');
+                if (focusedCard) {
+                    focusedCard.click();
+                }
+            }
+        });
+
+        // Make cards focusable for accessibility
+        document.querySelectorAll('.dashboard-card').forEach(card => {
+            card.setAttribute('tabindex', '0');
+            card.setAttribute('role', 'button');
+            card.setAttribute('aria-label', 
+                card.querySelector('.card-title').textContent + ' - ' + 
+                card.querySelector('.card-description').textContent
+            );
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,590 @@
+/**
+ * DNS Profile Widget Styles
+ * Professional styling for DNS profile configuration and management interface
+ */
+
+.dns-profile-widget {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+    font-family: var(--font-family);
+}
+
+/* Loading State */
+.profile-loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: var(--spacing-xl);
+    color: var(--color-text-secondary);
+    gap: var(--spacing-sm);
+}
+
+.loading-spinner {
+    width: 24px;
+    height: 24px;
+    border: 2px solid var(--color-border);
+    border-top: 2px solid var(--color-primary);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Content Layout */
+.profile-content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+    height: 100%;
+}
+
+/* Profile Header */
+.profile-header {
+    background: var(--color-bg-secondary);
+    border: 1px solid var(--color-border);
+    border-radius: 6px;
+    padding: var(--spacing-md);
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: var(--spacing-md);
+}
+
+.profile-info h4 {
+    margin: 0 0 var(--spacing-xs) 0;
+    color: var(--color-text-primary);
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.profile-name {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--color-primary);
+    margin-bottom: var(--spacing-xs);
+}
+
+.profile-id {
+    font-size: 0.9rem;
+    color: var(--color-text-secondary);
+    font-family: var(--font-mono);
+}
+
+.profile-actions {
+    display: flex;
+    gap: var(--spacing-xs);
+    flex-shrink: 0;
+}
+
+/* DNS Configuration */
+.dns-configuration {
+    background: var(--color-bg-secondary);
+    border: 1px solid var(--color-border);
+    border-radius: 6px;
+    padding: var(--spacing-md);
+}
+
+.dns-configuration h4 {
+    margin: 0 0 var(--spacing-sm) 0;
+    color: var(--color-text-primary);
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.config-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--spacing-sm);
+}
+
+.config-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--spacing-sm);
+    background: var(--color-bg-primary);
+    border: 1px solid var(--color-border);
+    border-radius: 4px;
+    gap: var(--spacing-sm);
+}
+
+.config-item label {
+    font-weight: 500;
+    color: var(--color-text-secondary);
+    font-size: 0.9rem;
+    flex-shrink: 0;
+}
+
+.endpoint-value,
+.device-value,
+.type-value {
+    font-family: var(--font-mono);
+    color: var(--color-text-primary);
+    font-size: 0.9rem;
+    flex: 1;
+    text-align: center;
+}
+
+.copy-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 3px;
+    color: var(--color-text-secondary);
+    transition: background-color 0.2s ease, color 0.2s ease;
+    flex-shrink: 0;
+}
+
+.copy-btn:hover {
+    background: var(--color-bg-tertiary);
+    color: var(--color-primary);
+}
+
+/* Filtering Status */
+.filtering-status {
+    background: var(--color-bg-secondary);
+    border: 1px solid var(--color-border);
+    border-radius: 6px;
+    padding: var(--spacing-md);
+}
+
+.filtering-status h4 {
+    margin: 0 0 var(--spacing-sm) 0;
+    color: var(--color-text-primary);
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.filter-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--spacing-xs);
+}
+
+.filter-item {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    background: var(--color-bg-primary);
+    border: 1px solid var(--color-border);
+    border-radius: 4px;
+}
+
+.filter-indicator {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.filter-indicator.active {
+    background: var(--color-success);
+}
+
+.filter-indicator.inactive {
+    background: var(--color-text-tertiary);
+}
+
+.filter-name {
+    flex: 1;
+    font-weight: 500;
+    color: var(--color-text-primary);
+    font-size: 0.9rem;
+}
+
+.filter-status {
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.filter-item.enabled .filter-status {
+    color: var(--color-success-dark);
+}
+
+.filter-item.disabled .filter-status {
+    color: var(--color-text-secondary);
+}
+
+/* Service Status */
+.service-status {
+    background: var(--color-bg-secondary);
+    border: 1px solid var(--color-border);
+    border-radius: 6px;
+    padding: var(--spacing-md);
+}
+
+.service-status h4 {
+    margin: 0 0 var(--spacing-sm) 0;
+    color: var(--color-text-primary);
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.status-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--spacing-xs);
+}
+
+.status-item {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    background: var(--color-bg-primary);
+    border: 1px solid var(--color-border);
+    border-radius: 4px;
+}
+
+.status-indicator {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.status-indicator.active {
+    background: var(--color-success);
+}
+
+.status-indicator.inactive {
+    background: var(--color-text-tertiary);
+}
+
+.status-item label {
+    flex: 1;
+    font-weight: 500;
+    color: var(--color-text-primary);
+    font-size: 0.9rem;
+}
+
+.status-value {
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: capitalize;
+}
+
+.status-value.enabled {
+    color: var(--color-success-dark);
+}
+
+.status-value.disabled {
+    color: var(--color-text-secondary);
+}
+
+/* Technical Details */
+.technical-details {
+    background: var(--color-bg-secondary);
+    border: 1px solid var(--color-border);
+    border-radius: 6px;
+    padding: var(--spacing-md);
+}
+
+.technical-details h4 {
+    margin: 0 0 var(--spacing-sm) 0;
+    color: var(--color-text-primary);
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.tech-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: var(--spacing-sm);
+}
+
+.tech-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--spacing-xs) var(--spacing-sm);
+    background: var(--color-bg-primary);
+    border: 1px solid var(--color-border);
+    border-radius: 4px;
+}
+
+.tech-item label {
+    font-weight: 500;
+    color: var(--color-text-secondary);
+    font-size: 0.9rem;
+}
+
+.tech-item span {
+    color: var(--color-text-primary);
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+}
+
+/* Profile Actions Panel */
+.profile-actions-panel {
+    background: var(--color-bg-secondary);
+    border: 1px solid var(--color-border);
+    border-radius: 6px;
+    padding: var(--spacing-md);
+}
+
+.action-buttons {
+    display: flex;
+    gap: var(--spacing-xs);
+    margin-bottom: var(--spacing-sm);
+    flex-wrap: wrap;
+}
+
+.action-buttons .btn {
+    font-size: 0.85rem;
+    padding: 8px 16px;
+    flex: 1;
+    min-width: 140px;
+}
+
+.action-results {
+    margin-top: var(--spacing-sm);
+}
+
+.action-result {
+    padding: var(--spacing-sm);
+    border-radius: 4px;
+    border: 1px solid;
+    margin-bottom: var(--spacing-xs);
+}
+
+.action-result.info {
+    background: rgba(23, 162, 184, 0.1);
+    border-color: var(--color-info);
+    color: var(--color-info-dark);
+}
+
+.action-result.success {
+    background: rgba(40, 167, 69, 0.1);
+    border-color: var(--color-success);
+    color: var(--color-success-dark);
+}
+
+.action-result.error {
+    background: rgba(220, 53, 69, 0.1);
+    border-color: var(--color-danger);
+    color: var(--color-danger-dark);
+}
+
+.action-result pre {
+    margin: 0;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+}
+
+/* Profile Selector */
+.profile-selector {
+    background: var(--color-bg-primary);
+    border: 1px solid var(--color-border);
+    border-radius: 4px;
+    padding: var(--spacing-md);
+}
+
+.profile-selector label {
+    display: block;
+    margin-bottom: var(--spacing-xs);
+    font-weight: 500;
+    color: var(--color-text-primary);
+}
+
+.profile-selector select {
+    width: 100%;
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border: 1px solid var(--color-border);
+    border-radius: 4px;
+    background: var(--color-bg-primary);
+    color: var(--color-text-primary);
+    font-size: 0.9rem;
+    margin-bottom: var(--spacing-sm);
+}
+
+.selector-actions {
+    display: flex;
+    gap: var(--spacing-xs);
+    justify-content: flex-end;
+}
+
+/* Last Updated */
+.last-updated {
+    text-align: center;
+    padding: var(--spacing-xs);
+    color: var(--color-text-secondary);
+    font-size: 0.8rem;
+}
+
+/* Error State */
+.profile-error {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: var(--spacing-xl);
+    text-align: center;
+    gap: var(--spacing-sm);
+}
+
+.error-icon {
+    font-size: 2rem;
+    margin-bottom: var(--spacing-sm);
+}
+
+.error-message {
+    color: var(--color-danger);
+    font-weight: 500;
+    margin-bottom: var(--spacing-md);
+}
+
+.retry-button {
+    background: var(--color-primary);
+    color: white;
+    border: none;
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-radius: 4px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.retry-button:hover {
+    background: var(--color-primary-dark);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .profile-header {
+        flex-direction: column;
+        align-items: stretch;
+        gap: var(--spacing-sm);
+    }
+    
+    .profile-actions {
+        justify-content: stretch;
+    }
+    
+    .profile-actions .btn {
+        flex: 1;
+    }
+    
+    .config-grid,
+    .filter-grid,
+    .status-grid,
+    .tech-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .action-buttons {
+        flex-direction: column;
+    }
+    
+    .action-buttons .btn {
+        min-width: auto;
+    }
+    
+    .config-item {
+        flex-direction: column;
+        align-items: stretch;
+        text-align: left;
+    }
+    
+    .endpoint-value,
+    .device-value,
+    .type-value {
+        text-align: left;
+        margin: var(--spacing-xs) 0;
+    }
+}
+
+@media (max-width: 480px) {
+    .dns-profile-widget {
+        gap: var(--spacing-sm);
+    }
+    
+    .profile-header,
+    .dns-configuration,
+    .filtering-status,
+    .service-status,
+    .technical-details,
+    .profile-actions-panel {
+        padding: var(--spacing-sm);
+    }
+    
+    .profile-name {
+        font-size: 1.1rem;
+    }
+    
+    .action-buttons .btn {
+        padding: 6px 12px;
+        font-size: 0.8rem;
+    }
+}
+
+/* Dark Theme Support */
+.theme-dark .dns-profile-widget {
+    color: var(--color-text-primary-dark);
+}
+
+.theme-dark .profile-header,
+.theme-dark .dns-configuration,
+.theme-dark .filtering-status,
+.theme-dark .service-status,
+.theme-dark .technical-details,
+.theme-dark .profile-actions-panel {
+    background: var(--color-bg-secondary-dark);
+    border-color: var(--color-border-dark);
+}
+
+.theme-dark .config-item,
+.theme-dark .filter-item,
+.theme-dark .status-item,
+.theme-dark .tech-item,
+.theme-dark .profile-selector {
+    background: var(--color-bg-primary-dark);
+    border-color: var(--color-border-dark);
+}
+
+.theme-dark .profile-selector select {
+    background: var(--color-bg-primary-dark);
+    border-color: var(--color-border-dark);
+    color: var(--color-text-primary-dark);
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+    .loading-spinner {
+        animation: none;
+    }
+    
+    .copy-btn {
+        transition: none;
+    }
+}
+
+@media (prefers-contrast: high) {
+    .profile-header,
+    .dns-configuration,
+    .filtering-status,
+    .service-status,
+    .technical-details,
+    .profile-actions-panel {
+        border-width: 2px;
+    }
+    
+    .config-item,
+    .filter-item,
+    .status-item,
+    .tech-item {
+        border-width: 2px;
+    }
+}

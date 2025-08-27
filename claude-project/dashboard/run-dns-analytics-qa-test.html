@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DNS Analytics Widget QA Test Runner - Task 1</title>
+    <link rel="stylesheet" href="styles/base.css">
+    <link rel="stylesheet" href="widgets/dns-analytics/dns-analytics.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f5f5f5;
+        }
+        .test-container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .test-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .test-results {
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 4px;
+            margin-top: 20px;
+        }
+        .test-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+        }
+        .test-item:last-child {
+            border-bottom: none;
+        }
+        .test-passed {
+            color: #4CAF50;
+            font-weight: bold;
+        }
+        .test-failed {
+            color: #F44336;
+            font-weight: bold;
+        }
+        .summary {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+        .btn {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .btn:hover {
+            background: #0056b3;
+        }
+        .btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        .error-list {
+            background: #ffebee;
+            padding: 15px;
+            border-radius: 4px;
+            margin-top: 15px;
+        }
+        .error-item {
+            color: #c62828;
+            margin-bottom: 5px;
+        }
+        #test-progress {
+            width: 100%;
+            height: 20px;
+            background: #e0e0e0;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 15px 0;
+        }
+        #test-progress-bar {
+            height: 100%;
+            background: #4CAF50;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+        .widget-preview {
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 15px;
+            margin: 20px 0;
+            background: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <div class="test-header">
+            <h1>DNS Analytics Widget QA Test Suite</h1>
+            <div>
+                <button id="run-tests" class="btn">Run QA Tests</button>
+                <button id="clear-results" class="btn" style="margin-left: 10px;">Clear Results</button>
+            </div>
+        </div>
+        
+        <div class="summary">
+            <h3>Task 1: QA Testing - DNS Analytics Widget</h3>
+            <p><strong>Agent:</strong> qa-specialist-task1</p>
+            <p><strong>Objective:</strong> Perform comprehensive QA testing on the DNS Analytics Widget</p>
+            <p><strong>Test Areas:</strong> Widget functionality, data visualization, user interactions, time range controls, error handling, responsive design, dashboard integration, and blank content issues</p>
+        </div>
+        
+        <div id="test-progress" style="display: none;">
+            <div id="test-progress-bar"></div>
+        </div>
+        
+        <div id="test-status" style="display: none;">
+            <p>Running tests... Please wait.</p>
+        </div>
+        
+        <div id="test-results" style="display: none;">
+            <h3>Test Results</h3>
+            <div id="test-summary"></div>
+            <div id="test-details"></div>
+            <div id="test-errors"></div>
+        </div>
+        
+        <div class="widget-preview">
+            <h3>Widget Preview</h3>
+            <div id="widget-test-area">
+                <!-- Widget will be tested here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Load required dependencies -->
+    <script src="js/core.js"></script>
+    
+    <!-- Initialize global EventBus -->
+    <script>
+        // Ensure EventBus is available globally
+        if (typeof window.eventBus === 'undefined') {
+            window.eventBus = new EventBus();
+        }
+    </script>
+    
+    <!-- Load DNS Analytics Widget -->
+    <script src="widgets/dns-analytics/dns-analytics.js"></script>
+    
+    <!-- Load QA Test Suite -->
+    <script src="qa-test-dns-analytics.js"></script>
+    
+    <script>
+        class QATestRunner {
+            constructor() {
+                this.testSuite = null;
+                this.testResults = null;
+                this.setupEventListeners();
+            }
+            
+            setupEventListeners() {
+                document.getElementById('run-tests').addEventListener('click', () => {
+                    this.runTests();
+                });
+                
+                document.getElementById('clear-results').addEventListener('click', () => {
+                    this.clearResults();
+                });
+            }
+            
+            async runTests() {
+                const runButton = document.getElementById('run-tests');
+                const clearButton = document.getElementById('clear-results');
+                const progressContainer = document.getElementById('test-progress');
+                const statusContainer = document.getElementById('test-status');
+                const resultsContainer = document.getElementById('test-results');
+                
+                // Disable buttons and show progress
+                runButton.disabled = true;
+                clearButton.disabled = true;
+                progressContainer.style.display = 'block';
+                statusContainer.style.display = 'block';
+                resultsContainer.style.display = 'none';
+                
+                try {
+                    // Initialize test suite
+                    this.testSuite = new DnsAnalyticsWidgetQA();
+                    
+                    // Run tests
+                    this.testResults = await this.testSuite.runAllTests();
+                    
+                    // Display results
+                    this.displayResults();
+                    
+                    // Update progress
+                    const progressBar = document.getElementById('test-progress-bar');
+                    progressBar.style.width = '100%';
+                    
+                } catch (error) {
+                    console.error('QA Test Runner Error:', error);
+                    this.displayError(error);
+                }
+                
+                // Re-enable buttons and hide progress
+                runButton.disabled = false;
+                clearButton.disabled = false;
+                progressContainer.style.display = 'none';
+                statusContainer.style.display = 'none';
+                resultsContainer.style.display = 'block';
+            }
+            
+            displayResults() {
+                const summaryContainer = document.getElementById('test-summary');
+                const detailsContainer = document.getElementById('test-details');
+                const errorsContainer = document.getElementById('test-errors');
+                
+                // Display summary
+                const { summary } = this.testResults;
+                summaryContainer.innerHTML = `
+                    <div class="summary">
+                        <h4>Test Summary</h4>
+                        <p><strong>Total Tests:</strong> ${summary.total}</p>
+                        <p><strong>Passed:</strong> <span class="test-passed">${summary.passed}</span></p>
+                        <p><strong>Failed:</strong> <span class="test-failed">${summary.failed}</span></p>
+                        <p><strong>Success Rate:</strong> ${summary.success_rate}%</p>
+                        <p><strong>Timestamp:</strong> ${this.testResults.timestamp}</p>
+                    </div>
+                `;
+                
+                // Display test details
+                const testsHtml = this.testResults.tests.map(test => `
+                    <div class="test-item">
+                        <span>${test.test}</span>
+                        <span class="${test.passed ? 'test-passed' : 'test-failed'}">
+                            ${test.passed ? '✅ PASS' : '❌ FAIL'}
+                        </span>
+                    </div>
+                    <div style="font-size: 0.9em; color: #666; margin-bottom: 10px;">
+                        ${test.details}
+                    </div>
+                `).join('');
+                
+                detailsContainer.innerHTML = `
+                    <div class="test-results">
+                        <h4>Test Details</h4>
+                        ${testsHtml}
+                    </div>
+                `;
+                
+                // Display errors if any
+                if (this.testResults.errors.length > 0) {
+                    const errorsHtml = this.testResults.errors.map(error => `
+                        <div class="error-item">• ${error}</div>
+                    `).join('');
+                    
+                    errorsContainer.innerHTML = `
+                        <div class="error-list">
+                            <h4>Errors Encountered</h4>
+                            ${errorsHtml}
+                        </div>
+                    `;
+                }
+            }
+            
+            displayError(error) {
+                const resultsContainer = document.getElementById('test-results');
+                resultsContainer.innerHTML = `
+                    <div class="error-list">
+                        <h4>Test Runner Error</h4>
+                        <div class="error-item">${error.message}</div>
+                    </div>
+                `;
+                resultsContainer.style.display = 'block';
+            }
+            
+            clearResults() {
+                document.getElementById('test-results').style.display = 'none';
+                document.getElementById('test-progress').style.display = 'none';
+                document.getElementById('test-status').style.display = 'none';
+                
+                if (this.testSuite) {
+                    this.testSuite.cleanup();
+                    this.testSuite = null;
+                }
+                
+                this.testResults = null;
+            }
+        }
+        
+        // Initialize test runner when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            new QATestRunner();
+        });
+    </script>
+</body>
+</html>

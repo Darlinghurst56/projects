@@ -1,0 +1,114 @@
+{
+  "agents": {
+    "qa-specialist": {
+      "id": "qa-specialist",
+      "role": "qa-specialist",
+      "capabilities": [
+        "testing",
+        "validation",
+        "e2e-testing",
+        "automated-testing"
+      ],
+      "status": "offline",
+      "currentTask": null,
+      "registeredAt": "2025-07-18T14:25:22.152Z",
+      "lastHeartbeat": "2025-07-18T14:25:22.152Z",
+      "taskHistory": [],
+      "metrics": {
+        "tasksCompleted": 0,
+        "totalUptime": 0,
+        "averageTaskTime": 0
+      }
+    },
+    "backend-agent": {
+      "id": "backend-agent",
+      "role": "backend-agent",
+      "capabilities": [
+        "server-development",
+        "api-development",
+        "database-operations"
+      ],
+      "status": "offline",
+      "currentTask": null,
+      "registeredAt": "2025-07-18T14:25:22.152Z",
+      "lastHeartbeat": "2025-07-18T14:25:22.152Z",
+      "taskHistory": [],
+      "metrics": {
+        "tasksCompleted": 0,
+        "totalUptime": 0,
+        "averageTaskTime": 0
+      }
+    },
+    "frontend-agent": {
+      "id": "frontend-agent",
+      "role": "frontend-agent",
+      "capabilities": [
+        "ui-development",
+        "responsive-design",
+        "accessibility"
+      ],
+      "status": "offline",
+      "currentTask": null,
+      "registeredAt": "2025-07-18T14:25:22.152Z",
+      "lastHeartbeat": "2025-07-18T14:25:22.152Z",
+      "taskHistory": [],
+      "metrics": {
+        "tasksCompleted": 0,
+        "totalUptime": 0,
+        "averageTaskTime": 0
+      }
+    },
+    "devops-agent": {
+      "id": "devops-agent",
+      "role": "devops-agent",
+      "capabilities": [
+        "deployment",
+        "infrastructure",
+        "ci-cd",
+        "monitoring"
+      ],
+      "status": "offline",
+      "currentTask": null,
+      "registeredAt": "2025-07-18T14:25:22.152Z",
+      "lastHeartbeat": "2025-07-18T14:25:22.152Z",
+      "taskHistory": [],
+      "metrics": {
+        "tasksCompleted": 0,
+        "totalUptime": 0,
+        "averageTaskTime": 0
+      }
+    },
+    "orchestrator-agent": {
+      "id": "orchestrator-agent",
+      "role": "orchestrator-agent",
+      "capabilities": [
+        "system-coordination",
+        "workflow-orchestration",
+        "agent-management"
+      ],
+      "status": "offline",
+      "currentTask": null,
+      "registeredAt": "2025-07-18T14:25:22.152Z",
+      "lastHeartbeat": "2025-07-18T14:25:22.152Z",
+      "taskHistory": [],
+      "metrics": {
+        "tasksCompleted": 0,
+        "totalUptime": 0,
+        "averageTaskTime": 0
+      }
+    }
+  },
+  "lastUpdated": "2025-07-18T14:25:22.152Z",
+  "orchestrator-agent-1753265711929": {
+    "id": "orchestrator-agent",
+    "name": "Orchestrator Agent",
+    "role": "orchestrator-agent",
+    "workspace": "orchestrator-agent-copy",
+    "timeout": 180000,
+    "developerInterface": true,
+    "coordinationMode": true,
+    "pid": 17801,
+    "startTime": 1753265711929,
+    "lastActive": 1753265711942
+  }
+}

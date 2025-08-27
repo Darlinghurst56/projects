@@ -1,0 +1,32 @@
+{
+  "lastAssignment": null,
+  "agentMetrics": {},
+  "activeWorkflows": [],
+  "lastUpdated": "2025-07-18T14:25:22.153Z",
+  "humanApprovalSuggestions": [
+    {
+      "id": "1752932184175",
+      "taskId": "test-task-2",
+      "targetAgent": "frontend-agent",
+      "reasoning": "E2E test suggestion",
+      "status": "pending",
+      "createdAt": "2025-07-19T13:36:24.175Z"
+    },
+    {
+      "id": "1752933231534",
+      "taskId": "test-task-2",
+      "targetAgent": "frontend-agent",
+      "reasoning": "E2E test suggestion",
+      "status": "pending",
+      "createdAt": "2025-07-19T13:53:51.534Z"
+    }
+  ],
+  "taskAssignments": {
+    "28": {
+      "agentId": "frontend-agent",
+      "assignedAt": "2025-07-20T17:10:44.668Z",
+      "status": "assigned",
+      "priority": "medium"
+    }
+  }
+}

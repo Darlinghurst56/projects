@@ -1,0 +1,55 @@
+{
+    "mcps":  {
+                 "browser":  {
+                                 "args":  [
+                                              "@browsermcp/mcp@latest"
+                                          ],
+                                 "active":  true,
+                                 "command":  "C:\\Program Files\\Development\\Nodejs\\npx.cmd",
+                                 "description":  "Provides web browsing capabilities"
+                             },
+                 "sequential":  {
+                                    "args":  [
+                                                 "@modelcontextprotocol/server-sequential-thinking"
+                                             ],
+                                    "active":  true,
+                                    "command":  "C:\\Program Files\\Development\\Nodejs\\npx.cmd",
+                                    "description":  "Helps with complex reasoning tasks"
+                                },
+                 "memory":  {
+                                "args":  [
+                                             "@modelcontextprotocol/server-memory"
+                                         ],
+                                "active":  true,
+                                "command":  "C:\\Program Files\\Development\\Nodejs\\npx.cmd",
+                                "description":  "Enables persistent memory between sessions",
+                                "storage":  "D:\\Projects\\claude-project\\memory"
+                            },
+                 "filesystem":  {
+                                    "args":  [
+                                                 "@modelcontextprotocol/server-filesystem"
+                                             ],
+                                    "active":  true,
+                                    "command":  "C:\\Program Files\\Development\\Nodejs\\npx.cmd",
+                                    "description":  "Provides access to project files",
+                                    "root":  "D:\\Projects\\claude-project"
+                                }
+             },
+    "memory":  {
+                   "environment":  {
+                                       "node_path":  "C:\\Program Files\\Development\\Nodejs"
+                                   },
+                   "project":  {
+                                   "path":  "D:\\Projects",
+                                   "key_files":  [
+                                                     "claude-config.json"
+                                                 ]
+                               }
+               },
+    "project":  {
+                    "created":  "2025-06-25",
+                    "description":  "A project to manage Claude MCP integrations",
+                    "name":  "Claude Project",
+                    "version":  "1.0.0"
+                }
+}

@@ -1,0 +1,11 @@
+# Task ID: 9
+# Title: Create and configure .claude/settings.json with allowlist for all new MCP tools
+# Status: pending
+# Dependencies: 1, 2
+# Priority: medium
+# Description: Set up Claude Code configuration file with comprehensive tool allowlist including Task Master AI, Puppeteer, Docker, ESLint, Vite, Tailwind CSS, Shadcn/UI, Cron, and HTTP MCP tools.
+# Details:
+Create the .claude/settings.json file with a comprehensive allowedTools array that includes all MCP tools mentioned in the CLAUDE.md guide. The configuration should include: mcp__task_master_ai__* for task management, mcp__puppeteer__* for browser automation, mcp__docker__* for container management, mcp__eslint__* for code linting and formatting, mcp__vite__* for modern development server capabilities, mcp__tailwindcss__* for utility-first CSS framework, mcp__shadcn_ui__* for component library integration, mcp__cron__* for task scheduling, and mcp__http__* for enhanced API calling. Also include standard tools like Edit, Bash commands for task-master, git operations, and npm scripts. Ensure the JSON structure is valid and follows the format specified in the CLAUDE.md documentation.
+
+# Test Strategy:
+Verify the .claude/settings.json file is created in the correct location with valid JSON syntax. Test that Claude Code can load the configuration without errors. Confirm all MCP tool patterns are correctly specified with wildcard notation. Validate that the allowedTools array includes all required tools for the Task Master workflow. Test a few MCP tool invocations to ensure they are properly allowed by the configuration.

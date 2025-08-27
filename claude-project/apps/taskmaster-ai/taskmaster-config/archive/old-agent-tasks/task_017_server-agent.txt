@@ -1,0 +1,11 @@
+# Task ID: 17
+# Title: Implement Missing Agent Dashboard Widgets
+# Status: pending
+# Dependencies: None
+# Priority: high
+# Description: Create the missing JavaScript widget files that are preventing deployment: agent-registry.js, task-assignment.js, agent-launcher.js. These widgets are referenced in HTML but never implemented, causing build failures. PROJECT: House AI - Family Home Page  < /dev/null |  SUBPROJECT: Dashboard UI System
+# Details:
+
+
+# Test Strategy:
+

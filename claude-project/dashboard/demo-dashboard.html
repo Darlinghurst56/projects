@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agent Dashboard - UX Demo</title>
+    <style>
+        /* Human-centered design principles applied */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f8f9fa;
+            color: #212529;
+            line-height: 1.6;
+        }
+
+        /* Skip link for accessibility */
+        .skip-link {
+            position: absolute;
+            top: -40px;
+            left: 6px;
+            background: #007bff;
+            color: white;
+            padding: 8px;
+            text-decoration: none;
+            border-radius: 4px;
+            z-index: 1000;
+        }
+
+        .skip-link:focus {
+            top: 6px;
+        }
+
+        /* Header with clear hierarchy */
+        .header {
+            background: white;
+            padding: 16px 24px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 24px;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 4px;
+        }
+
+        .header p {
+            color: #6c757d;
+            font-size: 14px;
+        }
+
+        /* Main container with proper spacing */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* Priority-based layout */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 24px;
+            margin-bottom: 24px;
+        }
+
+        /* Section styling */
+        .section {
+            background: white;
+            border-radius: 8px;
+            padding: 24px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .section h2 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Priority indicators */
+        .priority-urgent {
+            border-left: 4px solid #dc3545;
+        }
+
+        .priority-important {
+            border-left: 4px solid #ffc107;
+        }
+
+        .priority-normal {
+            border-left: 4px solid #28a745;
+        }
+
+        /* Task cards with proper sizing */
+        .task-card {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 6px;
+            padding: 16px;
+            margin-bottom: 12px;
+            transition: all 0.2s ease;
+        }
+
+        .task-card:hover {
+            background: #e9ecef;
+            border-color: #007bff;
+        }
+
+        .task-card h3 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #1a1a1a;
+        }
+
+        .task-card p {
+            color: #6c757d;
+            font-size: 14px;
+            margin-bottom: 12px;
+        }
+
+        .task-meta {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            margin-bottom: 12px;
+            font-size: 12px;
+            color: #6c757d;
+        }
+
+        .priority-badge {
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-weight: 500;
+            font-size: 11px;
+            text-transform: uppercase;
+        }
+
+        .priority-high {
+            background: #ffeaa7;
+            color: #2d3436;
+        }
+
+        .priority-medium {
+            background: #74b9ff;
+            color: white;
+        }
+
+        .priority-low {
+            background: #00b894;
+            color: white;
+        }
+
+        /* Buttons with proper touch targets */
+        .btn {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            min-height: 44px;
+            min-width: 44px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn:hover {
+            background: #0056b3;
+            transform: translateY(-1px);
+        }
+
+        .btn:focus-visible {
+            outline: 3px solid #007bff;
+            outline-offset: 2px;
+        }
+
+        .btn:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+
+        .btn-success {
+            background: #28a745;
+        }
+
+        .btn-success:hover {
+            background: #1e7e34;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+        }
+
+        .btn-danger:hover {
+            background: #c82333;
+        }
+
+        /* Action groups */
+        .action-group {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        /* Stats display */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 16px;
+            background: #f8f9fa;
+            border-radius: 6px;
+            border: 1px solid #e9ecef;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: #007bff;
+            margin-bottom: 4px;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #6c757d;
+            text-transform: uppercase;
+            font-weight: 500;
+        }
+
+        /* Agent cards */
+        .agent-card {
+            background: white;
+            border: 1px solid #e9ecef;
+            border-radius: 6px;
+            padding: 12px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .agent-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #007bff;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .agent-info {
+            flex: 1;
+        }
+
+        .agent-name {
+            font-weight: 600;
+            font-size: 14px;
+            margin-bottom: 2px;
+        }
+
+        .agent-role {
+            font-size: 12px;
+            color: #6c757d;
+        }
+
+        .agent-status {
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 500;
+        }
+
+        .status-active {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-busy {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-inactive {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        /* Notifications */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #28a745;
+            color: white;
+            padding: 12px 16px;
+            border-radius: 6px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            z-index: 1000;
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        /* Loading states */
+        .loading {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid #ffffff;
+            border-top: 2px solid transparent;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .container {
+                padding: 0 16px;
+            }
+            
+            .header {
+                padding: 12px 16px;
+            }
+            
+            .section {
+                padding: 16px;
+            }
+            
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        /* Focus management */
+        :focus-visible {
+            outline: 3px solid #007bff;
+            outline-offset: 2px;
+        }
+
+        /* Print styles */
+        @media print {
+            .btn, .action-group {
+                display: none;
+            }
+            
+            .section {
+                box-shadow: none;
+                border: 1px solid #ccc;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Skip link for accessibility -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <!-- Header -->
+    <header class="header">
+        <h1>Agent Dashboard</h1>
+        <p>Simple task coordination and agent management</p>
+    </header>
+
+    <!-- Main container -->
+    <div class="container">
+        <!-- Quick stats -->
+        <div class="stats">
+            <div class="stat-item">
+                <div class="stat-value">2</div>
+                <div class="stat-label">Working Now</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">5</div>
+                <div class="stat-label">Ready to Start</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">1</div>
+                <div class="stat-label">Needs Help</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">8</div>
+                <div class="stat-label">Done Today</div>
+            </div>
+        </div>
+
+        <!-- Main content grid -->
+        <div class="dashboard-grid">
+            <!-- Primary: Current work -->
+            <main id="main-content">
+                <!-- Urgent section -->
+                <section class="section priority-urgent" aria-labelledby="urgent-heading">
+                    <h2 id="urgent-heading">🚨 Needs Your Attention</h2>
+                    
+                    <div class="task-card">
+                        <div class="task-meta">
+                            <span class="priority-badge priority-high">High</span>
+                            <span>Blocking all work</span>
+                            <span>2 hours ago</span>
+                        </div>
+                        <h3>Fix Login Issue</h3>
+                        <p>Users can't log in to the system. This is blocking all development work.</p>
+                        <div class="action-group">
+                            <button class="btn btn-danger" onclick="handleTaskAction('fix', 'login-issue')">
+                                Fix Now
+                            </button>
+                            <button class="btn btn-secondary" onclick="handleTaskAction('assign', 'login-issue')">
+                                Assign to Expert
+                            </button>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- In progress section -->
+                <section class="section priority-important" aria-labelledby="progress-heading">
+                    <h2 id="progress-heading">🔄 Currently Working On</h2>
+                    
+                    <div class="task-card">
+                        <div class="task-meta">
+                            <span class="priority-badge priority-medium">Medium</span>
+                            <span>UI Developer</span>
+                            <span>Started 1 hour ago</span>
+                        </div>
+                        <h3>Improve Dashboard Layout</h3>
+                        <p>Making the dashboard more user-friendly and responsive across devices.</p>
+                        <div class="action-group">
+                            <button class="btn" onclick="handleTaskAction('check', 'dashboard-layout')">
+                                Check Progress
+                            </button>
+                            <button class="btn btn-secondary" onclick="handleTaskAction('message', 'dashboard-layout')">
+                                Message Agent
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="task-card">
+                        <div class="task-meta">
+                            <span class="priority-badge priority-medium">Medium</span>
+                            <span>QA Specialist</span>
+                            <span>Started 30 minutes ago</span>
+                        </div>
+                        <h3>Test New Features</h3>
+                        <p>Running comprehensive tests on the latest feature updates.</p>
+                        <div class="action-group">
+                            <button class="btn" onclick="handleTaskAction('check', 'feature-testing')">
+                                Check Progress
+                            </button>
+                            <button class="btn btn-secondary" onclick="handleTaskAction('message', 'feature-testing')">
+                                Message Agent
+                            </button>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Ready to start section -->
+                <section class="section priority-normal" aria-labelledby="ready-heading">
+                    <h2 id="ready-heading">⚡ Ready to Start</h2>
+                    
+                    <div class="task-card">
+                        <div class="task-meta">
+                            <span class="priority-badge priority-high">High</span>
+                            <span>Unassigned</span>
+                            <span>Due today</span>
+                        </div>
+                        <h3>Add Mobile Navigation</h3>
+                        <p>Create touch-friendly navigation for mobile users.</p>
+                        <div class="action-group">
+                            <button class="btn btn-success" onclick="handleTaskAction('assign', 'mobile-nav')">
+                                Assign to Agent
+                            </button>
+                            <button class="btn btn-secondary" onclick="handleTaskAction('details', 'mobile-nav')">
+                                View Details
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="task-card">
+                        <div class="task-meta">
+                            <span class="priority-badge priority-medium">Medium</span>
+                            <span>Unassigned</span>
+                            <span>Due tomorrow</span>
+                        </div>
+                        <h3>Improve Performance</h3>
+                        <p>Optimize loading times and make the dashboard faster.</p>
+                        <div class="action-group">
+                            <button class="btn btn-success" onclick="handleTaskAction('assign', 'performance')">
+                                Assign to Agent
+                            </button>
+                            <button class="btn btn-secondary" onclick="handleTaskAction('details', 'performance')">
+                                View Details
+                            </button>
+                        </div>
+                    </div>
+                </section>
+            </main>
+
+            <!-- Secondary: Agents and quick actions -->
+            <aside>
+                <!-- Quick actions -->
+                <section class="section" aria-labelledby="actions-heading">
+                    <h2 id="actions-heading">⚡ Quick Actions</h2>
+                    
+                    <div style="display: flex; flex-direction: column; gap: 12px;">
+                        <button class="btn" onclick="handleQuickAction('assign-next')">
+                            🎯 Assign Next Priority Task
+                        </button>
+                        <button class="btn" onclick="handleQuickAction('create-agent')">
+                            🤖 Create Specialized Agent
+                        </button>
+                        <button class="btn btn-secondary" onclick="handleQuickAction('view-reports')">
+                            📊 View Progress Report
+                        </button>
+                    </div>
+                </section>
+
+                <!-- Active agents -->
+                <section class="section" aria-labelledby="agents-heading">
+                    <h2 id="agents-heading">👥 Active Agents</h2>
+                    
+                    <div class="agent-card">
+                        <div class="agent-avatar">UI</div>
+                        <div class="agent-info">
+                            <div class="agent-name">UI Developer</div>
+                            <div class="agent-role">Layout & Design</div>
+                        </div>
+                        <div class="agent-status status-busy">Busy</div>
+                    </div>
+
+                    <div class="agent-card">
+                        <div class="agent-avatar">QA</div>
+                        <div class="agent-info">
+                            <div class="agent-name">QA Specialist</div>
+                            <div class="agent-role">Testing & Validation</div>
+                        </div>
+                        <div class="agent-status status-busy">Busy</div>
+                    </div>
+
+                    <div class="agent-card">
+                        <div class="agent-avatar">BE</div>
+                        <div class="agent-info">
+                            <div class="agent-name">Backend Developer</div>
+                            <div class="agent-role">APIs & Integration</div>
+                        </div>
+                        <div class="agent-status status-active">Available</div>
+                    </div>
+                </section>
+            </aside>
+        </div>
+    </div>
+
+    <!-- Notification container -->
+    <div id="notification" class="notification"></div>
+
+    <script>
+        // Human-centered interaction handling
+        function handleTaskAction(action, taskId) {
+            const button = event.target;
+            const originalText = button.textContent;
+            
+            // Immediate visual feedback
+            button.innerHTML = `<span class="loading"></span> Working...`;
+            button.disabled = true;
+            button.setAttribute('aria-busy', 'true');
+            
+            // Simulate action processing
+            setTimeout(() => {
+                let message = '';
+                let newText = '';
+                
+                switch(action) {
+                    case 'fix':
+                        message = `Started fixing ${taskId}`;
+                        newText = '🔧 In Progress';
+                        break;
+                    case 'assign':
+                        message = `Assigned ${taskId} to best available agent`;
+                        newText = '✅ Assigned';
+                        break;
+                    case 'check':
+                        message = `Checked progress on ${taskId}`;
+                        newText = '📊 Updated';
+                        break;
+                    case 'message':
+                        message = `Sent message about ${taskId}`;
+                        newText = '💬 Sent';
+                        break;
+                    default:
+                        message = `Completed ${action} for ${taskId}`;
+                        newText = '✅ Done';
+                }
+                
+                button.textContent = newText;
+                button.setAttribute('aria-busy', 'false');
+                showNotification(message);
+                
+                // Reset button after delay
+                setTimeout(() => {
+                    button.textContent = originalText;
+                    button.disabled = false;
+                }, 3000);
+            }, 1500);
+        }
+
+        function handleQuickAction(action) {
+            const button = event.target;
+            const originalText = button.textContent;
+            
+            button.innerHTML = `<span class="loading"></span> Working...`;
+            button.disabled = true;
+            
+            setTimeout(() => {
+                let message = '';
+                
+                switch(action) {
+                    case 'assign-next':
+                        message = 'Assigned next priority task to available agent';
+                        break;
+                    case 'create-agent':
+                        message = 'Created new specialized agent';
+                        break;
+                    case 'view-reports':
+                        message = 'Generated progress report';
+                        break;
+                    default:
+                        message = 'Action completed successfully';
+                }
+                
+                button.textContent = '✅ Done';
+                showNotification(message);
+                
+                setTimeout(() => {
+                    button.textContent = originalText;
+                    button.disabled = false;
+                }, 3000);
+            }, 1000);
+        }
+
+        function showNotification(message) {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 4000);
+        }
+
+        // Keyboard navigation improvements
+        document.addEventListener('keydown', function(e) {
+            // Allow Enter key to activate buttons
+            if (e.key === 'Enter' && e.target.classList.contains('btn')) {
+                e.target.click();
+            }
+        });
+
+        // Initialize dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🚀 Human-centered dashboard initialized');
+            
+            // Add focus management
+            const firstFocusable = document.querySelector('.btn');
+            if (firstFocusable) {
+                firstFocusable.focus();
+            }
+            
+            // Auto-refresh stats every 30 seconds
+            setInterval(updateStats, 30000);
+        });
+
+        function updateStats() {
+            // In a real implementation, this would fetch actual data
+            console.log('📊 Updating dashboard stats');
+        }
+    </script>
+</body>
+</html>

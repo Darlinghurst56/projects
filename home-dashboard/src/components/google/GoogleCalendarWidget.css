@@ -1,0 +1,458 @@
+/**
+ * Google Calendar Widget Styles
+ * Professional styling for calendar events and authentication
+ */
+
+.google-calendar-widget {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+/* Loading State */
+.calendar-loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    color: #6b7280;
+    gap: 0.75rem;
+}
+
+.loading-spinner {
+    width: 24px;
+    height: 24px;
+    border: 2px solid #e5e7eb;
+    border-top: 2px solid #4285f4;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Authentication Required */
+.auth-required {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    text-align: center;
+    gap: 1rem;
+}
+
+.auth-icon {
+    font-size: 3rem;
+    margin-bottom: 0.5rem;
+}
+
+.auth-required h4 {
+    margin: 0;
+    color: #1f2937;
+    font-size: 1.25rem;
+    font-weight: 600;
+}
+
+.auth-required p {
+    margin: 0;
+    color: #6b7280;
+    font-size: 0.875rem;
+}
+
+.auth-button {
+    background: #4285f4;
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.auth-button:hover {
+    background: #3367d6;
+}
+
+/* Calendar Content */
+.calendar-content {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding: 1.5rem;
+    gap: 1rem;
+}
+
+/* Header */
+.calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.header-info h4 {
+    margin: 0;
+    color: #1f2937;
+    font-size: 1.25rem;
+    font-weight: 600;
+}
+
+.events-count {
+    color: #6b7280;
+    font-size: 0.875rem;
+    font-weight: 500;
+    margin-left: 0.5rem;
+}
+
+.refresh-button {
+    background: #f3f4f6;
+    border: 1px solid #e5e7eb;
+    color: #6b7280;
+    padding: 0.5rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: all 0.2s ease;
+}
+
+.refresh-button:hover:not(:disabled) {
+    background: #e5e7eb;
+    color: #374151;
+}
+
+.refresh-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Events List */
+.events-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    flex: 1;
+    overflow-y: auto;
+    padding-right: 0.5rem;
+}
+
+.events-list::-webkit-scrollbar {
+    width: 4px;
+}
+
+.events-list::-webkit-scrollbar-track {
+    background: #f1f5f9;
+}
+
+.events-list::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 4px;
+}
+
+/* No Events */
+.no-events {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    color: #6b7280;
+    text-align: center;
+}
+
+.no-events-icon {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+}
+
+.no-events p {
+    margin: 0;
+    font-size: 0.875rem;
+}
+
+/* Event Item */
+.event-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 1rem;
+    background: #f9fafb;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    border-left: 4px solid #4285f4;
+    transition: all 0.2s ease;
+}
+
+.event-item:hover {
+    background: #f3f4f6;
+    border-color: #d1d5db;
+}
+
+.event-item.cancelled {
+    border-left-color: #dc2626;
+    opacity: 0.7;
+}
+
+.event-item.tentative {
+    border-left-color: #f59e0b;
+}
+
+.event-item.confirmed {
+    border-left-color: #4285f4;
+}
+
+/* Event Time */
+.event-time {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 80px;
+    text-align: center;
+}
+
+.time {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #1f2937;
+}
+
+.duration {
+    font-size: 0.75rem;
+    color: #6b7280;
+    margin-top: 0.25rem;
+}
+
+.all-day {
+    font-size: 0.75rem;
+    color: #6b7280;
+    font-weight: 500;
+    background: #f3f4f6;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+}
+
+/* Event Details */
+.event-details {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.event-title {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #1f2937;
+    line-height: 1.4;
+}
+
+.event-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    font-size: 0.75rem;
+    color: #6b7280;
+}
+
+.event-date {
+    font-weight: 500;
+}
+
+.event-location {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+/* Event Attendees */
+.event-attendees {
+    display: flex;
+    align-items: center;
+    min-width: 40px;
+}
+
+.attendees-count {
+    font-size: 0.75rem;
+    color: #6b7280;
+    background: #f3f4f6;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-weight: 500;
+}
+
+/* Error Display */
+.error-display {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem;
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    border-radius: 8px;
+    margin-top: 1rem;
+}
+
+.error-icon {
+    font-size: 1.25rem;
+    color: #dc2626;
+}
+
+.error-text {
+    flex: 1;
+    color: #dc2626;
+    font-size: 0.875rem;
+}
+
+.error-text strong {
+    font-weight: 600;
+}
+
+.retry-button {
+    background: #dc2626;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.retry-button:hover:not(:disabled) {
+    background: #b91c1c;
+}
+
+.retry-button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Last Updated */
+.last-updated {
+    font-size: 0.75rem;
+    color: #6b7280;
+    text-align: center;
+    padding: 0.5rem;
+    border-top: 1px solid #e5e7eb;
+    margin-top: auto;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .event-item {
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+    
+    .event-time {
+        align-items: flex-start;
+        min-width: auto;
+        text-align: left;
+    }
+    
+    .event-meta {
+        flex-direction: column;
+        gap: 0.25rem;
+    }
+    
+    .calendar-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+    
+    .header-info {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+    .google-calendar-widget {
+        background: #1f2937;
+        color: #f9fafb;
+    }
+    
+    .calendar-header h4,
+    .auth-required h4 {
+        color: #f9fafb;
+    }
+    
+    .events-count {
+        color: #9ca3af;
+    }
+    
+    .refresh-button {
+        background: #374151;
+        border-color: #4b5563;
+        color: #9ca3af;
+    }
+    
+    .refresh-button:hover:not(:disabled) {
+        background: #4b5563;
+        color: #f3f4f6;
+    }
+    
+    .event-item {
+        background: #374151;
+        border-color: #4b5563;
+    }
+    
+    .event-item:hover {
+        background: #4b5563;
+        border-color: #6b7280;
+    }
+    
+    .event-title {
+        color: #f9fafb;
+    }
+    
+    .event-meta,
+    .duration,
+    .attendees-count {
+        color: #9ca3af;
+    }
+    
+    .all-day,
+    .attendees-count {
+        background: #4b5563;
+    }
+    
+    .time {
+        color: #f9fafb;
+    }
+    
+    .last-updated {
+        color: #9ca3af;
+        border-top-color: #4b5563;
+    }
+    
+    .calendar-loading,
+    .no-events {
+        color: #9ca3af;
+    }
+    
+    .loading-spinner {
+        border-color: #4b5563;
+        border-top-color: #4285f4;
+    }
+    
+    .auth-required p {
+        color: #9ca3af;
+    }
+}

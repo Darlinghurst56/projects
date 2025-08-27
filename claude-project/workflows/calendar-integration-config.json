@@ -1,0 +1,75 @@
+{
+  "name": "Calendar Integration Configuration",
+  "description": "Configuration for Google Calendar integration workflows on existing n8n instance",
+  "target_instance": {
+    "host": "192.168.1.74",
+    "port": 5678,
+    "url": "http://192.168.1.74:5678",
+    "api_base": "http://192.168.1.74:5678/api/v1"
+  },
+  "credentials_mapping": {
+    "telegram": {
+      "existing_name": "Gmail Telegram Bot",
+      "credential_type": "telegramApi",
+      "required_for": ["calendar_read", "calendar_create", "all_workflows"]
+    },
+    "google_oauth2": {
+      "existing_name": "Gmail OAuth2", 
+      "credential_type": "googleOAuth2Api",
+      "additional_scopes_required": [
+        "https://www.googleapis.com/auth/calendar",
+        "https://www.googleapis.com/auth/calendar.events"
+      ],
+      "current_scopes": [
+        "https://www.googleapis.com/auth/gmail.readonly",
+        "https://www.googleapis.com/auth/gmail.send", 
+        "https://www.googleapis.com/auth/gmail.modify"
+      ]
+    }
+  },
+  "workflows_to_deploy": [
+    {
+      "file": "telegram-to-google-calendar.json",
+      "name": "Telegram to Google Calendar - Home User",
+      "purpose": "Read calendar events via Telegram commands",
+      "dependencies": ["Gmail Telegram Bot", "Gmail OAuth2"]
+    },
+    {
+      "file": "telegram-to-create-calendar-event.json", 
+      "name": "Telegram to Create Calendar Event - Home User",
+      "purpose": "Create calendar events via Telegram commands",
+      "dependencies": ["Gmail Telegram Bot", "Gmail OAuth2"]
+    },
+    {
+      "file": "test-google-calendar-workflow.json",
+      "name": "Test Google Calendar Workflow - Home User", 
+      "purpose": "Validation and testing workflow",
+      "dependencies": ["Gmail OAuth2"],
+      "deploy_active": false
+    },
+    {
+      "file": "test-create-calendar-event.json",
+      "name": "Test Create Calendar Event Workflow - Home User",
+      "purpose": "Event creation validation workflow", 
+      "dependencies": ["Gmail OAuth2"],
+      "deploy_active": false
+    }
+  ],
+  "deployment_notes": {
+    "oauth2_scope_update": "The existing Gmail OAuth2 credential needs calendar scopes added",
+    "telegram_bot_reuse": "Using existing Telegram bot from Gmail integration",
+    "testing_approach": "Test workflows can be imported but kept inactive initially",
+    "integration_verification": "Verify calendar commands work alongside existing Gmail commands"
+  },
+  "required_permissions": {
+    "google_cloud_console": [
+      "Google Calendar API enabled",
+      "OAuth2 credentials updated with calendar scopes"
+    ],
+    "n8n_instance": [
+      "Admin access to 192.168.1.74:5678",
+      "Ability to import workflows",
+      "Credential management permissions"
+    ]
+  }
+}

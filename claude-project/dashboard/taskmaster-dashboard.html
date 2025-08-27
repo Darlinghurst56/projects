@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TaskMaster Dashboard</title>
+    
+    <!-- Base styles -->
+    <link rel="stylesheet" href="styles/base.css">
+    <link rel="stylesheet" href="styles/layout.css">
+    <link rel="stylesheet" href="styles/dashboard.css">
+    
+    <style>
+        /* Dashboard header styles */
+        .dashboard-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1.5rem 2rem;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .dashboard-header h1 {
+            margin: 0;
+            font-size: 1.75rem;
+            font-weight: 600;
+        }
+        
+        .dashboard-nav {
+            margin-top: 1rem;
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+        }
+        
+        .nav-button {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+        
+        .nav-button:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        
+        /* Main container */
+        body {
+            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #f8f9fa;
+            min-height: 100vh;
+        }
+        
+        .dashboard-container {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .dashboard-main {
+            flex: 1;
+        }
+        
+        .dashboard-footer {
+            background: #343a40;
+            color: white;
+            text-align: center;
+            padding: 1rem;
+            margin-top: 2rem;
+        }
+        
+        .dashboard-footer p {
+            margin: 0;
+            font-size: 0.875rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <header class="dashboard-header">
+            <h1>TaskMaster Dashboard</h1>
+            <nav class="dashboard-nav">
+                <button id="refresh-all" class="nav-button">🔄 Refresh All</button>
+                <button id="settings" class="nav-button">⚙️ Settings</button>
+                <button id="api-status" class="nav-button">📊 API Status</button>
+            </nav>
+        </header>
+        
+        <main class="dashboard-main">
+            <div id="widget-grid" class="widget-grid">
+                <!-- Widgets will be dynamically loaded here -->
+                <div class="loading">
+                    <p>🚀 Loading TaskMaster Dashboard...</p>
+                </div>
+            </div>
+        </main>
+        
+        <footer class="dashboard-footer">
+            <p>&copy; 2025 TaskMaster Dashboard - Agent Coordination System</p>
+        </footer>
+    </div>
+
+    <!-- Load API client first -->
+    <script type="module" src="js/taskmaster-api-client.js"></script>
+    
+    <!-- Load dashboard manager -->
+    <script type="module" src="js/dashboard-manager.js"></script>
+    
+    <!-- Initialize dashboard -->
+    <script type="module">
+        import TaskMasterApiClient from './js/taskmaster-api-client.js';
+        import DashboardManager from './js/dashboard-manager.js';
+        
+        // Make available globally
+        window.TaskMasterApiClient = TaskMasterApiClient;
+        window.DashboardManager = DashboardManager;
+        
+        // Initialize when DOM is ready
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🚀 Starting TaskMaster Dashboard...');
+            
+            try {
+                const dashboard = new DashboardManager();
+                dashboard.init();
+                
+                // Store globally for debugging
+                window.dashboard = dashboard;
+                
+                // API status button handler
+                const apiStatusBtn = document.getElementById('api-status');
+                if (apiStatusBtn) {
+                    apiStatusBtn.addEventListener('click', async () => {
+                        try {
+                            const health = await dashboard.apiClient.getHealth();
+                            alert(`API Status: ${health.status}\nTasks: ${health.tasks}\nAgents: ${health.agents}\nTime: ${health.timestamp}`);
+                        } catch (error) {
+                            alert(`API Error: ${error.message}`);
+                        }
+                    });
+                }
+                
+            } catch (error) {
+                console.error('❌ Failed to initialize dashboard:', error);
+                document.getElementById('widget-grid').innerHTML = `
+                    <div class="error-container">
+                        <h3>⚠️ Dashboard Initialization Failed</h3>
+                        <p>${error.message}</p>
+                        <button onclick="location.reload()">Reload Page</button>
+                    </div>
+                `;
+            }
+        });
+    </script>
+</body>
+</html>

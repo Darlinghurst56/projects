@@ -1,0 +1,461 @@
+{
+  "name": "Telegram to Google Docs - Home User",
+  "active": true,
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ]
+      },
+      "id": "f1a2b3c4-d5e6-f7g8-h9i0-j1k2l3m4n5o7",
+      "name": "Telegram Trigger",
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ],
+      "webhookId": "auto-generated",
+      "credentials": {
+        "telegramApi": {
+          "id": "1",
+          "name": "Home Telegram Bot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$json.message.text}}",
+              "operation": "startsWith",
+              "value2": "/doc"
+            }
+          ]
+        }
+      },
+      "id": "a1b2c3d4-e5f6-g7h8-i9j0-k1l2m3n4o5p7",
+      "name": "Check Doc Command",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        460,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Parse Telegram command: /doc_create Title: Document title Body: Document content\n// or /doc_read document_id\n// or /doc_edit document_id Body: New content\nconst text = $input.first().json.message.text;\nconst userId = $input.first().json.message.from.id;\n\n// Security: Only allow specific Telegram user ID (replace with your ID)\nconst ALLOWED_USER_ID = 123456789; // Replace with your Telegram user ID\nif (userId !== ALLOWED_USER_ID) {\n  throw new Error('Unauthorized user');\n}\n\n// Parse command format\nconst parts = text.split(' ');\nif (parts.length < 2) {\n  throw new Error('Invalid format. Use: /doc_create Title: Your title Body: Your content OR /doc_read document_id OR /doc_edit document_id Body: New content');\n}\n\nconst operation = parts[0].replace('/doc_', ''); // create, read, edit\nconst validOperations = ['create', 'read', 'edit'];\n\nif (!validOperations.includes(operation)) {\n  throw new Error('Invalid operation. Use: create, read, or edit');\n}\n\nlet result = {\n  operation: operation,\n  originalCommand: text,\n  userId: userId\n};\n\nif (operation === 'create') {\n  // Extract title and body for create\n  const titleMatch = text.match(/Title: (.*?) Body:/);\n  const bodyMatch = text.match(/Body: (.*)/);\n  \n  const title = titleMatch ? titleMatch[1].trim() : 'Untitled Document';\n  const body = bodyMatch ? bodyMatch[1].trim() : 'No content provided';\n  \n  result.title = title;\n  result.content = body;\n} else if (operation === 'read') {\n  // Extract document ID for read\n  const docId = parts[1];\n  if (!docId) {\n    throw new Error('Document ID required for read operation');\n  }\n  result.documentId = docId;\n} else if (operation === 'edit') {\n  // Extract document ID and new content for edit\n  const docId = parts[1];\n  const bodyMatch = text.match(/Body: (.*)/);\n  \n  if (!docId) {\n    throw new Error('Document ID required for edit operation');\n  }\n  if (!bodyMatch) {\n    throw new Error('Body content required for edit operation');\n  }\n  \n  result.documentId = docId;\n  result.content = bodyMatch[1].trim();\n}\n\nreturn {\n  json: result\n};"
+      },
+      "id": "b1c2d3e4-f5g6-h7i8-j9k0-l1m2n3o4p5q7",
+      "name": "Parse Doc Command",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        680,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$json.operation}}",
+              "operation": "equal",
+              "value2": "create"
+            }
+          ]
+        }
+      },
+      "id": "c1d2e3f4-g5h6-i7j8-k9l0-m1n2o3p4q5r7",
+      "name": "Check Create Operation",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        900,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$json.operation}}",
+              "operation": "equal",
+              "value2": "read"
+            }
+          ]
+        }
+      },
+      "id": "d1e2f3g4-h5i6-j7k8-l9m0-n1o2p3q4r5s7",
+      "name": "Check Read Operation",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        900,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$json.operation}}",
+              "operation": "equal",
+              "value2": "edit"
+            }
+          ]
+        }
+      },
+      "id": "e1f2g3h4-i5j6-k7l8-m9n0-o1p2q3r4s5t7",
+      "name": "Check Edit Operation",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        900,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "title": "={{$json.title}}",
+        "content": "={{$json.content}}",
+        "options": {
+          "format": "text"
+        }
+      },
+      "id": "f1g2h3i4-j5k6-l7m8-n9o0-p1q2r3s4t5u7",
+      "name": "Create Google Doc",
+      "type": "n8n-nodes-base.googleDocs",
+      "typeVersion": 1,
+      "position": [
+        1120,
+        200
+      ],
+      "credentials": {
+        "googleOAuth2Api": {
+          "id": "2",
+          "name": "Google APIs - Home User"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "documentId": "={{$json.documentId}}",
+        "options": {
+          "format": "text"
+        }
+      },
+      "id": "g1h2i3j4-k5l6-m7n8-o9p0-q1r2s3t4u5v7",
+      "name": "Read Google Doc",
+      "type": "n8n-nodes-base.googleDocs",
+      "typeVersion": 1,
+      "position": [
+        1120,
+        300
+      ],
+      "credentials": {
+        "googleOAuth2Api": {
+          "id": "2",
+          "name": "Google APIs - Home User"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": "={{$json.documentId}}",
+        "updateFields": {
+          "content": "={{$json.content}}"
+        },
+        "options": {
+          "format": "text"
+        }
+      },
+      "id": "h1i2j3k4-l5m6-n7o8-p9q0-r1s2t3u4v5w7",
+      "name": "Edit Google Doc",
+      "type": "n8n-nodes-base.googleDocs",
+      "typeVersion": 1,
+      "position": [
+        1120,
+        400
+      ],
+      "credentials": {
+        "googleOAuth2Api": {
+          "id": "2",
+          "name": "Google APIs - Home User"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "operation": "sendMessage",
+        "chatId": "={{$('Telegram Trigger').item.json.message.chat.id}}",
+        "text": "✅ Document created successfully!\n\n📄 Title: {{$('Parse Doc Command').item.json.title}}\n🔗 Document ID: {{$json.documentId}}\n📝 Content: {{$('Parse Doc Command').item.json.content}}\n\n🤖 Created via Home Assistant\n\n💡 Use /doc_read {{$json.documentId}} to read this document\n💡 Use /doc_edit {{$json.documentId}} Body: New content to edit"
+      },
+      "id": "i1j2k3l4-m5n6-o7p8-q9r0-s1t2u3v4w5x7",
+      "name": "Reply Create Success",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [
+        1340,
+        200
+      ],
+      "credentials": {
+        "telegramApi": {
+          "id": "1",
+          "name": "Home Telegram Bot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "sendMessage",
+        "chatId": "={{$('Telegram Trigger').item.json.message.chat.id}}",
+        "text": "📄 Document Content:\n\n🔗 Document ID: {{$('Parse Doc Command').item.json.documentId}}\n📝 Content:\n{{$json.content}}\n\n🤖 Retrieved via Home Assistant\n\n💡 Use /doc_edit {{$('Parse Doc Command').item.json.documentId}} Body: New content to edit"
+      },
+      "id": "j1k2l3m4-n5o6-p7q8-r9s0-t1u2v3w4x5y7",
+      "name": "Reply Read Success",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [
+        1340,
+        300
+      ],
+      "credentials": {
+        "telegramApi": {
+          "id": "1",
+          "name": "Home Telegram Bot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "sendMessage",
+        "chatId": "={{$('Telegram Trigger').item.json.message.chat.id}}",
+        "text": "✅ Document updated successfully!\n\n🔗 Document ID: {{$('Parse Doc Command').item.json.documentId}}\n📝 New Content: {{$('Parse Doc Command').item.json.content}}\n\n🤖 Updated via Home Assistant\n\n💡 Use /doc_read {{$('Parse Doc Command').item.json.documentId}} to read the updated document"
+      },
+      "id": "k1l2m3n4-o5p6-q7r8-s9t0-u1v2w3x4y5z7",
+      "name": "Reply Edit Success",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [
+        1340,
+        400
+      ],
+      "credentials": {
+        "telegramApi": {
+          "id": "1",
+          "name": "Home Telegram Bot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "sendMessage",
+        "chatId": "={{$('Telegram Trigger').item.json.message.chat.id}}",
+        "text": "❌ Failed to process document command!\n\n🚨 Error: {{$('Parse Doc Command').item.json.error || 'Unknown error occurred'}}\n\n💡 Available formats:\n📝 Create: /doc_create Title: Your title Body: Your content\n👀 Read: /doc_read document_id\n✏️ Edit: /doc_edit document_id Body: New content\n\n🔒 Only authorized users can access documents"
+      },
+      "id": "l1m2n3o4-p5q6-r7s8-t9u0-v1w2x3y4z5a7",
+      "name": "Reply Error",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [
+        900,
+        500
+      ],
+      "credentials": {
+        "telegramApi": {
+          "id": "1",
+          "name": "Home Telegram Bot"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "Check Doc Command",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Doc Command": {
+      "main": [
+        [
+          {
+            "node": "Parse Doc Command",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Doc Command": {
+      "main": [
+        [
+          {
+            "node": "Check Create Operation",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Check Read Operation",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Check Edit Operation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ],
+      "error": [
+        [
+          {
+            "node": "Reply Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Create Operation": {
+      "main": [
+        [
+          {
+            "node": "Create Google Doc",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Read Operation": {
+      "main": [
+        [
+          {
+            "node": "Read Google Doc",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Edit Operation": {
+      "main": [
+        [
+          {
+            "node": "Edit Google Doc",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Google Doc": {
+      "main": [
+        [
+          {
+            "node": "Reply Create Success",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ],
+      "error": [
+        [
+          {
+            "node": "Reply Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read Google Doc": {
+      "main": [
+        [
+          {
+            "node": "Reply Read Success",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ],
+      "error": [
+        [
+          {
+            "node": "Reply Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Google Doc": {
+      "main": [
+        [
+          {
+            "node": "Reply Edit Success",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ],
+      "error": [
+        [
+          {
+            "node": "Reply Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "errorWorkflow": {
+      "value": ""
+    },
+    "timezone": "America/New_York",
+    "saveManualExecutions": true
+  },
+  "staticData": null,
+  "tags": [
+    {
+      "id": "home-automation",
+      "name": "Home Automation"
+    },
+    {
+      "id": "google-api",
+      "name": "Google API"
+    },
+    {
+      "id": "telegram-bot",
+      "name": "Telegram Bot"
+    },
+    {
+      "id": "google-docs",
+      "name": "Google Docs"
+    }
+  ],
+  "triggerCount": 1,
+  "updatedAt": "2025-01-06T13:30:00.000Z",
+  "versionId": "1"
+}

@@ -1,0 +1,19 @@
+{
+  "name": "design-system-mcp",
+  "version": "1.0.0",
+  "description": "MCP server for consistent UI component library focused on single home user dashboard design patterns",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node index.js",
+    "test": "node test.js",
+    "generate-components": "node generate-components.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0",
+    "puppeteer": "^21.0.0"
+  },
+  "keywords": ["mcp", "design-system", "ui-components", "dashboard", "consistency"],
+  "author": "Home Dashboard Team",
+  "license": "MIT"
+}

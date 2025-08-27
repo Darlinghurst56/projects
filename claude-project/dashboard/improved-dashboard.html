@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agent Dashboard - Task-Focused Design</title>
+    
+    <!-- Core styles -->
+    <link rel="stylesheet" href="styles/improved-layout.css">
+    
+    <!-- Core JavaScript -->
+    <script src="js/core.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/api-client.js"></script>
+</head>
+<body>
+    <div id="dashboard-container">
+        <!-- Header with clear navigation -->
+        <header class="dashboard-header">
+            <div>
+                <h1 class="dashboard-title">Agent Dashboard</h1>
+                <p class="dashboard-subtitle">Task coordination and agent management</p>
+            </div>
+            <div class="nav-buttons">
+                <button class="nav-button" id="refresh-all" aria-label="Refresh all data">
+                    <span aria-hidden="true">🔄</span> Refresh
+                </button>
+                <button class="nav-button" id="new-task" aria-label="Create new task">
+                    <span aria-hidden="true">➕</span> New Task
+                </button>
+                <button class="nav-button" id="settings" aria-label="Dashboard settings">
+                    <span aria-hidden="true">⚙️</span> Settings
+                </button>
+            </div>
+        </header>
+
+        <!-- Task-first layout -->
+        <div class="agent-dashboard-grid">
+            <!-- Primary: Current Tasks (Most Important) -->
+            <div class="primary-content">
+                <div class="widget-card">
+                    <div class="widget-header">
+                        <h2 class="widget-title">
+                            <span class="widget-icon" aria-hidden="true">📋</span>
+                            Current Tasks
+                        </h2>
+                        <span class="urgency-indicator" id="urgent-count">3 urgent</span>
+                    </div>
+                    <div class="widget-content">
+                        <!-- Quick stats -->
+                        <div class="quick-stats">
+                            <div class="stat-item">
+                                <div class="stat-value" id="in-progress-count">2</div>
+                                <div class="stat-label">In Progress</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value" id="ready-count">5</div>
+                                <div class="stat-label">Ready to Start</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value" id="blocked-count">1</div>
+                                <div class="stat-label">Blocked</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value" id="completed-today">8</div>
+                                <div class="stat-label">Completed Today</div>
+                            </div>
+                        </div>
+
+                        <!-- In Progress Tasks -->
+                        <div class="task-section">
+                            <h3 style="margin: 0 0 16px 0; font-size: 16px; font-weight: 600; color: #495057;">
+                                🔄 In Progress
+                            </h3>
+                            <div id="in-progress-tasks">
+                                <div class="task-item in-progress">
+                                    <div class="task-meta">
+                                        <span class="task-priority high">HIGH</span>
+                                        <span>Agent: ui-developer</span>
+                                        <span>Started: 2h ago</span>
+                                    </div>
+                                    <h4>Fix DNS Analytics Widget Layout</h4>
+                                    <p>Resolving content sizing issues and improving responsive design</p>
+                                    <div class="action-group">
+                                        <button class="primary-action">View Progress</button>
+                                        <button class="secondary-action">Message Agent</button>
+                                    </div>
+                                </div>
+                                <div class="task-item in-progress">
+                                    <div class="task-meta">
+                                        <span class="task-priority medium">MEDIUM</span>
+                                        <span>Agent: qa-specialist</span>
+                                        <span>Started: 30m ago</span>
+                                    </div>
+                                    <h4>Validate Dashboard Accessibility</h4>
+                                    <p>Running comprehensive accessibility tests and validation</p>
+                                    <div class="action-group">
+                                        <button class="primary-action">View Progress</button>
+                                        <button class="secondary-action">Message Agent</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Ready to Start Tasks -->
+                        <div class="task-section">
+                            <h3 style="margin: 24px 0 16px 0; font-size: 16px; font-weight: 600; color: #495057;">
+                                ⚡ Ready to Start
+                            </h3>
+                            <div id="ready-tasks">
+                                <div class="task-item urgent">
+                                    <div class="task-meta">
+                                        <span class="task-priority high">HIGH</span>
+                                        <span>Unassigned</span>
+                                        <span>Due: Today</span>
+                                    </div>
+                                    <h4>Implement Mobile Navigation</h4>
+                                    <p>Create touch-friendly navigation for mobile devices</p>
+                                    <div class="action-group">
+                                        <button class="primary-action">Assign to Agent</button>
+                                        <button class="secondary-action">View Details</button>
+                                    </div>
+                                </div>
+                                <div class="task-item actionable">
+                                    <div class="task-meta">
+                                        <span class="task-priority medium">MEDIUM</span>
+                                        <span>Unassigned</span>
+                                        <span>Due: Tomorrow</span>
+                                    </div>
+                                    <h4>Add Task Filtering</h4>
+                                    <p>Implement smart filtering for task management</p>
+                                    <div class="action-group">
+                                        <button class="primary-action">Assign to Agent</button>
+                                        <button class="secondary-action">View Details</button>
+                                    </div>
+                                </div>
+                                <div class="task-item actionable">
+                                    <div class="task-meta">
+                                        <span class="task-priority low">LOW</span>
+                                        <span>Unassigned</span>
+                                        <span>Due: Next Week</span>
+                                    </div>
+                                    <h4>Performance Optimization</h4>
+                                    <p>Optimize dashboard loading and rendering performance</p>
+                                    <div class="action-group">
+                                        <button class="primary-action">Assign to Agent</button>
+                                        <button class="secondary-action">View Details</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Blocked Tasks -->
+                        <div class="task-section">
+                            <h3 style="margin: 24px 0 16px 0; font-size: 16px; font-weight: 600; color: #495057;">
+                                🚫 Blocked
+                            </h3>
+                            <div id="blocked-tasks">
+                                <div class="task-item urgent">
+                                    <div class="task-meta">
+                                        <span class="task-priority high">HIGH</span>
+                                        <span>Waiting for: API Fix</span>
+                                        <span>Blocked: 1 day</span>
+                                    </div>
+                                    <h4>Agent Status Integration</h4>
+                                    <p>Blocked waiting for TaskMaster API endpoint fix</p>
+                                    <div class="action-group">
+                                        <button class="primary-action">Unblock Task</button>
+                                        <button class="secondary-action">Update Status</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Secondary: Quick Actions -->
+            <div class="secondary-content">
+                <div class="widget-card">
+                    <div class="widget-header">
+                        <h2 class="widget-title">
+                            <span class="widget-icon" aria-hidden="true">⚡</span>
+                            Quick Actions
+                        </h2>
+                    </div>
+                    <div class="widget-content">
+                        <div style="display: flex; flex-direction: column; gap: 12px;">
+                            <button class="primary-action" id="assign-next-task">
+                                <span aria-hidden="true">🎯</span> Assign Next Task
+                            </button>
+                            <button class="primary-action" id="create-agent">
+                                <span aria-hidden="true">🤖</span> Create New Agent
+                            </button>
+                            <button class="secondary-action" id="view-reports">
+                                <span aria-hidden="true">📊</span> View Reports
+                            </button>
+                            <button class="secondary-action" id="system-health">
+                                <span aria-hidden="true">🏥</span> System Health
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tertiary: Agent Status -->
+            <div class="tertiary-content">
+                <div class="widget-card">
+                    <div class="widget-header">
+                        <h2 class="widget-title">
+                            <span class="widget-icon" aria-hidden="true">👥</span>
+                            Active Agents
+                        </h2>
+                        <span class="urgency-indicator low" id="agent-count">3 active</span>
+                    </div>
+                    <div class="widget-content">
+                        <div id="agent-list">
+                            <div class="agent-card">
+                                <div class="agent-avatar">UI</div>
+                                <div class="agent-info">
+                                    <div class="agent-name">UI Developer</div>
+                                    <div class="agent-role">Widget & Layout Specialist</div>
+                                </div>
+                                <div class="agent-status active">Active</div>
+                            </div>
+                            <div class="agent-card">
+                                <div class="agent-avatar">QA</div>
+                                <div class="agent-info">
+                                    <div class="agent-name">QA Specialist</div>
+                                    <div class="agent-role">Testing & Validation</div>
+                                </div>
+                                <div class="agent-status active">Active</div>
+                            </div>
+                            <div class="agent-card">
+                                <div class="agent-avatar">BE</div>
+                                <div class="agent-info">
+                                    <div class="agent-name">Backend Agent</div>
+                                    <div class="agent-role">API & Integration</div>
+                                </div>
+                                <div class="agent-status inactive">Inactive</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript initialization -->
+    <script>
+        // Initialize improved dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🚀 Initializing improved dashboard...');
+            
+            // Initialize API client
+            const apiClient = new ApiClient();
+            
+            // Initialize event bus if not already available
+            if (!window.eventBus) {
+                window.eventBus = new EventBus();
+            }
+            
+            // Load real data
+            loadDashboardData();
+            
+            // Set up event listeners
+            setupEventListeners();
+            
+            // Auto-refresh every 30 seconds
+            setInterval(loadDashboardData, 30000);
+        });
+
+        async function loadDashboardData() {
+            try {
+                console.log('📊 Loading dashboard data...');
+                
+                // Load tasks and agents
+                const [tasksResponse, agentsResponse] = await Promise.all([
+                    apiClient.getTasks(),
+                    apiClient.getAgents()
+                ]);
+                
+                updateTaskCounts(tasksResponse.tasks);
+                updateAgentStatus(agentsResponse.agents);
+                
+                console.log('✅ Dashboard data loaded successfully');
+            } catch (error) {
+                console.error('❌ Failed to load dashboard data:', error);
+                // Continue with fallback data
+            }
+        }
+
+        function updateTaskCounts(tasks) {
+            const counts = {
+                'in-progress': 0,
+                'ready': 0,
+                'blocked': 0,
+                'completed': 0
+            };
+            
+            tasks.forEach(task => {
+                if (task.status === 'in-progress') counts['in-progress']++;
+                else if (task.status === 'pending') counts['ready']++;
+                else if (task.status === 'blocked') counts['blocked']++;
+                else if (task.status === 'done') counts['completed']++;
+            });
+            
+            document.getElementById('in-progress-count').textContent = counts['in-progress'];
+            document.getElementById('ready-count').textContent = counts['ready'];
+            document.getElementById('blocked-count').textContent = counts['blocked'];
+            document.getElementById('completed-today').textContent = counts['completed'];
+        }
+
+        function updateAgentStatus(agents) {
+            const activeAgents = agents.filter(agent => agent.status === 'active');
+            document.getElementById('agent-count').textContent = `${activeAgents.length} active`;
+            
+            // Update urgency based on unassigned tasks
+            const urgentTasks = 3; // This would be calculated from real data
+            const urgencyElement = document.getElementById('urgent-count');
+            if (urgentTasks > 5) {
+                urgencyElement.className = 'urgency-indicator';
+                urgencyElement.textContent = `${urgentTasks} urgent`;
+            } else if (urgentTasks > 2) {
+                urgencyElement.className = 'urgency-indicator medium';
+                urgencyElement.textContent = `${urgentTasks} urgent`;
+            } else {
+                urgencyElement.className = 'urgency-indicator low';
+                urgencyElement.textContent = `${urgentTasks} urgent`;
+            }
+        }
+
+        function setupEventListeners() {
+            // Quick action buttons
+            document.getElementById('assign-next-task').addEventListener('click', () => {
+                console.log('🎯 Assigning next task...');
+                // This would open a task assignment modal
+                alert('Task assignment feature - would open modal to assign next priority task');
+            });
+
+            document.getElementById('create-agent').addEventListener('click', () => {
+                console.log('🤖 Creating new agent...');
+                // This would open agent creation modal
+                alert('Agent creation feature - would open modal to create specialized agent');
+            });
+
+            document.getElementById('refresh-all').addEventListener('click', () => {
+                console.log('🔄 Refreshing all data...');
+                loadDashboardData();
+            });
+
+            document.getElementById('new-task').addEventListener('click', () => {
+                console.log('➕ Creating new task...');
+                alert('New task feature - would open task creation modal');
+            });
+
+            // Task action buttons
+            document.querySelectorAll('.primary-action').forEach(button => {
+                button.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const action = this.textContent.trim();
+                    console.log(`🎬 Action: ${action}`);
+                    
+                    // Provide feedback for user actions
+                    const originalText = this.textContent;
+                    this.textContent = 'Processing...';
+                    this.disabled = true;
+                    
+                    setTimeout(() => {
+                        this.textContent = originalText;
+                        this.disabled = false;
+                        alert(`${action} - This would perform the requested action`);
+                    }, 1000);
+                });
+            });
+        }
+    </script>
+</body>
+</html>

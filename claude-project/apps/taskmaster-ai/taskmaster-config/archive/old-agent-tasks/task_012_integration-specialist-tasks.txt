@@ -1,0 +1,52 @@
+# Task ID: 12
+# Title: Fix DNS Profile Widget to Display Real Control D Profile Data
+# Status: done
+# Dependencies: 2, 6
+# Priority: medium
+# Description: Replace the fake/blank content in the DNS Profile Widget with actual Control D profile data by implementing proper API integration to fetch and display real profile configurations, service blocking rules, and DNS filtering settings. This task is assigned to the integration-specialist role for Control D API integration.
+# Details:
+1. Analyze the current DNS Profile Widget implementation to understand the existing structure and identify where fake data is being generated
+2. Review the Control D API documentation for the /profiles endpoint to understand the response structure and required authentication
+3. Implement proper API integration:
+   - Create or update the API client to handle the /profiles endpoint
+   - Add proper authentication headers (API key or token)
+   - Handle the API response and map it to the widget's data structure
+4. Update the widget component to:
+   - Remove all hardcoded/fake profile data
+   - Fetch real profiles from the Control D API on component mount
+   - Display the actual services from the user's account
+   - Show real service blocking rules and DNS filtering settings
+   - Handle loading states while fetching data
+   - Implement error handling for API failures
+5. Ensure the widget displays:
+   - Profile names and IDs
+   - Service blocking configurations
+   - DNS filtering rules and settings
+   - Profile status (active/inactive)
+   - Any custom rules or exceptions
+6. Add proper error boundaries and fallback UI for when the API is unavailable
+7. Implement caching strategy to avoid excessive API calls
+8. Update any related documentation or comments to reflect the real data integration
+
+# Test Strategy:
+1. Verify the widget no longer displays fake or blank profile data
+2. Test API integration:
+   - Confirm the /profiles endpoint is called with proper authentication
+   - Verify services are fetched and displayed correctly
+   - Test error handling by simulating API failures
+3. Validate data display:
+   - Check that profile names match the Control D account
+   - Verify service blocking rules are accurately displayed
+   - Confirm DNS filtering settings are shown correctly
+4. Test edge cases:
+   - Empty profile list
+   - Single profile vs multiple profiles
+   - Profiles with complex filtering rules
+5. Performance testing:
+   - Measure widget load time with real data
+   - Verify caching prevents unnecessary API calls
+6. User experience testing:
+   - Ensure loading states are displayed during data fetch
+   - Confirm error messages are user-friendly
+   - Test widget responsiveness with varying amounts of profile data
+7. Integration testing with the main dashboard to ensure the widget functions correctly within the larger application context

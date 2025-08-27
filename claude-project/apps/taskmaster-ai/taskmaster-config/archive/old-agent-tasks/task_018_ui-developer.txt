@@ -1,0 +1,31 @@
+# Task ID: 18
+# Title: MVP Priority 3: Essential Task View for Home User
+# Status: pending
+# Dependencies: 14, 15, 16, 17
+# Priority: medium
+# Description: Create a dead-simple task list interface showing task name, assigned agent, and status with mobile-friendly design for phone/tablet monitoring while coding, integrating with existing TaskMaster data and supporting offline functionality.
+# Details:
+1. **Simple Task List Component:** Create a lightweight task list view that displays only essential information - task name, assigned agent, and current status. Use semantic HTML with minimal CSS for fastest load times and maximum compatibility.
+
+2. **TaskMaster Data Integration:** Connect to existing TaskMaster data sources using the established WebSocket/SSE connections from the agent dashboard. Implement efficient data fetching that only retrieves task name, agent assignment, and status fields to minimize bandwidth usage.
+
+3. **Mobile-First Responsive Design:** Design interface starting with smallest mobile screens (320px width). Use CSS Grid or Flexbox for fluid layouts. Ensure touch targets are at least 44x44px for easy tapping. Test on actual devices including iPhone SE, standard Android phones, and tablets.
+
+4. **Offline Functionality:** Implement service worker for offline support. Cache task data locally using IndexedDB or localStorage. Show clear indicators when offline and queue any status updates for sync when connection returns. Display last update timestamp.
+
+5. **Minimal UI Elements:** Use native HTML elements where possible - no heavy frameworks. Status indicators using simple colored dots or text. Agent names abbreviated on small screens with full name on hover/tap. Implement pull-to-refresh for mobile devices.
+
+6. **Performance Optimization:** Lazy load task data in batches of 20-50 items. Implement virtual scrolling for large task lists. Use CSS containment for render performance. Target sub-100ms interaction response times.
+
+7. **Integration Points:** Reuse existing WebSocket connection from live-agent-dashboard.html. Share authentication/session management. Link to full dashboard for users who need more details. Ensure consistent styling with existing dashboard.
+
+# Test Strategy:
+1. **Mobile Device Testing:** Test on real devices - iPhone SE (small screen), Pixel 5 (standard Android), iPad Mini (tablet), and desktop browser in mobile emulation mode. Verify all text is readable without zooming and touch targets are easily tappable.
+
+2. **Offline Functionality Testing:** Disconnect network and verify cached data displays correctly. Make changes while offline and verify they queue properly. Reconnect and confirm queued changes sync automatically. Test service worker installation and update process.
+
+3. **Performance Testing:** Measure initial load time (target < 2 seconds on 3G). Test with 1000+ tasks to verify virtual scrolling works smoothly. Monitor memory usage during extended sessions. Verify no memory leaks from WebSocket connections.
+
+4. **Integration Testing:** Verify task data matches what's shown in main dashboard. Test that authentication carries over from main dashboard. Confirm WebSocket updates reflect in real-time. Test graceful degradation when TaskMaster API is unavailable.
+
+5. **Accessibility Testing:** Run axe DevTools for WCAG compliance. Test with screen readers on mobile devices. Verify keyboard navigation works on desktop. Check color contrast ratios meet WCAG AA standards. Test with users who have motor impairments for touch target effectiveness.

@@ -1,0 +1,184 @@
+{
+  "name": "HTTP Client Configuration",
+  "version": "1.0.0",
+  "description": "Configuration for HTTP client settings with caching, error handling, and API integrations",
+  "settings": {
+    "defaultTimeout": 30000,
+    "retryAttempts": 3,
+    "retryDelayMs": 1000,
+    "enableCaching": true,
+    "defaultCacheTtl": 300000,
+    "maxCacheSize": "50MB",
+    "userAgent": "Claude-Project-Dashboard/1.0.0 (MCP HTTP Client)"
+  },
+  "defaultHeaders": {
+    "Accept": "application/json, text/html, text/plain, */*",
+    "Accept-Encoding": "gzip, deflate, br",
+    "Accept-Language": "en-US,en;q=0.9",
+    "Cache-Control": "no-cache",
+    "Connection": "keep-alive"
+  },
+  "cachingRules": {
+    "apiResponses": {
+      "ttl": 300000,
+      "patterns": [
+        "*/api/*",
+        "*/v1/*",
+        "*/v2/*"
+      ]
+    },
+    "staticContent": {
+      "ttl": 3600000,
+      "patterns": [
+        "*.css",
+        "*.js",
+        "*.json",
+        "*.xml"
+      ]
+    },
+    "dynamicContent": {
+      "ttl": 60000,
+      "patterns": [
+        "*/weather/*",
+        "*/news/*",
+        "*/status/*"
+      ]
+    }
+  },
+  "errorHandling": {
+    "retryOn": [
+      "NETWORK_ERROR",
+      "TIMEOUT",
+      "RATE_LIMIT",
+      "SERVER_ERROR"
+    ],
+    "retryStatusCodes": [
+      408,
+      429,
+      500,
+      502,
+      503,
+      504
+    ],
+    "nonRetryableErrors": [
+      "INVALID_URL",
+      "AUTHENTICATION_ERROR",
+      "AUTHORIZATION_ERROR"
+    ],
+    "nonRetryableStatusCodes": [
+      400,
+      401,
+      403,
+      404,
+      422
+    ]
+  },
+  "apiClients": {
+    "weatherApi": {
+      "baseUrl": "https://api.openweathermap.org/data/2.5",
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "timeout": 10000,
+      "cacheTtl": 600000,
+      "requiresAuth": true,
+      "authType": "query",
+      "authParam": "appid",
+      "endpoints": {
+        "current": "/weather",
+        "forecast": "/forecast",
+        "history": "/onecall/timemachine"
+      }
+    },
+    "newsApi": {
+      "baseUrl": "https://newsapi.org/v2",
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "timeout": 15000,
+      "cacheTtl": 900000,
+      "requiresAuth": true,
+      "authType": "header",
+      "authParam": "X-API-Key",
+      "endpoints": {
+        "topHeadlines": "/top-headlines",
+        "everything": "/everything",
+        "sources": "/sources"
+      }
+    },
+    "jsonPlaceholder": {
+      "baseUrl": "https://jsonplaceholder.typicode.com",
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "timeout": 10000,
+      "cacheTtl": 300000,
+      "requiresAuth": false,
+      "endpoints": {
+        "posts": "/posts",
+        "users": "/users",
+        "comments": "/comments"
+      }
+    },
+    "httpBin": {
+      "baseUrl": "https://httpbin.org",
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "timeout": 10000,
+      "cacheTtl": 0,
+      "requiresAuth": false,
+      "endpoints": {
+        "get": "/get",
+        "post": "/post",
+        "status": "/status",
+        "delay": "/delay"
+      }
+    }
+  },
+  "rateLimiting": {
+    "enabled": true,
+    "defaultLimits": {
+      "requestsPerSecond": 10,
+      "requestsPerMinute": 100,
+      "requestsPerHour": 1000
+    },
+    "apiSpecificLimits": {
+      "weatherApi": {
+        "requestsPerSecond": 1,
+        "requestsPerMinute": 60,
+        "requestsPerHour": 1000
+      },
+      "newsApi": {
+        "requestsPerSecond": 1,
+        "requestsPerMinute": 30,
+        "requestsPerHour": 500
+      }
+    }
+  },
+  "security": {
+    "allowedDomains": [
+      "api.openweathermap.org",
+      "newsapi.org",
+      "jsonplaceholder.typicode.com",
+      "httpbin.org",
+      "localhost"
+    ],
+    "blockedDomains": [
+      "malicious-site.com",
+      "spam-api.net"
+    ],
+    "requireHttps": true,
+    "validateCertificates": true,
+    "maxRedirects": 5
+  },
+  "logging": {
+    "enabled": true,
+    "level": "info",
+    "logRequests": true,
+    "logResponses": true,
+    "logErrors": true,
+    "logRetries": true,
+    "maxLogSize": "10MB"
+  }
+}

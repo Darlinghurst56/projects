@@ -1,0 +1,133 @@
+{
+  "timestamp": "2025-08-03T14:05:47.207Z",
+  "success": false,
+  "steps": [
+    {
+      "timestamp": "2025-08-03T14:05:47.208Z",
+      "type": "info",
+      "message": "Starting router login test..."
+    },
+    {
+      "timestamp": "2025-08-03T14:05:47.209Z",
+      "type": "info",
+      "message": "Initializing browser..."
+    },
+    {
+      "timestamp": "2025-08-03T14:06:05.155Z",
+      "type": "info",
+      "message": "Browser initialized successfully"
+    },
+    {
+      "timestamp": "2025-08-03T14:06:05.155Z",
+      "type": "info",
+      "message": "Attempting to access router at http://192.168.1.1"
+    },
+    {
+      "timestamp": "2025-08-03T14:06:11.321Z",
+      "type": "info",
+      "message": "Response status: 200"
+    },
+    {
+      "timestamp": "2025-08-03T14:06:11.322Z",
+      "type": "info",
+      "message": "Final URL: http://192.168.1.1/webpages/index.html"
+    },
+    {
+      "timestamp": "2025-08-03T14:06:13.081Z",
+      "type": "info",
+      "message": "Screenshot saved: /home/darlinghurstlinux/projects/miniprojects/router_logs/screenshot-initial-1754229971322.png"
+    },
+    {
+      "timestamp": "2025-08-03T14:06:13.099Z",
+      "type": "info",
+      "message": "Page title: login"
+    },
+    {
+      "timestamp": "2025-08-03T14:06:13.099Z",
+      "type": "info",
+      "message": "Current URL: http://192.168.1.1/webpages/index.html"
+    },
+    {
+      "timestamp": "2025-08-03T14:06:13.100Z",
+      "type": "info",
+      "message": "Analyzing login form..."
+    },
+    {
+      "timestamp": "2025-08-03T14:06:13.101Z",
+      "type": "error",
+      "message": "Failed to analyze login form: this.page.waitForTimeout is not a function"
+    },
+    {
+      "timestamp": "2025-08-03T14:06:13.101Z",
+      "type": "info",
+      "message": "Attempting login with username: admin"
+    },
+    {
+      "timestamp": "2025-08-03T14:06:13.222Z",
+      "type": "info",
+      "message": "Found username field with selector: input[type=\"text\"]"
+    },
+    {
+      "timestamp": "2025-08-03T14:06:13.298Z",
+      "type": "info",
+      "message": "Found password field with selector: input[type=\"password\"]"
+    },
+    {
+      "timestamp": "2025-08-03T14:06:13.303Z",
+      "type": "error",
+      "message": "Could not find username or password fields"
+    },
+    {
+      "timestamp": "2025-08-03T14:06:13.304Z",
+      "type": "info",
+      "message": "Exploring router interface..."
+    },
+    {
+      "timestamp": "2025-08-03T14:06:13.309Z",
+      "type": "info",
+      "message": "Found 1 potentially useful links:"
+    },
+    {
+      "timestamp": "2025-08-03T14:06:13.310Z",
+      "type": "info",
+      "message": "  1. \"LOG IN\" -> javascript:void(0);"
+    },
+    {
+      "timestamp": "2025-08-03T14:06:14.240Z",
+      "type": "info",
+      "message": "Screenshot saved: /home/darlinghurstlinux/projects/miniprojects/router_logs/screenshot-interface-explored-1754229973310.png"
+    }
+  ],
+  "errors": [
+    {
+      "timestamp": "2025-08-03T14:06:13.101Z",
+      "type": "error",
+      "message": "Failed to analyze login form: this.page.waitForTimeout is not a function"
+    },
+    {
+      "timestamp": "2025-08-03T14:06:13.303Z",
+      "type": "error",
+      "message": "Could not find username or password fields"
+    }
+  ],
+  "screenshots": [
+    "/home/darlinghurstlinux/projects/miniprojects/router_logs/screenshot-initial-1754229971322.png",
+    "/home/darlinghurstlinux/projects/miniprojects/router_logs/screenshot-interface-explored-1754229973310.png"
+  ],
+  "loginFields": [],
+  "pageInfo": {
+    "status": 200,
+    "url": "http://192.168.1.1/webpages/index.html",
+    "title": "login",
+    "currentUrl": "http://192.168.1.1/webpages/index.html"
+  },
+  "interfaceLinks": [
+    {
+      "text": "LOG IN",
+      "href": "javascript:void(0);",
+      "onclick": "",
+      "tagName": "A",
+      "index": 0
+    }
+  ]
+}

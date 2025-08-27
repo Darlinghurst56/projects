@@ -1,0 +1,213 @@
+{
+  "name": "Gmail Read Emails via Telegram",
+  "nodes": [
+    {
+      "parameters": {
+        "authentication": "botToken",
+        "resource": "message",
+        "operation": "get",
+        "additionalFields": {}
+      },
+      "name": "Telegram Trigger",
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ],
+      "webhookId": "telegram-read-emails",
+      "credentials": {
+        "telegramApi": {
+          "id": "telegram-bot-credentials",
+          "name": "Gmail Telegram Bot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$node['Telegram Trigger'].json['message']['text']}}",
+              "operation": "startsWith",
+              "value2": "/read_emails"
+            }
+          ]
+        }
+      },
+      "name": "Check Read Command",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        460,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "// Parse the telegram message to extract read parameters\nconst message = items[0].json.message.text;\nconst chatId = items[0].json.message.chat.id;\n\n// Expected format: /read_emails [count:5] [unread_only]\nconst parts = message.split(' ');\nlet count = 5; // default\nlet unreadOnly = false;\n\nfor (let i = 1; i < parts.length; i++) {\n  if (parts[i].startsWith('count:')) {\n    count = parseInt(parts[i].split(':')[1]) || 5;\n  }\n  if (parts[i] === 'unread_only') {\n    unreadOnly = true;\n  }\n}\n\nreturn [{\n  json: {\n    chatId: chatId,\n    count: Math.min(count, 20), // limit to 20 emails max\n    unreadOnly: unreadOnly\n  }\n}];"
+      },
+      "name": "Parse Read Command",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        680,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "operation": "getAll",
+        "returnAll": false,
+        "limit": "={{$node['Parse Read Command'].json['count']}}",
+        "simple": false,
+        "options": {
+          "q": "={{$node['Parse Read Command'].json['unreadOnly'] ? 'is:unread' : ''}}"
+        }
+      },
+      "name": "Get Gmail Messages",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 1,
+      "position": [
+        900,
+        200
+      ],
+      "credentials": {
+        "googleOAuth2Api": {
+          "id": "gmail-oauth-credentials",
+          "name": "Gmail OAuth2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "// Format the emails for Telegram response\nconst emails = items;\nconst chatId = $node['Parse Read Command'].json.chatId;\n\nif (emails.length === 0) {\n  return [{\n    json: {\n      chatId: chatId,\n      text: \"📭 No emails found.\"\n    }\n  }];\n}\n\nlet emailList = `📧 **Recent Emails** (${emails.length} found)\\n\\n`;\n\nfor (let i = 0; i < emails.length; i++) {\n  const email = emails[i].json;\n  const subject = email.payload.headers.find(h => h.name === 'Subject')?.value || 'No Subject';\n  const from = email.payload.headers.find(h => h.name === 'From')?.value || 'Unknown Sender';\n  const date = new Date(parseInt(email.internalDate)).toLocaleDateString();\n  const isUnread = email.labelIds?.includes('UNREAD') ? '🔵' : '✅';\n  \n  emailList += `${isUnread} **${subject}**\\n`;\n  emailList += `👤 From: ${from}\\n`;\n  emailList += `📅 Date: ${date}\\n`;\n  emailList += `🆔 ID: ${email.id}\\n\\n`;\n}\n\n// Telegram message limit is 4096 characters\nif (emailList.length > 4000) {\n  emailList = emailList.substring(0, 4000) + '\\n\\n... (truncated)';\n}\n\nreturn [{\n  json: {\n    chatId: chatId,\n    text: emailList\n  }\n}];"
+      },
+      "name": "Format Email List",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1120,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "chatId": "={{$node['Format Email List'].json['chatId']}}",
+        "text": "={{$node['Format Email List'].json['text']}}",
+        "additionalFields": {
+          "parse_mode": "Markdown"
+        }
+      },
+      "name": "Send Email List",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [
+        1340,
+        200
+      ],
+      "credentials": {
+        "telegramApi": {
+          "id": "telegram-bot-credentials",
+          "name": "Gmail Telegram Bot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{$node['Telegram Trigger'].json['message']['chat']['id']}}",
+        "text": "❓ Unknown command. Use /read_emails [count:5] [unread_only] to read emails."
+      },
+      "name": "Unknown Command",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [
+        680,
+        400
+      ],
+      "credentials": {
+        "telegramApi": {
+          "id": "telegram-bot-credentials",
+          "name": "Gmail Telegram Bot"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "Check Read Command",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Read Command": {
+      "main": [
+        [
+          {
+            "node": "Parse Read Command",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Unknown Command",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Read Command": {
+      "main": [
+        [
+          {
+            "node": "Get Gmail Messages",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Gmail Messages": {
+      "main": [
+        [
+          {
+            "node": "Format Email List",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format Email List": {
+      "main": [
+        [
+          {
+            "node": "Send Email List",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {},
+  "id": "gmail-read-emails-workflow",
+  "meta": {
+    "instanceId": "n8n-gmail-telegram-integration"
+  },
+  "tags": [
+    "gmail",
+    "telegram",
+    "email",
+    "read"
+  ]
+}

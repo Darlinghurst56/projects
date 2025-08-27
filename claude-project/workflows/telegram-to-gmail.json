@@ -1,0 +1,222 @@
+{
+  "name": "Telegram to Gmail - Home User",
+  "active": true,
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ]
+      },
+      "id": "f1a2b3c4-d5e6-f7g8-h9i0-j1k2l3m4n5o6",
+      "name": "Telegram Trigger",
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ],
+      "webhookId": "auto-generated",
+      "credentials": {
+        "telegramApi": {
+          "id": "1",
+          "name": "Home Telegram Bot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$json.message.text}}",
+              "operation": "startsWith",
+              "value2": "/send_email"
+            }
+          ]
+        }
+      },
+      "id": "a1b2c3d4-e5f6-g7h8-i9j0-k1l2m3n4o5p6",
+      "name": "Check Email Command",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        460,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Parse Telegram command: /send_email to@email.com Subject: Body text\nconst text = $input.first().json.message.text;\nconst userId = $input.first().json.message.from.id;\n\n// Security: Only allow specific Telegram user ID (replace with your ID)\nconst ALLOWED_USER_ID = 123456789; // Replace with your Telegram user ID\nif (userId !== ALLOWED_USER_ID) {\n  throw new Error('Unauthorized user');\n}\n\n// Parse email command format\nconst parts = text.split(' ');\nif (parts.length < 2) {\n  throw new Error('Invalid format. Use: /send_email to@email.com Subject: Your subject Body: Your message');\n}\n\nconst to = parts[1];\nif (!to.includes('@')) {\n  throw new Error('Invalid email address');\n}\n\n// Extract subject and body\nconst subjectMatch = text.match(/Subject: (.*?) Body:/);\nconst bodyMatch = text.match(/Body: (.*)/);\n\nconst subject = subjectMatch ? subjectMatch[1].trim() : 'Message from Home Assistant';\nconst body = bodyMatch ? bodyMatch[1].trim() : 'No message body provided';\n\nreturn {\n  json: {\n    to: to,\n    subject: subject,\n    body: body,\n    originalCommand: text,\n    userId: userId\n  }\n};"
+      },
+      "id": "b1c2d3e4-f5g6-h7i8-j9k0-l1m2n3o4p5q6",
+      "name": "Parse Email Command",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        680,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "send",
+        "toEmail": "={{$json.to}}",
+        "subject": "={{$json.subject}}",
+        "message": "={{$json.body}}",
+        "options": {
+          "ccEmail": "",
+          "bccEmail": ""
+        }
+      },
+      "id": "c1d2e3f4-g5h6-i7j8-k9l0-m1n2o3p4q5r6",
+      "name": "Send Gmail",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2,
+      "position": [
+        900,
+        300
+      ],
+      "credentials": {
+        "googleOAuth2Api": {
+          "id": "2",
+          "name": "Google APIs - Home User"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "operation": "sendMessage",
+        "chatId": "={{$('Telegram Trigger').item.json.message.chat.id}}",
+        "text": "✅ Email sent successfully!\n\n📧 To: {{$json.to}}\n📝 Subject: {{$json.subject}}\n💬 Body: {{$json.body}}\n\n🤖 Sent via Home Assistant"
+      },
+      "id": "d1e2f3g4-h5i6-j7k8-l9m0-n1o2p3q4r5s6",
+      "name": "Reply Success",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [
+        1120,
+        300
+      ],
+      "credentials": {
+        "telegramApi": {
+          "id": "1",
+          "name": "Home Telegram Bot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "sendMessage",
+        "chatId": "={{$('Telegram Trigger').item.json.message.chat.id}}",
+        "text": "❌ Failed to send email!\n\n🚨 Error: {{$('Parse Email Command').item.json.error || 'Unknown error occurred'}}\n\n💡 Format: /send_email user@example.com Subject: Your subject Body: Your message\n\n🔒 Only authorized users can send emails"
+      },
+      "id": "e1f2g3h4-i5j6-k7l8-m9n0-o1p2q3r4s5t6",
+      "name": "Reply Error",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [
+        900,
+        480
+      ],
+      "credentials": {
+        "telegramApi": {
+          "id": "1",
+          "name": "Home Telegram Bot"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "Check Email Command",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Email Command": {
+      "main": [
+        [
+          {
+            "node": "Parse Email Command",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Email Command": {
+      "main": [
+        [
+          {
+            "node": "Send Gmail",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Gmail": {
+      "main": [
+        [
+          {
+            "node": "Reply Success",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ],
+      "error": [
+        [
+          {
+            "node": "Reply Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Email Command": {
+      "error": [
+        [
+          {
+            "node": "Reply Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "errorWorkflow": {
+      "value": ""
+    },
+    "timezone": "America/New_York",
+    "saveManualExecutions": true
+  },
+  "staticData": null,
+  "tags": [
+    {
+      "id": "home-automation",
+      "name": "Home Automation"
+    },
+    {
+      "id": "google-api",
+      "name": "Google API"
+    },
+    {
+      "id": "telegram-bot",
+      "name": "Telegram Bot"
+    }
+  ],
+  "triggerCount": 1,
+  "updatedAt": "2025-01-06T13:00:00.000Z",
+  "versionId": "1"
+}

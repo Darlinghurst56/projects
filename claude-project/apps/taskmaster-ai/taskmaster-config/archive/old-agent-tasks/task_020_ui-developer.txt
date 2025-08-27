@@ -1,0 +1,29 @@
+# Task ID: 20
+# Title: Unified Entry Point with Simple Routing System
+# Status: pending
+# Dependencies: 17, 18, 15, 16
+# Priority: medium
+# Description: Consolidate all scattered interfaces into a single entry point at localhost:3001/ with a simple routing system, replacing agent-dashboard.html and test pages with unified navigation optimized for home users and mobile devices.
+# Details:
+1. **Create Main Entry Point:** Implement index.html at root serving as the primary navigation hub. Design a clean, minimal interface with large touch-friendly buttons for each major section: Agent Control, Task View, System Status, and Settings. Use CSS Grid for responsive layout that adapts from mobile to desktop.
+
+2. **Simple Client-Side Routing:** Implement lightweight hash-based routing (#/agents, #/tasks, #/status) using vanilla JavaScript. Create a router.js module that listens to hashchange events and dynamically loads the appropriate view without page refreshes. Keep routing logic under 50 lines of code for maintainability.
+
+3. **Consolidate Existing Pages:** Migrate functionality from agent-dashboard.html, live-agent-dashboard.html, and test pages into modular components. Extract common elements (WebSocket connections, data fetching) into shared utilities. Convert each page into a view function that returns HTML content.
+
+4. **Mobile-First Responsive Design:** Design with 320px minimum width as baseline. Use relative units (rem, %) and CSS custom properties for consistent spacing. Implement touch gestures for common actions (swipe to refresh, tap to expand). Ensure all interactive elements are minimum 44x44px for touch targets.
+
+5. **Performance Optimization:** Lazy load views only when accessed. Implement simple caching for static content. Use CSS containment for better rendering performance. Keep total JavaScript bundle under 50KB uncompressed. Inline critical CSS for instant rendering.
+
+6. **Navigation Component:** Create persistent bottom navigation bar for mobile and side navigation for desktop. Include icons and labels for clarity. Highlight active route with visual indicator. Support keyboard navigation with proper focus management.
+
+# Test Strategy:
+1. **Routing Verification:** Test all hash routes (#/, #/agents, #/tasks, #/status) navigate to correct views. Verify browser back/forward buttons work correctly. Ensure deep linking (direct URL access) loads appropriate view. Test invalid routes show 404 or redirect to home.
+
+2. **Mobile Device Testing:** Test on iPhone SE (375px), standard Android (412px), iPad (768px), and desktop (1920px). Verify all navigation elements are easily tappable. Ensure text remains readable without zooming. Test landscape and portrait orientations.
+
+3. **Performance Testing:** Measure initial page load time (target < 1 second). Test view switching speed (target < 100ms). Verify lazy loading prevents unnecessary resource downloads. Check total bundle size stays under 50KB.
+
+4. **Integration Testing:** Confirm WebSocket connections persist during navigation. Verify data updates reflect across all views. Test that existing functionality from consolidated pages works correctly. Ensure no console errors during navigation.
+
+5. **Accessibility Testing:** Verify keyboard navigation through all routes. Test with screen reader for proper announcements. Ensure focus management during route changes. Validate all interactive elements have proper ARIA labels.

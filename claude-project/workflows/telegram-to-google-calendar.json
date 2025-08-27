@@ -1,0 +1,252 @@
+{
+  "name": "Telegram to Google Calendar - Home User",
+  "active": true,
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ]
+      },
+      "id": "f1a2b3c4-d5e6-f7g8-h9i0-j1k2l3m4n5o8",
+      "name": "Telegram Trigger",
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ],
+      "webhookId": "auto-generated",
+      "credentials": {
+        "telegramApi": {
+          "id": "1",
+          "name": "Gmail Telegram Bot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$json.message.text}}",
+              "operation": "startsWith",
+              "value2": "/calendar"
+            }
+          ]
+        }
+      },
+      "id": "a1b2c3d4-e5f6-g7h8-i9j0-k1l2m3n4o5p8",
+      "name": "Check Calendar Command",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        460,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Parse Telegram command: /calendar_list, /calendar_today, or /calendar_week\nconst text = $input.first().json.message.text;\nconst userId = $input.first().json.message.from.id;\n\n// Security: Only allow specific Telegram user ID (replace with your ID)\nconst ALLOWED_USER_ID = 123456789; // Replace with your Telegram user ID\nif (userId !== ALLOWED_USER_ID) {\n  throw new Error('Unauthorized user');\n}\n\n// Parse calendar command format\nconst parts = text.split(' ');\nconst command = parts[0].toLowerCase();\n\nlet operation, timeRange, startDate, endDate;\n\nswitch (command) {\n  case '/calendar_today':\n    operation = 'list';\n    timeRange = 'today';\n    startDate = new Date();\n    startDate.setHours(0, 0, 0, 0);\n    endDate = new Date();\n    endDate.setHours(23, 59, 59, 999);\n    break;\n    \n  case '/calendar_week':\n    operation = 'list';\n    timeRange = 'week';\n    startDate = new Date();\n    // Get Monday of current week\n    const day = startDate.getDay();\n    const diff = startDate.getDate() - day + (day === 0 ? -6 : 1);\n    startDate.setDate(diff);\n    startDate.setHours(0, 0, 0, 0);\n    endDate = new Date(startDate);\n    endDate.setDate(startDate.getDate() + 6);\n    endDate.setHours(23, 59, 59, 999);\n    break;\n    \n  case '/calendar_upcoming':\n  case '/calendar_list':\n  default:\n    operation = 'list';\n    timeRange = 'upcoming';\n    startDate = new Date();\n    endDate = new Date();\n    endDate.setDate(startDate.getDate() + 30); // Next 30 days\n    break;\n}\n\n// Parse custom date range if provided\nif (parts.length > 1) {\n  const dateStr = parts.slice(1).join(' ');\n  if (dateStr.includes('to')) {\n    const [start, end] = dateStr.split(' to ');\n    try {\n      startDate = new Date(start.trim());\n      endDate = new Date(end.trim());\n      timeRange = 'custom';\n    } catch (error) {\n      // Use default range if parsing fails\n    }\n  }\n}\n\nreturn {\n  json: {\n    operation: operation,\n    timeRange: timeRange,\n    startDate: startDate.toISOString(),\n    endDate: endDate.toISOString(),\n    originalCommand: text,\n    userId: userId\n  }\n};"
+      },
+      "id": "b1c2d3e4-f5g6-h7i8-j9k0-l1m2n3o4p5q8",
+      "name": "Parse Calendar Command",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        680,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "calendarId": "primary",
+        "options": {
+          "timeMin": "={{$json.startDate}}",
+          "timeMax": "={{$json.endDate}}",
+          "singleEvents": true,
+          "orderBy": "startTime",
+          "maxResults": 50
+        }
+      },
+      "id": "c1d2e3f4-g5h6-i7j8-k9l0-m1n2o3p4q5r8",
+      "name": "Get Calendar Events",
+      "type": "n8n-nodes-base.googleCalendar",
+      "typeVersion": 1,
+      "position": [
+        900,
+        300
+      ],
+      "credentials": {
+        "googleOAuth2Api": {
+          "id": "2",
+          "name": "Gmail OAuth2"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Format calendar events for Telegram display\nconst input = $input.all();\nconst commandData = input[0].json;\nconst eventsData = input[1].json;\n\n// Handle both single event and array of events\nconst events = Array.isArray(eventsData) ? eventsData : (eventsData.items || [eventsData]);\n\nif (!events || events.length === 0) {\n  return {\n    json: {\n      message: `📅 No events found for ${commandData.timeRange}\\n\\n🔍 Time range: ${new Date(commandData.startDate).toLocaleDateString()} - ${new Date(commandData.endDate).toLocaleDateString()}\\n\\n💡 Try /calendar_week or /calendar_today for different views`,\n      hasEvents: false,\n      timeRange: commandData.timeRange\n    }\n  };\n}\n\n// Format events for display\nlet message = `📅 **Calendar Events (${commandData.timeRange})**\\n\\n`;\nmessage += `📊 Found ${events.length} event${events.length > 1 ? 's' : ''}\\n\\n`;\n\nevents.forEach((event, index) => {\n  const start = event.start ? (event.start.dateTime || event.start.date) : 'No start time';\n  const end = event.end ? (event.end.dateTime || event.end.date) : 'No end time';\n  \n  const startDate = new Date(start);\n  const endDate = new Date(end);\n  \n  // Format date and time\n  let dateStr = startDate.toLocaleDateString();\n  let timeStr = '';\n  \n  if (event.start && event.start.dateTime) {\n    // Timed event\n    timeStr = `${startDate.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})} - ${endDate.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}`;\n  } else {\n    // All-day event\n    timeStr = 'All day';\n  }\n  \n  message += `${index + 1}. **${event.summary || 'Untitled Event'}**\\n`;\n  message += `   📅 ${dateStr}\\n`;\n  message += `   🕐 ${timeStr}\\n`;\n  \n  if (event.location) {\n    message += `   📍 ${event.location}\\n`;\n  }\n  \n  if (event.description) {\n    const desc = event.description.length > 100 ? \n      event.description.substring(0, 100) + '...' : event.description;\n    message += `   📝 ${desc}\\n`;\n  }\n  \n  if (event.attendees && event.attendees.length > 0) {\n    const attendeeCount = event.attendees.length;\n    message += `   👥 ${attendeeCount} attendee${attendeeCount > 1 ? 's' : ''}\\n`;\n  }\n  \n  if (event.htmlLink) {\n    message += `   🔗 [View in Calendar](${event.htmlLink})\\n`;\n  }\n  \n  message += '\\n';\n});\n\n// Add footer with available commands\nmessage += '💡 **Available commands:**\\n';\nmessage += '• /calendar_today - Today\\'s events\\n';\nmessage += '• /calendar_week - This week\\'s events\\n';\nmessage += '• /calendar_upcoming - Next 30 days\\n';\nmessage += '• /calendar_list 2024-01-15 to 2024-01-20 - Custom range\\n';\n\nreturn {\n  json: {\n    message: message,\n    hasEvents: true,\n    eventCount: events.length,\n    timeRange: commandData.timeRange,\n    events: events.map(event => ({\n      id: event.id,\n      summary: event.summary,\n      start: event.start,\n      end: event.end,\n      location: event.location\n    }))\n  }\n};"
+      },
+      "id": "d1e2f3g4-h5i6-j7k8-l9m0-n1o2p3q4r5s8",
+      "name": "Format Events for Display",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1120,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "sendMessage",
+        "chatId": "={{$('Telegram Trigger').item.json.message.chat.id}}",
+        "text": "={{$json.message}}",
+        "additionalFields": {
+          "parse_mode": "Markdown"
+        }
+      },
+      "id": "e1f2g3h4-i5j6-k7l8-m9n0-o1p2q3r4s5t8",
+      "name": "Reply with Events",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [
+        1340,
+        300
+      ],
+      "credentials": {
+        "telegramApi": {
+          "id": "1",
+          "name": "Gmail Telegram Bot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "sendMessage",
+        "chatId": "={{$('Telegram Trigger').item.json.message.chat.id}}",
+        "text": "❌ Failed to retrieve calendar events!\\n\\n🚨 Error: {{$('Parse Calendar Command').item.json.error || $('Get Calendar Events').item.json.error || 'Unknown error occurred'}}\\n\\n💡 Available commands:\\n• /calendar_today - Today's events\\n• /calendar_week - This week's events\\n• /calendar_upcoming - Next 30 days\\n• /calendar_list 2024-01-15 to 2024-01-20 - Custom range\\n\\n🔒 Only authorized users can access calendar data\\n🔧 Check Google Calendar API permissions"
+      },
+      "id": "f1g2h3i4-j5k6-l7m8-n9o0-p1q2r3s4t5u8",
+      "name": "Reply Error",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [
+        900,
+        480
+      ],
+      "credentials": {
+        "telegramApi": {
+          "id": "1",
+          "name": "Gmail Telegram Bot"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "Check Calendar Command",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Calendar Command": {
+      "main": [
+        [
+          {
+            "node": "Parse Calendar Command",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Calendar Command": {
+      "main": [
+        [
+          {
+            "node": "Get Calendar Events",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ],
+      "error": [
+        [
+          {
+            "node": "Reply Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Calendar Events": {
+      "main": [
+        [
+          {
+            "node": "Format Events for Display",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ],
+      "error": [
+        [
+          {
+            "node": "Reply Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format Events for Display": {
+      "main": [
+        [
+          {
+            "node": "Reply with Events",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "errorWorkflow": {
+      "value": ""
+    },
+    "timezone": "America/New_York",
+    "saveManualExecutions": true
+  },
+  "staticData": null,
+  "tags": [
+    {
+      "id": "home-automation",
+      "name": "Home Automation"
+    },
+    {
+      "id": "google-api",
+      "name": "Google API"
+    },
+    {
+      "id": "telegram-bot",
+      "name": "Telegram Bot"
+    },
+    {
+      "id": "google-calendar",
+      "name": "Google Calendar"
+    }
+  ],
+  "triggerCount": 1,
+  "updatedAt": "2025-01-06T14:00:00.000Z",
+  "versionId": "1"
+}

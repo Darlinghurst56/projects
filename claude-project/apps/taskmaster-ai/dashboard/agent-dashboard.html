@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TaskMaster Agent Dashboard</title>
+    <link rel="stylesheet" href="/app/web/css/common.css">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        .status-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+        }
+        .agent-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        .agent-card {
+            background: #fff;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .agent-id {
+            font-weight: bold;
+            color: #2563eb;
+            margin-bottom: 10px;
+        }
+        .agent-capabilities {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+        .agent-status {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        .status-available {
+            background: #dcfce7;
+            color: #166534;
+        }
+        .status-active {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+        .agent-tasks {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #666;
+        }
+        .refresh-btn {
+            background: #2563eb;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .refresh-btn:hover {
+            background: #1d4ed8;
+        }
+        .error {
+            background: #fef2f2;
+            color: #dc2626;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+        }
+        .loading {
+            text-align: center;
+            color: #666;
+            padding: 40px;
+        }
+    </style>
+</head>
+<body>
+    <main class="tm-main">
+        <div class="tm-container">
+            <div class="container">
+        <h1>🤖 TaskMaster Agent Dashboard</h1>
+        
+        <div class="status-bar">
+            <div>
+                <strong>Total Agents:</strong> <span id="totalAgents">-</span>
+                <strong>Active Agents:</strong> <span id="activeAgents">-</span>
+            </div>
+            <button class="refresh-btn" onclick="loadAgents()">🔄 Refresh</button>
+        </div>
+        
+        <div id="content">
+            <div class="loading">Loading agents...</div>
+        </div>
+    </div>
+        </div>
+    </main>
+
+    <script>
+        async function loadAgents() {
+            const content = document.getElementById('content');
+            content.innerHTML = '<div class="loading">Loading agents...</div>';
+            
+            try {
+                const response = await fetch('/api/v2/agents');
+                const data = await response.json();
+                
+                if (data.error || !data.success) {
+                    throw new Error(data.error || 'Failed to load agents');
+                }
+                
+                // Update status bar (v2 API format)
+                document.getElementById('totalAgents').textContent = data.count || 0;
+                const activeCount = data.agents ? data.agents.filter(a => a.status === 'active' || a.status === 'busy').length : 0;
+                document.getElementById('activeAgents').textContent = activeCount;
+                
+                // Render agents
+                if (data.agents && data.agents.length > 0) {
+                    const agentsHtml = data.agents.map(agent => `
+                        <div class="agent-card">
+                            <div class="agent-id">${agent.id}</div>
+                            <div class="agent-capabilities">
+                                Capabilities: ${Array.isArray(agent.capabilities) ? agent.capabilities.join(', ') : agent.capabilities}
+                            </div>
+                            <div class="agent-status status-${agent.status}">${agent.status}</div>
+                            <div class="agent-tasks">
+                                Assigned Tasks: ${agent.assignedTasks ? agent.assignedTasks.length : 0}
+                                ${agent.assignedTasks && agent.assignedTasks.length > 0 ? `(${agent.assignedTasks.join(', ')})` : ''}
+                            </div>
+                            <div class="agent-tasks">
+                                Registered: ${new Date(agent.registeredAt).toLocaleString()}
+                            </div>
+                            <div class="agent-tasks">
+                                Last Updated: ${new Date(agent.lastUpdated).toLocaleString()}
+                            </div>
+                        </div>
+                    `).join('');
+                    
+                    content.innerHTML = `<div class="agent-grid">${agentsHtml}</div>`;
+                } else {
+                    content.innerHTML = '<div class="error">No agents found</div>';
+                }
+            } catch (error) {
+                content.innerHTML = `<div class="error">Error loading agents: ${error.message}</div>`;
+            }
+        }
+        
+        // Load agents on page load
+        loadAgents();
+        
+        // Auto-refresh every 30 seconds
+        setInterval(loadAgents, 30000);
+    </script>
+    <script src="/app/web/components/navigation.js"></script>
+</body>
+</html> 

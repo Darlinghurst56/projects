@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Widget Health Test - Isolated Testing Environment</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .header {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .test-section {
+            background: white;
+            margin: 20px 0;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .test-section h3 {
+            background: #4f46e5;
+            color: white;
+            padding: 15px;
+            margin: 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .test-content {
+            padding: 20px;
+        }
+        .status {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        .status.success { background: #10b981; color: white; }
+        .status.error { background: #ef4444; color: white; }
+        .status.warning { background: #f59e0b; color: white; }
+        .status.testing { background: #6b7280; color: white; }
+        
+        .api-test {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 15px;
+            margin: 15px 0;
+        }
+        .api-endpoint {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            padding: 15px;
+        }
+        .api-endpoint h4 {
+            margin: 0 0 10px 0;
+            color: #374151;
+            font-size: 14px;
+        }
+        .test-result {
+            font-size: 12px;
+            color: #6b7280;
+        }
+        .test-button {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            margin-top: 10px;
+        }
+        .test-button:hover {
+            background: #2563eb;
+        }
+        .test-button:disabled {
+            background: #9ca3af;
+            cursor: not-allowed;
+        }
+        .mock-data-toggle {
+            margin: 10px 0;
+        }
+        .mock-data-toggle input[type="checkbox"] {
+            margin-right: 8px;
+        }
+        .widget-preview {
+            border: 2px dashed #d1d5db;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 15px 0;
+            background: #f9fafb;
+        }
+        .error-log {
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            border-radius: 4px;
+            padding: 10px;
+            margin: 10px 0;
+            font-family: monospace;
+            font-size: 12px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        .recommendations {
+            background: #ecfdf5;
+            border: 1px solid #bbf7d0;
+            border-radius: 4px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        .recommendations h4 {
+            color: #059669;
+            margin: 0 0 10px 0;
+        }
+        .recommendations ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔍 Widget Health Test Environment</h1>
+            <p>Isolated testing environment for individual widget components with Gemini-enhanced analysis</p>
+            <div class="mock-data-toggle">
+                <label>
+                    <input type="checkbox" id="useMockData" checked> Use mock data for offline testing
+                </label>
+            </div>
+        </div>
+
+        <!-- DNS Widgets Section -->
+        <div class="test-section">
+            <h3>
+                🌐 DNS Widgets
+                <span class="status testing" id="dns-status">Testing...</span>
+            </h3>
+            <div class="test-content">
+                <div class="api-test">
+                    <div class="api-endpoint">
+                        <h4>DNS Status API</h4>
+                        <div class="test-result" id="dns-status-result">Not tested</div>
+                        <button class="test-button" onclick="testDnsStatus()">Test Connection</button>
+                    </div>
+                    <div class="api-endpoint">
+                        <h4>DNS Analytics API</h4>
+                        <div class="test-result" id="dns-analytics-result">Not tested</div>
+                        <button class="test-button" onclick="testDnsAnalytics()">Test Connection</button>
+                    </div>
+                    <div class="api-endpoint">
+                        <h4>DNS Profile API</h4>
+                        <div class="test-result" id="dns-profile-result">Not tested</div>
+                        <button class="test-button" onclick="testDnsProfile()">Test Connection</button>
+                    </div>
+                </div>
+                <div class="widget-preview" id="dns-widget-preview">
+                    DNS widgets will be tested here...
+                </div>
+                <div class="error-log" id="dns-error-log" style="display: none;"></div>
+                <div class="recommendations">
+                    <h4>🤖 Gemini Analysis - DNS Widgets</h4>
+                    <ul>
+                        <li><strong>DnsStatusWidget:</strong> Most resilient, WebSocket disabled with hardcoded fallbacks</li>
+                        <li><strong>DnsAnalyticsWidget:</strong> High risk - relies on WebSocket connection, may fail without fallback</li>
+                        <li><strong>DnsProfileWidget:</strong> Should work, but uses inconsistent import path</li>
+                        <li><strong>Recommended:</strong> Re-enable WebSocket in DnsStatusWidget with fallback logic</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Google Widgets Section -->
+        <div class="test-section">
+            <h3>
+                📧 Google Services Widgets
+                <span class="status testing" id="google-status">Testing...</span>
+            </h3>
+            <div class="test-content">
+                <div class="api-test">
+                    <div class="api-endpoint">
+                        <h4>Google Calendar API</h4>
+                        <div class="test-result" id="google-calendar-result">Not tested</div>
+                        <button class="test-button" onclick="testGoogleCalendar()">Test Connection</button>
+                    </div>
+                    <div class="api-endpoint">
+                        <h4>Gmail API</h4>
+                        <div class="test-result" id="gmail-result">Not tested</div>
+                        <button class="test-button" onclick="testGmail()">Test Connection</button>
+                    </div>
+                    <div class="api-endpoint">
+                        <h4>Google Drive API</h4>
+                        <div class="test-result" id="google-drive-result">Not tested</div>
+                        <button class="test-button" onclick="testGoogleDrive()">Test Connection</button>
+                    </div>
+                </div>
+                <div class="widget-preview" id="google-widget-preview">
+                    Google widgets will be tested here...
+                </div>
+                <div class="error-log" id="google-error-log" style="display: none;"></div>
+                <div class="recommendations">
+                    <h4>🤖 Gemini Analysis - Google Widgets</h4>
+                    <ul>
+                        <li><strong>GoogleCalendarWidget:</strong> Will work gracefully - proper auth handling with fallback UI</li>
+                        <li><strong>GoogleGmailWidget:</strong> Will fail - no auth checks, assumes authenticated state</li>
+                        <li><strong>GoogleDriveWidget:</strong> Will fail - no auth checks, assumes authenticated state</li>
+                        <li><strong>Recommended:</strong> Copy auth pattern from Calendar widget to Gmail/Drive widgets</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- AI Chat Widget Section -->
+        <div class="test-section">
+            <h3>
+                🤖 AI Chat Widget
+                <span class="status testing" id="ai-status">Testing...</span>
+            </h3>
+            <div class="test-content">
+                <div class="api-test">
+                    <div class="api-endpoint">
+                        <h4>AI Connection</h4>
+                        <div class="test-result" id="ai-connection-result">Not tested</div>
+                        <button class="test-button" onclick="testAiConnection()">Test Connection</button>
+                    </div>
+                    <div class="api-endpoint">
+                        <h4>Chat History</h4>
+                        <div class="test-result" id="ai-history-result">Not tested</div>
+                        <button class="test-button" onclick="testAiHistory()">Test History</button>
+                    </div>
+                    <div class="api-endpoint">
+                        <h4>Send Message</h4>
+                        <div class="test-result" id="ai-message-result">Not tested</div>
+                        <button class="test-button" onclick="testAiMessage()">Test Message</button>
+                    </div>
+                </div>
+                <div class="widget-preview" id="ai-widget-preview">
+                    AI Chat widget will be tested here...
+                </div>
+                <div class="error-log" id="ai-error-log" style="display: none;"></div>
+                <div class="recommendations">
+                    <h4>🤖 Gemini Analysis - AI Chat Widget</h4>
+                    <ul>
+                        <li><strong>High failure risk:</strong> Dual API dependencies (AI + Google) without proper auth checks</li>
+                        <li><strong>Integration issue:</strong> Google actions will fail if user not authenticated with Google</li>
+                        <li><strong>Import inconsistency:</strong> Uses relative imports instead of @services alias</li>
+                        <li><strong>Recommended:</strong> Add Google auth checks before suggested actions, fix imports</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Meal Planner Widget Section -->
+        <div class="test-section">
+            <h3>
+                🍽️ Meal Planner Widget
+                <span class="status testing" id="meal-status">Testing...</span>
+            </h3>
+            <div class="test-content">
+                <div class="api-test">
+                    <div class="api-endpoint">
+                        <h4>Meal Plan API</h4>
+                        <div class="test-result" id="meal-plan-result">Not tested</div>
+                        <button class="test-button" onclick="testMealPlan()">Test Connection</button>
+                    </div>
+                    <div class="api-endpoint">
+                        <h4>PDF Upload</h4>
+                        <div class="test-result" id="meal-upload-result">Not tested</div>
+                        <button class="test-button" onclick="testMealUpload()">Test Upload</button>
+                    </div>
+                    <div class="api-endpoint">
+                        <h4>AI Suggestions</h4>
+                        <div class="test-result" id="meal-ai-result">Not tested</div>
+                        <button class="test-button" onclick="testMealAI()">Test AI</button>
+                    </div>
+                </div>
+                <div class="widget-preview" id="meal-widget-preview">
+                    Meal Planner widget will be tested here...
+                </div>
+                <div class="error-log" id="meal-error-log" style="display: none;"></div>
+                <div class="recommendations">
+                    <h4>🤖 Gemini Analysis - Meal Planner Widget</h4>
+                    <ul>
+                        <li><strong>Medium failure risk:</strong> PDF upload without size validation, no auth checks</li>
+                        <li><strong>Security concern:</strong> File upload needs client/server-side validation</li>
+                        <li><strong>Complex state:</strong> High complexity with nested components affects maintainability</li>
+                        <li><strong>Recommended:</strong> Add file size limits, break into separate component files</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Overall Health Summary -->
+        <div class="test-section">
+            <h3>
+                📊 Overall Widget Health Summary
+                <span class="status testing" id="overall-status">Analyzing...</span>
+            </h3>
+            <div class="test-content">
+                <div id="health-summary">
+                    <p>Complete individual widget tests to see overall health analysis...</p>
+                </div>
+                <button class="test-button" onclick="runAllTests()" style="font-size: 16px; padding: 12px 24px;">
+                    🚀 Run All Tests
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Mock data for offline testing
+        const mockData = {
+            dns: {
+                status: {
+                    connection: { status: 'connected', primaryDns: '76.76.19.19', location: 'US-East' },
+                    health: { status: 'healthy', responseTime: '12ms', successRate: '99.8%' }
+                },
+                analytics: {
+                    metrics: { totalQueries: 1250, blockedQueries: 125, blockRate: 10 },
+                    timeline: [{ time: '12:00', allowed: 100, blocked: 10 }]
+                },
+                profile: { provider: 'Control D', primaryDns: 'Auto', domain: 'home.local' }
+            },
+            google: {
+                calendar: { authenticated: false, events: [] },
+                gmail: { messages: [{ from: 'test@example.com', subject: 'Test Email' }] },
+                drive: { files: [{ name: 'Document.pdf', size: 1024000 }] }
+            },
+            ai: {
+                connection: { connected: true },
+                history: [{ role: 'assistant', content: 'Hello! How can I help you today?' }],
+                message: { message: 'I can help with various tasks!', suggestedActions: [] }
+            },
+            meal: {
+                plan: {
+                    meals: { Monday: { name: 'Spaghetti', ingredients: 'pasta, sauce, cheese' } },
+                    generatedFrom: 'uploaded shopping list'
+                },
+                suggestions: { success: true, message: 'Generated meal suggestions' }
+            }
+        };
+
+        let testResults = {
+            dns: { status: 0, errors: [] },
+            google: { status: 0, errors: [] },
+            ai: { status: 0, errors: [] },
+            meal: { status: 0, errors: [] }
+        };
+
+        function useMockData() {
+            return document.getElementById('useMockData').checked;
+        }
+
+        function updateStatus(section, status, message) {
+            const statusEl = document.getElementById(section + '-status');
+            statusEl.className = 'status ' + status;
+            statusEl.textContent = message;
+        }
+
+        function logError(section, error) {
+            const errorLog = document.getElementById(section + '-error-log');
+            errorLog.style.display = 'block';
+            errorLog.innerHTML += `<div>[${new Date().toLocaleTimeString()}] ${error}</div>`;
+            testResults[section].errors.push(error);
+        }
+
+        function updateResult(elementId, status, message) {
+            const el = document.getElementById(elementId);
+            el.textContent = message;
+            el.style.color = status === 'success' ? '#10b981' : status === 'error' ? '#ef4444' : '#f59e0b';
+        }
+
+        // DNS Tests
+        async function testDnsStatus() {
+            try {
+                if (useMockData()) {
+                    updateResult('dns-status-result', 'success', 'Connected (mock data)');
+                    return;
+                }
+                const response = await fetch('/api/dns/status');
+                if (response.ok) {
+                    updateResult('dns-status-result', 'success', 'Connected');
+                    testResults.dns.status++;
+                } else {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+            } catch (error) {
+                updateResult('dns-status-result', 'error', error.message);
+                logError('dns', `DNS Status API: ${error.message}`);
+            }
+        }
+
+        async function testDnsAnalytics() {
+            try {
+                if (useMockData()) {
+                    updateResult('dns-analytics-result', 'success', 'Connected (mock data)');
+                    return;
+                }
+                const response = await fetch('/api/dns/analytics');
+                if (response.ok) {
+                    updateResult('dns-analytics-result', 'success', 'Connected');
+                    testResults.dns.status++;
+                } else {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+            } catch (error) {
+                updateResult('dns-analytics-result', 'error', error.message);
+                logError('dns', `DNS Analytics API: ${error.message}`);
+            }
+        }
+
+        async function testDnsProfile() {
+            try {
+                if (useMockData()) {
+                    updateResult('dns-profile-result', 'success', 'Connected (mock data)');
+                    return;
+                }
+                const response = await fetch('/api/dns/profile');
+                if (response.ok) {
+                    updateResult('dns-profile-result', 'success', 'Connected');
+                    testResults.dns.status++;
+                } else {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+            } catch (error) {
+                updateResult('dns-profile-result', 'error', error.message);
+                logError('dns', `DNS Profile API: ${error.message}`);
+            }
+        }
+
+        // Google Tests
+        async function testGoogleCalendar() {
+            try {
+                if (useMockData()) {
+                    updateResult('google-calendar-result', 'warning', 'Not authenticated (mock data)');
+                    return;
+                }
+                const response = await fetch('/api/google/calendar/events');
+                if (response.status === 401) {
+                    updateResult('google-calendar-result', 'warning', 'Not authenticated');
+                    testResults.google.status++;
+                } else if (response.ok) {
+                    updateResult('google-calendar-result', 'success', 'Authenticated & Connected');
+                    testResults.google.status++;
+                } else {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+            } catch (error) {
+                updateResult('google-calendar-result', 'error', error.message);
+                logError('google', `Google Calendar API: ${error.message}`);
+            }
+        }
+
+        async function testGmail() {
+            try {
+                if (useMockData()) {
+                    updateResult('gmail-result', 'warning', 'Not authenticated (mock data)');
+                    return;
+                }
+                const response = await fetch('/api/google/gmail/messages');
+                if (response.status === 401) {
+                    updateResult('gmail-result', 'warning', 'Not authenticated');
+                } else if (response.ok) {
+                    updateResult('gmail-result', 'success', 'Connected');
+                    testResults.google.status++;
+                } else {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+            } catch (error) {
+                updateResult('gmail-result', 'error', error.message);
+                logError('google', `Gmail API: ${error.message}`);
+            }
+        }
+
+        async function testGoogleDrive() {
+            try {
+                if (useMockData()) {
+                    updateResult('google-drive-result', 'warning', 'Not authenticated (mock data)');
+                    return;
+                }
+                const response = await fetch('/api/google/drive/files');
+                if (response.status === 401) {
+                    updateResult('google-drive-result', 'warning', 'Not authenticated');
+                } else if (response.ok) {
+                    updateResult('google-drive-result', 'success', 'Connected');
+                    testResults.google.status++;
+                } else {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+            } catch (error) {
+                updateResult('google-drive-result', 'error', error.message);
+                logError('google', `Google Drive API: ${error.message}`);
+            }
+        }
+
+        // AI Tests
+        async function testAiConnection() {
+            try {
+                if (useMockData()) {
+                    updateResult('ai-connection-result', 'success', 'Connected (mock data)');
+                    return;
+                }
+                const response = await fetch('/api/ai/status');
+                if (response.ok) {
+                    updateResult('ai-connection-result', 'success', 'Connected');
+                    testResults.ai.status++;
+                } else {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+            } catch (error) {
+                updateResult('ai-connection-result', 'error', error.message);
+                logError('ai', `AI Connection: ${error.message}`);
+            }
+        }
+
+        async function testAiHistory() {
+            try {
+                if (useMockData()) {
+                    updateResult('ai-history-result', 'success', 'Loaded (mock data)');
+                    return;
+                }
+                const response = await fetch('/api/ai/history');
+                if (response.ok) {
+                    updateResult('ai-history-result', 'success', 'Loaded');
+                    testResults.ai.status++;
+                } else {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+            } catch (error) {
+                updateResult('ai-history-result', 'error', error.message);
+                logError('ai', `AI History: ${error.message}`);
+            }
+        }
+
+        async function testAiMessage() {
+            try {
+                if (useMockData()) {
+                    updateResult('ai-message-result', 'success', 'Response received (mock data)');
+                    return;
+                }
+                const response = await fetch('/api/ai/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message: 'Hello, this is a test message' })
+                });
+                if (response.ok) {
+                    updateResult('ai-message-result', 'success', 'Response received');
+                    testResults.ai.status++;
+                } else {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+            } catch (error) {
+                updateResult('ai-message-result', 'error', error.message);
+                logError('ai', `AI Message: ${error.message}`);
+            }
+        }
+
+        // Meal Planner Tests
+        async function testMealPlan() {
+            try {
+                if (useMockData()) {
+                    updateResult('meal-plan-result', 'success', 'Plan loaded (mock data)');
+                    return;
+                }
+                const response = await fetch('/api/meals/current');
+                if (response.ok) {
+                    updateResult('meal-plan-result', 'success', 'Plan loaded');
+                    testResults.meal.status++;
+                } else {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+            } catch (error) {
+                updateResult('meal-plan-result', 'error', error.message);
+                logError('meal', `Meal Plan API: ${error.message}`);
+            }
+        }
+
+        async function testMealUpload() {
+            try {
+                if (useMockData()) {
+                    updateResult('meal-upload-result', 'success', 'Upload endpoint available (mock)');
+                    return;
+                }
+                // Just test if the endpoint exists
+                const response = await fetch('/api/meals/upload', { method: 'POST' });
+                if (response.status === 400 || response.status === 415) {
+                    updateResult('meal-upload-result', 'success', 'Upload endpoint available');
+                    testResults.meal.status++;
+                } else {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+            } catch (error) {
+                updateResult('meal-upload-result', 'error', error.message);
+                logError('meal', `Meal Upload: ${error.message}`);
+            }
+        }
+
+        async function testMealAI() {
+            try {
+                if (useMockData()) {
+                    updateResult('meal-ai-result', 'success', 'AI suggestions available (mock)');
+                    return;
+                }
+                const response = await fetch('/api/meals/suggestions');
+                if (response.ok) {
+                    updateResult('meal-ai-result', 'success', 'AI suggestions available');
+                    testResults.meal.status++;
+                } else {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+            } catch (error) {
+                updateResult('meal-ai-result', 'error', error.message);
+                logError('meal', `Meal AI: ${error.message}`);
+            }
+        }
+
+        // Run all tests
+        async function runAllTests() {
+            testResults = {
+                dns: { status: 0, errors: [] },
+                google: { status: 0, errors: [] },
+                ai: { status: 0, errors: [] },
+                meal: { status: 0, errors: [] }
+            };
+
+            // Clear error logs
+            document.querySelectorAll('.error-log').forEach(log => {
+                log.innerHTML = '';
+                log.style.display = 'none';
+            });
+
+            updateStatus('overall', 'testing', 'Running tests...');
+
+            // DNS Tests
+            await testDnsStatus();
+            await testDnsAnalytics();
+            await testDnsProfile();
+            
+            // Google Tests
+            await testGoogleCalendar();
+            await testGmail();
+            await testGoogleDrive();
+            
+            // AI Tests
+            await testAiConnection();
+            await testAiHistory();
+            await testAiMessage();
+            
+            // Meal Tests
+            await testMealPlan();
+            await testMealUpload();
+            await testMealAI();
+
+            // Update section statuses
+            const dnsHealth = testResults.dns.status > 0 ? (testResults.dns.errors.length === 0 ? 'success' : 'warning') : 'error';
+            const googleHealth = testResults.google.status > 0 ? 'warning' : 'error'; // Always warning due to auth
+            const aiHealth = testResults.ai.status > 0 ? (testResults.ai.errors.length === 0 ? 'success' : 'warning') : 'error';
+            const mealHealth = testResults.meal.status > 0 ? (testResults.meal.errors.length === 0 ? 'success' : 'warning') : 'error';
+
+            updateStatus('dns', dnsHealth, `DNS: ${testResults.dns.status}/3 endpoints`);
+            updateStatus('google', googleHealth, `Google: Authentication required`);
+            updateStatus('ai', aiHealth, `AI: ${testResults.ai.status}/3 endpoints`);
+            updateStatus('meal', mealHealth, `Meal: ${testResults.meal.status}/3 endpoints`);
+
+            // Generate overall summary
+            generateHealthSummary();
+        }
+
+        function generateHealthSummary() {
+            const totalErrors = Object.values(testResults).reduce((sum, result) => sum + result.errors.length, 0);
+            const totalEndpoints = Object.values(testResults).reduce((sum, result) => sum + result.status, 0);
+            
+            let overallStatus = 'error';
+            let statusMessage = 'Critical issues detected';
+            
+            if (totalErrors === 0 && totalEndpoints > 8) {
+                overallStatus = 'success';
+                statusMessage = 'All systems operational';
+            } else if (totalEndpoints > 4) {
+                overallStatus = 'warning';
+                statusMessage = 'Some issues detected';
+            }
+
+            updateStatus('overall', overallStatus, statusMessage);
+
+            const summaryEl = document.getElementById('health-summary');
+            summaryEl.innerHTML = `
+                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; margin: 20px 0;">
+                    <div>
+                        <h4>📊 Test Results</h4>
+                        <ul>
+                            <li>DNS Widgets: ${testResults.dns.status}/3 endpoints working</li>
+                            <li>Google Widgets: Require authentication setup</li>
+                            <li>AI Chat: ${testResults.ai.status}/3 endpoints working</li>
+                            <li>Meal Planner: ${testResults.meal.status}/3 endpoints working</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4>🎯 Priority Fixes</h4>
+                        <ul>
+                            <li>Fix import paths (@services alias)</li>
+                            <li>Add authentication to Google widgets</li>
+                            <li>Enable WebSocket fallback for DNS Analytics</li>
+                            <li>Add file size validation to Meal Planner</li>
+                        </ul>
+                    </div>
+                </div>
+                <div style="background: #f0f9ff; border: 1px solid #0ea5e9; border-radius: 4px; padding: 15px; margin-top: 15px;">
+                    <h4 style="color: #0369a1; margin: 0 0 10px 0;">🤖 Gemini Recommendation</h4>
+                    <p style="margin: 0;">
+                        Based on the analysis, <strong>DNS Status</strong> and <strong>Google Calendar</strong> widgets are most likely to work.
+                        Priority should be given to fixing authentication patterns and import consistency across all widgets.
+                    </p>
+                </div>
+            `;
+        }
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Widget Health Test Environment Loaded');
+        });
+    </script>
+</body>
+</html>

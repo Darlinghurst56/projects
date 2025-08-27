@@ -1,0 +1,19 @@
+{
+  "name": "accessibility-testing-mcp",
+  "version": "1.0.0",
+  "description": "MCP server for automated accessibility testing focused on single home user needs",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node index.js",
+    "test": "node test.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0",
+    "axe-core": "^4.8.0",
+    "puppeteer": "^21.0.0"
+  },
+  "keywords": ["mcp", "accessibility", "testing", "wcag", "dashboard"],
+  "author": "Home Dashboard Team",
+  "license": "MIT"
+}
