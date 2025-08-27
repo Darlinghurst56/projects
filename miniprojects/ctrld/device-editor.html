@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Device Editor - Control D</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            background: #0f172a;
+            color: #e2e8f0;
+            line-height: 1.6;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        h1 {
+            color: #60a5fa;
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+        .description {
+            color: #94a3b8;
+            font-size: 1.1rem;
+        }
+        
+        .device-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.5fr 2fr 2fr 1.5fr 2fr;
+            gap: 1px;
+            background: #334155;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 30px;
+        }
+        
+        .device-row {
+            display: contents;
+        }
+        
+        .device-row > div {
+            background: #1e293b;
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .device-header {
+            font-weight: 600;
+            color: #cbd5e1;
+            background: #334155 !important;
+        }
+        
+        .status-indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+        .active-status { background: #10b981; }
+        .inactive-status { background: #6b7280; }
+        
+        .device-ip {
+            font-family: 'Courier New', monospace;
+            color: #60a5fa;
+            font-weight: 500;
+        }
+        
+        .device-hostname {
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: 4px;
+            transition: all 0.2s;
+            min-width: 150px;
+            position: relative;
+        }
+        
+        .device-hostname:hover {
+            background: #374151;
+            transform: translateY(-1px);
+        }
+        
+        .manual-name {
+            color: #10b981;
+            font-weight: 500;
+        }
+        
+        .auto-name {
+            color: #9ca3af;
+            font-style: italic;
+        }
+        
+        .placeholder-name {
+            color: #6b7280;
+            font-style: italic;
+        }
+        
+        .editing {
+            background: #1f2937 !important;
+            border: 2px solid #60a5fa !important;
+        }
+        
+        .edit-input {
+            background: #1f2937;
+            border: 2px solid #60a5fa;
+            color: #fff;
+            padding: 6px 10px;
+            border-radius: 4px;
+            font-family: inherit;
+            font-size: inherit;
+            width: 200px;
+            outline: none;
+        }
+        
+        .edit-buttons {
+            margin-left: 8px;
+            display: inline-flex;
+            gap: 4px;
+        }
+        
+        .btn {
+            background: #60a5fa;
+            color: white;
+            border: none;
+            padding: 4px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: background 0.2s;
+        }
+        
+        .btn:hover {
+            background: #3b82f6;
+        }
+        
+        .btn.cancel {
+            background: #6b7280;
+        }
+        
+        .btn.cancel:hover {
+            background: #4b5563;
+        }
+        
+        .loading {
+            text-align: center;
+            color: #94a3b8;
+            padding: 40px;
+        }
+        
+        .error {
+            background: #dc2626;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+        }
+        
+        .success {
+            background: #10b981;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+        }
+        
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-item {
+            text-align: center;
+            padding: 15px 25px;
+            background: #1e293b;
+            border-radius: 8px;
+            border: 1px solid #334155;
+        }
+        
+        .stat-number {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #60a5fa;
+        }
+        
+        .refresh-controls {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .refresh-btn {
+            background: #10b981;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            margin: 0 10px;
+        }
+        
+        .refresh-btn:hover {
+            background: #059669;
+        }
+        
+        @media (max-width: 768px) {
+            .device-grid {
+                display: block;
+            }
+            .device-row > div {
+                display: block;
+                border-bottom: 1px solid #334155;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📝 Device Name Editor</h1>
+            <p class="description">Click on device names to edit them. Green names are manually set, gray names are auto-detected.</p>
+        </div>
+        
+        <div id="message-area"></div>
+        
+        <div class="refresh-controls">
+            <button class="refresh-btn" onclick="loadDevices()">🔄 Refresh Devices</button>
+            <button class="refresh-btn" onclick="toggleAutoRefresh()">⏯️ Toggle Auto-refresh</button>
+            <span id="refresh-status">Auto-refresh: ON (every 30s)</span>
+        </div>
+        
+        <div class="stats" id="stats">
+            <div class="stat-item">
+                <div class="stat-number" id="total-devices">-</div>
+                <div>Total Devices</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" id="active-devices">-</div>
+                <div>Active Devices</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" id="manual-names">-</div>
+                <div>Named Devices</div>
+            </div>
+        </div>
+        
+        <div id="device-list" class="loading">
+            Loading devices...
+        </div>
+    </div>
+
+    <script>
+        let devices = [];
+        let currentlyEditing = null;
+        let autoRefresh = true;
+        let refreshInterval = null;
+        
+        // Load devices from API
+        async function loadDevices() {
+            try {
+                const response = await fetch('http://localhost:3001/json');
+                if (!response.ok) {
+                    throw new Error('Failed to fetch devices');
+                }
+                const data = await response.json();
+                devices = data.devices || [];
+                updateStats(data);
+                renderDevices();
+                showMessage('Devices loaded successfully', 'success');
+            } catch (error) {
+                console.error('Error loading devices:', error);
+                showMessage('Failed to load devices: ' + error.message, 'error');
+            }
+        }
+        
+        function updateStats(data) {
+            document.getElementById('total-devices').textContent = data.totalDevices || devices.length;
+            document.getElementById('active-devices').textContent = data.activeDevices || devices.filter(d => d.isActive).length;
+            document.getElementById('manual-names').textContent = devices.filter(d => d.isManualDescription).length;
+        }
+        
+        function renderDevices() {
+            const deviceList = document.getElementById('device-list');
+            
+            if (devices.length === 0) {
+                deviceList.innerHTML = '<div class="loading">No devices found</div>';
+                return;
+            }
+            
+            // Sort devices by IP
+            const sortedDevices = devices.sort((a, b) => {
+                const aIp = a.ip.split('.').map(n => parseInt(n));
+                const bIp = b.ip.split('.').map(n => parseInt(n));
+                for (let i = 0; i < 4; i++) {
+                    if (aIp[i] !== bIp[i]) return aIp[i] - bIp[i];
+                }
+                return 0;
+            });
+            
+            let html = `
+                <div class="device-grid">
+                    <div class="device-row device-header">
+                        <div>Status</div>
+                        <div>IP Address</div>
+                        <div>Device Type</div>
+                        <div>Device Name (Click to Edit)</div>
+                        <div>Last Domain</div>
+                        <div>Last Seen</div>
+                    </div>
+            `;
+            
+            sortedDevices.forEach(device => {
+                const displayName = getDisplayName(device);
+                const nameClass = getNameClass(device);
+                
+                html += `
+                    <div class="device-row">
+                        <div>
+                            <span class="status-indicator ${device.isActive ? 'active-status' : 'inactive-status'}"></span>
+                            ${device.isActive ? 'Active' : 'Inactive'}
+                        </div>
+                        <div class="device-ip">${device.ip}</div>
+                        <div>${getDeviceIcon(device.deviceType)} ${device.deviceType}</div>
+                        <div class="device-hostname ${nameClass}" 
+                             data-ip="${device.ip}" 
+                             onclick="startEdit(this)"
+                             title="Click to edit device name">
+                            ${displayName}
+                        </div>
+                        <div title="${device.lastDomain || 'None'}">
+                            ${device.lastDomain ? truncate(device.lastDomain, 25) : 'None'}
+                        </div>
+                        <div>${device.lastSeen ? new Date(device.lastSeen).toLocaleString() : 'Never'}</div>
+                    </div>
+                `;
+            });
+            
+            html += '</div>';
+            deviceList.innerHTML = html;
+        }
+        
+        function getDisplayName(device) {
+            if (device.isManualDescription && device.manualDescription) {
+                return device.manualDescription;
+            } else if (device.hostname && device.hostname !== 'Unknown') {
+                return device.hostname;
+            } else {
+                return 'Click to name this device';
+            }
+        }
+        
+        function getNameClass(device) {
+            if (device.isManualDescription && device.manualDescription) {
+                return 'manual-name';
+            } else if (device.hostname && device.hostname !== 'Unknown') {
+                return 'auto-name';
+            } else {
+                return 'placeholder-name';
+            }
+        }
+        
+        function getDeviceIcon(deviceType) {
+            const icons = {
+                'Desktop': '🖥️',
+                'Laptop': '💻', 
+                'Mobile': '📱',
+                'Apple Device': '🍎',
+                'Google Device': '🟢',
+                'Smart Speaker': '🔊',
+                'Smart Light': '💡',
+                'Security Camera': '📷',
+                'Media Device': '📺',
+                'Printer': '🖨️',
+                'Network Device': '🌐',
+                'IoT Device': '📡',
+                'Smart Home': '🏠',
+                'Smart Home Hub': '🏠',
+                'Vacuum Robot': '🤖',
+                'Weather Station': '🌡️',
+                'Unknown': '❓'
+            };
+            return icons[deviceType] || '❓';
+        }
+        
+        function truncate(str, length) {
+            return str.length > length ? str.substring(0, length) + '...' : str;
+        }
+        
+        function startEdit(element) {
+            if (currentlyEditing && currentlyEditing !== element) {
+                cancelEdit(currentlyEditing);
+            }
+            
+            currentlyEditing = element;
+            const ip = element.dataset.ip;
+            const device = devices.find(d => d.ip === ip);
+            
+            const currentValue = device.isManualDescription && device.manualDescription 
+                ? device.manualDescription 
+                : '';
+            
+            // Create input
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.className = 'edit-input';
+            input.value = currentValue;
+            input.placeholder = 'Enter device name...';
+            
+            // Create buttons
+            const buttonContainer = document.createElement('span');
+            buttonContainer.className = 'edit-buttons';
+            
+            const saveBtn = document.createElement('button');
+            saveBtn.textContent = 'Save';
+            saveBtn.className = 'btn save';
+            
+            const cancelBtn = document.createElement('button');
+            cancelBtn.textContent = 'Cancel';
+            cancelBtn.className = 'btn cancel';
+            
+            buttonContainer.appendChild(saveBtn);
+            buttonContainer.appendChild(cancelBtn);
+            
+            // Replace content
+            element.innerHTML = '';
+            element.appendChild(input);
+            element.appendChild(buttonContainer);
+            element.classList.add('editing');
+            
+            // Focus input
+            input.focus();
+            input.select();
+            
+            // Event handlers
+            const save = () => saveEdit(element, ip, input.value);
+            const cancel = () => cancelEdit(element);
+            
+            saveBtn.addEventListener('click', save);
+            cancelBtn.addEventListener('click', cancel);
+            
+            input.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    save();
+                } else if (e.key === 'Escape') {
+                    e.preventDefault();
+                    cancel();
+                }
+            });
+        }
+        
+        async function saveEdit(element, ip, newValue) {
+            const trimmedValue = newValue.trim();
+            
+            try {
+                const response = await fetch('http://localhost:3001/api/update-description', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        ip: ip,
+                        description: trimmedValue
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    // Update local device data
+                    const device = devices.find(d => d.ip === ip);
+                    if (device) {
+                        device.manualDescription = trimmedValue;
+                        device.isManualDescription = trimmedValue !== '';
+                    }
+                    
+                    // Re-render to show changes
+                    renderDevices();
+                    showMessage(`Device name updated: ${ip} → "${trimmedValue}"`, 'success');
+                } else {
+                    throw new Error(data.error || 'Unknown error');
+                }
+            } catch (error) {
+                console.error('Error updating description:', error);
+                showMessage('Failed to update device name: ' + error.message, 'error');
+                renderDevices(); // Restore original display
+            }
+            
+            currentlyEditing = null;
+        }
+        
+        function cancelEdit(element) {
+            currentlyEditing = null;
+            renderDevices(); // Restore original display
+        }
+        
+        function showMessage(message, type) {
+            const messageArea = document.getElementById('message-area');
+            messageArea.innerHTML = `<div class="${type}">${message}</div>`;
+            
+            // Auto-hide success messages
+            if (type === 'success') {
+                setTimeout(() => {
+                    messageArea.innerHTML = '';
+                }, 3000);
+            }
+        }
+        
+        function toggleAutoRefresh() {
+            autoRefresh = !autoRefresh;
+            const status = document.getElementById('refresh-status');
+            
+            if (autoRefresh) {
+                status.textContent = 'Auto-refresh: ON (every 30s)';
+                startAutoRefresh();
+            } else {
+                status.textContent = 'Auto-refresh: OFF';
+                stopAutoRefresh();
+            }
+        }
+        
+        function startAutoRefresh() {
+            if (refreshInterval) clearInterval(refreshInterval);
+            refreshInterval = setInterval(loadDevices, 30000);
+        }
+        
+        function stopAutoRefresh() {
+            if (refreshInterval) {
+                clearInterval(refreshInterval);
+                refreshInterval = null;
+            }
+        }
+        
+        // Initialize
+        window.addEventListener('load', function() {
+            loadDevices();
+            if (autoRefresh) {
+                startAutoRefresh();
+            }
+        });
+        
+        // Cleanup
+        window.addEventListener('beforeunload', function() {
+            stopAutoRefresh();
+        });
+    </script>
+</body>
+</html>

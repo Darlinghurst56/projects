@@ -28,23 +28,11 @@ Last Updated: 2025-01-30
 - Document task progress throughout
 - Separate agent workflow from Claude code
 
-### Dual-Tagging Agent Coordination System - DEVELOPMENT STANDARD
+### @ Tag Agent Coordination System - DEVELOPMENT STANDARD
 
-Our development environment uses a sophisticated dual-tagging system that combines real-time model routing with automated workflow coordination:
+Our development environment uses an @ tag system for automated workflow coordination:
 
-#### 1. CCR-SUBAGENT-MODEL Tags (Real-Time Routing)
-```
-<CCR-SUBAGENT-MODEL>provider,model</CCR-SUBAGENT-MODEL>
-```
-- **Purpose**: Direct real-time model routing during API calls
-- **Status**: 100% functional with comprehensive testing
-- **Location**: Top of agent definition files
-- **Routing Examples**:
-  - `<CCR-SUBAGENT-MODEL>gemini,gemini-1.5-flash</CCR-SUBAGENT-MODEL>` → Routes to Gemini Flash
-  - `<CCR-SUBAGENT-MODEL>groq,llama-3.3-70b-versatile</CCR-SUBAGENT-MODEL>` → Routes to Groq Llama
-  - `<CCR-SUBAGENT-MODEL>ollama,qwen2.5-coder:latest</CCR-SUBAGENT-MODEL>` → Routes to local Ollama
-
-#### 2. @ Tag System (Commit-Based Automation)
+#### @ Tag System (Commit-Based Automation)
 ```bash
 # Trigger security review for authentication changes
 git commit -m "Add OAuth2 login @security_agent"
@@ -56,8 +44,7 @@ git commit -m "Payment processing @security_agent @gem_test_agent @gem_doc_agent
 git commit -m "Database query optimization @performance_agent"
 ```
 
-**Dual-System Benefits:**
-- **Real-Time Intelligence**: CCR tags ensure optimal model selection for each agent's capabilities
+**@ Tag System Benefits:**
 - **Workflow Automation**: @ tags provide automated quality gates and coordination
 - **98% Built-in Functionality**: Leverages Claude Code's native infrastructure
 - **Automatic Backup Protection**: Staged files backed up before agent execution
@@ -65,27 +52,21 @@ git commit -m "Database query optimization @performance_agent"
 - **GitHub Actions Ready**: Team collaboration workflows supported
 - **Zero Maintenance**: No custom infrastructure to maintain
 
-**Quick Reference - Available Agents with Dual-Tagging:**
+**Quick Reference - Available Agents:**
 
-| @ Tag | CCR Routing | Agent Purpose | Use When |
-|-------|-------------|---------------|----------|
-| `@security_agent` | `groq,llama-3.3-70b-versatile` | Security & vulnerability analysis | Auth changes, crypto, API security |
-| `@performance_agent` | `groq,llama-3.1-70b-versatile` | Performance analysis & optimization | Slow queries, bottlenecks, scaling |
-| `@gem_test_agent` | `gemini,gemini-1.5-flash` | Advanced testing with Gemini reasoning | Complex logic, integration testing |
-| `@gem_doc_agent` | `gemini,gemini-1.5-flash` | Enhanced documentation with Gemini | API docs, complex systems, user guides |
-| `@technical_architecture_agent` | `groq,llama-3.3-70b-versatile` | System design & architecture review | Major refactoring, architectural decisions |
-| `@server_agent` | `groq,llama-3.1-8b-instant` | Infrastructure & deployment | Docker, services, configuration |
-| `@ux_agent` | `gemini,gemini-1.5-flash` | User experience & interface validation | UI changes, workflows, accessibility |
-| `@home_ui_engineer` | `gemini,gemini-1.5-flash` | Family-friendly UI implementation | React components, responsive design, family interfaces |
-| `@codereview_agent` | `groq,llama-3.3-70b-versatile` | Code quality & standards review | Refactoring, new implementations |
-| `@data_migration_agent` | `groq,llama-3.1-70b-versatile` | Database & data structure changes | Schema changes, data transformations |
-| `@integration_agent` | `groq,llama-3.1-8b-instant` | API & service integration testing | Third-party APIs, webhooks, services |
-
-**CCR Routing Notes:**
-- `gem_*` agents automatically route to Gemini models for enhanced reasoning
-- Security/architecture agents use high-capacity models for complex analysis
-- Infrastructure agents use fast models for quick operations
-- All routing is automatic - CCR tags in agent definitions handle this transparently
+| @ Tag | Agent Purpose | Use When |
+|-------|---------------|----------|
+| `@security_agent` | Security & vulnerability analysis | Auth changes, crypto, API security |
+| `@performance_agent` | Performance analysis & optimization | Slow queries, bottlenecks, scaling |
+| `@gem_test_agent` | Advanced testing with Gemini reasoning | Complex logic, integration testing |
+| `@gem_doc_agent` | Enhanced documentation with Gemini | API docs, complex systems, user guides |
+| `@technical_architecture_agent` | System design & architecture review | Major refactoring, architectural decisions |
+| `@server_agent` | Infrastructure & deployment | Docker, services, configuration |
+| `@ux_agent` | User experience & interface validation | UI changes, workflows, accessibility |
+| `@home_ui_engineer` | Family-friendly UI implementation | React components, responsive design, family interfaces |
+| `@codereview_agent` | Code quality & standards review | Refactoring, new implementations |
+| `@data_migration_agent` | Database & data structure changes | Schema changes, data transformations |
+| `@integration_agent` | API & service integration testing | Third-party APIs, webhooks, services |
 
 **For complete documentation and advanced patterns, see:** `~/.claude/AGENT_TAG_COORDINATION.md`
 
@@ -160,7 +141,7 @@ git commit -m "Database query optimization @performance_agent"
 │   │   └── jellyfin/          # Media server configuration
 │   ├── docs/                  # Shared documentation
 │   └── scripts/               # Shared utility scripts
-├── .claude-code-router/        # CCR proxy configuration (in development)
+├── .claude-code-router/        # Legacy proxy configuration (archived)
 ├── archive/                    # Project backups and deprecated code
 └── [various config files]     # Environment-specific configurations
 ```
@@ -370,59 +351,21 @@ ls -la ./node_modules/.bin/        # Node.js executables
   - Production services
 - **Requirement**: Code must be flexible for localhost/IP address deployment
 
-### Claude Code Router (CCR) Solution ✅
+### AI Service Infrastructure
 
-The claude-code-router is now fully operational and provides intelligent model routing for Claude Code commands. This proxy system routes different types of requests to optimal AI providers based on agent types and request context.
+The development environment uses multiple AI service options:
 
-**Location**: `/home/darlinghurstlinux/.claude-code-router/`
-**Status**: Production-ready with 100% test compliance
-**Endpoint**: `http://127.0.0.1:3456/v1/messages`
+**Local AI Services:**
+- **Ollama**: Local model inference on home server (192.168.1.74)
+- **Models**: Llama, Qwen2.5-coder for development tasks
 
-**Key Features:**
-- **CCR-SUBAGENT-MODEL Tag Routing**: Agents can specify exact models using `<CCR-SUBAGENT-MODEL>provider,model</CCR-SUBAGENT-MODEL>` tags
-- **Agent-based Routing**: `gem_*` agents automatically route to Gemini, others to Groq
-- **Context-aware Routing**: Long context → Gemini Pro, Web search → Gemini Flash, Background tasks → Ollama
-- **Multi-provider Support**: Groq, Gemini, and Ollama with failsafe fallback
+**API Services:**
+- **LiteLLM Simple Proxy**: Port 4000 for basic model routing
+- **Direct API Access**: Groq, Gemini for specific use cases
 
-**Provider Configuration:**
-```json
-{
-  "groq": ["llama-3.1-8b-instant", "llama-3.3-70b-versatile", "llama-3.1-70b-versatile"],
-  "gemini": ["gemini-1.5-flash", "gemini-1.5-pro"], 
-  "ollama": ["llama3.2:latest", "qwen2.5-coder:latest"]
-}
-```
-
-**Routing Logic:**
-- **Default**: `groq,llama-3.1-8b-instant`
-- **Background**: `ollama,llama3.2:latest` 
-- **Think**: `groq,llama-3.3-70b-versatile`
-- **Long Context**: `gemini,gemini-1.5-pro`
-- **Web Search**: `gemini,gemini-1.5-flash`
-
-**Important Configuration Note**: 
-The current implementation uses direct API key storage in `config.json` rather than environment variables. While the security documentation suggests using environment variables with a `.env` file approach, the current working configuration stores keys directly. This is acceptable for a home network environment but should be migrated to environment variables for better security practices.
-
-**Files:**
-- `config.json` - Main configuration with provider settings and API keys
-- `custom-router.js` - Routing logic and CCR tag processing
-- `config-loader.js` - Secure configuration loading utility (designed for env vars)
-- `SECURITY.md` - Security guidelines and environment variable setup
-- `CLAUDE_CODE_ROUTER_TEST_REPORT.md` - Comprehensive test results
-
-**Why Environment Variables Cannot Use a Single Location:**
-The claude-code-router operates as a standalone proxy service with its own Node.js process, separate from other project components. This architectural isolation means:
-
-1. **Process Isolation**: Each service (router, dashboard, litellm) runs in separate processes with independent environment contexts
-2. **Different .env Scopes**: Each component requires its own `.env` file in its working directory to load variables correctly
-3. **Runtime Context**: Node.js process.env loading happens at startup within each process's working directory
-4. **Security Compartmentalization**: Separate .env files provide better security isolation between services
-5. **Configuration Inheritance**: While shared environment variables could work system-wide, each service needs component-specific configurations
-
-**Current Working Solution**: Direct API key storage in config.json provides immediate functionality while maintaining clear separation between the router service and other project components. The claude-code-router's design as an independent proxy service makes centralized environment variable management complex without additional orchestration tools.
-
-**Local AI Service Clarification**: 
-The Ollama service mentioned in the infrastructure runs on the home server (192.168.1.74) and provides local model inference for background tasks and development work. This "local AI" capability is separate from and supplements the claude-code-router system, which primarily routes requests to cloud providers (Groq, Gemini). The home-dashboard project has its own integrated AI chat service that may utilize local models, but the claude-code-router is designed as a cloud-first routing solution with local fallback options.
+**Home Dashboard Integration:**
+- Built-in AI chat using available local and cloud models
+- Cost-effective local-first approach for family automation
 
 ## Projects Overview
 
@@ -595,15 +538,14 @@ Our @ tag agent coordination system is now active and provides enterprise-grade 
 ## Universal Reminders
 - **Main Development**: Use `/projects/claude-project/` as primary hub
 - **Task Management**: Always start and end jobs for every task
-- **Dual-Tagging System**: 
+- **@ Tag System**: 
   - **@ Tags**: Use in commit messages for automated workflows (`@security_agent`, `@gem_test_agent`)
-  - **CCR Tags**: Automatically handled in agent definitions for optimal model routing
   - **Quick Pattern**: `git commit -m "Feature description @relevant_agent @gem_doc_agent"`
-- **Agent Discovery**: Reference the dual-tagging table above for agent selection and automatic routing
+- **Agent Discovery**: Reference the @ tag table above for agent selection
 - **Real APIs**: Never mock - always use real services
 - **Family Focus**: Build for actual family use, not theoretical features
 - **Documentation**: Keep CLAUDE.md files updated as projects evolve; use `@gem_doc_agent` for comprehensive docs
-- **Optimized Environment**: Take advantage of parallel execution, caching, and intelligent model routing
+- **Optimized Environment**: Take advantage of parallel execution and caching
 
 ---
 > For project-specific instructions, navigate to individual project directories and read their CLAUDE.md files
