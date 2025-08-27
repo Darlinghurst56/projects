@@ -73,13 +73,23 @@
             font-weight: 500;
         }
         
-        .device-hostname {
+        .device-hostname, .device-type {
             cursor: pointer;
             padding: 4px 8px;
             border-radius: 4px;
             transition: all 0.2s;
             min-width: 150px;
             position: relative;
+        }
+        
+        .editable-type {
+            border: 1px solid transparent;
+        }
+        
+        .editable-type:hover {
+            background: #374151;
+            border: 1px solid #60a5fa;
+            transform: translateY(-1px);
         }
         
         .device-hostname:hover {
@@ -226,7 +236,7 @@
     <div class="container">
         <div class="header">
             <h1>📝 Device Name Editor</h1>
-            <p class="description">Click on device names to edit them. Green names are manually set, gray names are auto-detected.</p>
+            <p class="description">Click on device names or types to edit them. Green names are manually set, gray names are auto-detected. Device types can be corrected by clicking on them.</p>
         </div>
         
         <div id="message-area"></div>
@@ -266,7 +276,7 @@
         // Load devices from API
         async function loadDevices() {
             try {
-                const response = await fetch('http://localhost:3001/json');
+                const response = await fetch('/json');
                 if (!response.ok) {
                     throw new Error('Failed to fetch devices');
                 }
@@ -310,7 +320,7 @@
                     <div class="device-row device-header">
                         <div>Status</div>
                         <div>IP Address</div>
-                        <div>Device Type</div>
+                        <div>Device Type (Click to Edit)</div>
                         <div>Device Name (Click to Edit)</div>
                         <div>Last Domain</div>
                         <div>Last Seen</div>
@@ -328,7 +338,12 @@
                             ${device.isActive ? 'Active' : 'Inactive'}
                         </div>
                         <div class="device-ip">${device.ip}</div>
-                        <div>${getDeviceIcon(device.deviceType)} ${device.deviceType}</div>
+                        <div class="device-type editable-type" 
+                             data-ip="${device.ip}" 
+                             onclick="startTypeEdit(this)"
+                             title="Click to edit device type">
+                            ${getDeviceIcon(device.deviceType)} ${device.deviceType}
+                        </div>
                         <div class="device-hostname ${nameClass}" 
                              data-ip="${device.ip}" 
                              onclick="startEdit(this)"
@@ -461,7 +476,7 @@
             const trimmedValue = newValue.trim();
             
             try {
-                const response = await fetch('http://localhost:3001/api/update-description', {
+                const response = await fetch('/api/update-description', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -500,6 +515,118 @@
         function cancelEdit(element) {
             currentlyEditing = null;
             renderDevices(); // Restore original display
+        }
+        
+        // Device type editing functions
+        function startTypeEdit(element) {
+            if (currentlyEditing && currentlyEditing !== element) {
+                cancelEdit(currentlyEditing);
+            }
+            
+            currentlyEditing = element;
+            const ip = element.dataset.ip;
+            const device = devices.find(d => d.ip === ip);
+            
+            const currentType = device.deviceType;
+            
+            // Create dropdown with device type options
+            const select = document.createElement('select');
+            select.className = 'edit-input';
+            
+            const deviceTypes = [
+                'Desktop', 'Laptop', 'Mobile', 'Apple Device', 'Google Device', 
+                'Smart Speaker', 'Smart Light', 'Security Camera', 'Media Device',
+                'Printer', 'Network Device', 'IoT Device', 'Smart Home', 
+                'Smart Home Hub', 'Vacuum Robot', 'Weather Station', 'Unknown'
+            ];
+            
+            deviceTypes.forEach(type => {
+                const option = document.createElement('option');
+                option.value = type;
+                option.textContent = type;
+                if (type === currentType) {
+                    option.selected = true;
+                }
+                select.appendChild(option);
+            });
+            
+            // Create buttons
+            const buttonContainer = document.createElement('span');
+            buttonContainer.className = 'edit-buttons';
+            
+            const saveBtn = document.createElement('button');
+            saveBtn.textContent = 'Save';
+            saveBtn.className = 'btn save';
+            
+            const cancelBtn = document.createElement('button');
+            cancelBtn.textContent = 'Cancel';
+            cancelBtn.className = 'btn cancel';
+            
+            buttonContainer.appendChild(saveBtn);
+            buttonContainer.appendChild(cancelBtn);
+            
+            // Replace content
+            element.innerHTML = '';
+            element.appendChild(select);
+            element.appendChild(buttonContainer);
+            element.classList.add('editing');
+            
+            // Focus select
+            select.focus();
+            
+            // Event handlers
+            const save = () => saveTypeEdit(element, ip, select.value);
+            const cancel = () => cancelEdit(element);
+            
+            saveBtn.addEventListener('click', save);
+            cancelBtn.addEventListener('click', cancel);
+            
+            select.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    save();
+                } else if (e.key === 'Escape') {
+                    e.preventDefault();
+                    cancel();
+                }
+            });
+        }
+        
+        async function saveTypeEdit(element, ip, newType) {
+            try {
+                const response = await fetch('/api/update-device-type', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        ip: ip,
+                        deviceType: newType
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    // Update local device data
+                    const device = devices.find(d => d.ip === ip);
+                    if (device) {
+                        device.deviceType = newType;
+                    }
+                    
+                    // Re-render to show changes
+                    renderDevices();
+                    showMessage(`Device type updated: ${ip} → "${newType}"`, 'success');
+                } else {
+                    throw new Error(data.error || 'Unknown error');
+                }
+            } catch (error) {
+                console.error('Error updating device type:', error);
+                showMessage('Failed to update device type: ' + error.message, 'error');
+                renderDevices(); // Restore original display
+            }
+            
+            currentlyEditing = null;
         }
         
         function showMessage(message, type) {
